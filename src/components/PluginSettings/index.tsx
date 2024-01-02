@@ -74,9 +74,9 @@ function ReloadRequiredCard({ required }: { required: boolean; }) {
                 </>
             ) : (
                 <>
-                    <Forms.FormTitle tag="h5">Plugin Management</Forms.FormTitle>
-                    <Forms.FormText>Press the cog wheel or info icon to get more info on a plugin</Forms.FormText>
-                    <Forms.FormText>Plugins with a cog wheel have settings you can modify!</Forms.FormText>
+                    <Forms.FormTitle tag="h5">プラグインの管理</Forms.FormTitle>
+                    <Forms.FormText>歯車または情報アイコンをクリックすると、詳細なプラグインの情報を取得できます。</Forms.FormText>
+                    <Forms.FormText>歯車アイコンがあるプラグインの場合は、設定を編集できます。</Forms.FormText>
                 </>
             )}
         </Card>
@@ -111,7 +111,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
             const { restartNeeded, failures } = startDependenciesRecursive(plugin);
             if (failures.length) {
                 logger.error(`Failed to start dependencies for ${plugin.name}: ${failures.join(", ")}`);
-                showNotice("Failed to start dependencies: " + failures.join(", "), "Close", () => null);
+                showNotice("必須要件を開始できませんでした: " + failures.join(", "), "閉じる", () => null);
                 return;
             } else if (restartNeeded) {
                 // If any dependencies have patches, don't start the plugin yet.
@@ -139,7 +139,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
         if (!result) {
             settings.enabled = false;
 
-            const msg = `Error while ${wasEnabled ? "stopping" : "starting"} plugin ${plugin.name}`;
+            const msg = `${plugin.name}の${wasEnabled ? "停止中" : "起動中"}に、エラーが発生しました。`;
             logger.error(msg);
             showErrorToast(msg);
             return;
@@ -182,10 +182,10 @@ export default function PluginSettings() {
 
     React.useEffect(() => {
         return () => void (changes.hasChanges && Alerts.show({
-            title: "Restart required",
+            title: "再起動が必要です",
             body: (
                 <>
-                    <p>The following plugins require a restart:</p>
+                    <p>これらのプラグインは、再起動を必要としています:</p>
                     <div>{changes.map((s, i) => (
                         <>
                             {i > 0 && ", "}
@@ -194,8 +194,8 @@ export default function PluginSettings() {
                     ))}</div>
                 </>
             ),
-            confirmText: "Restart now",
-            cancelText: "Later!",
+            confirmText: "再起動",
+            cancelText: "後で",
             onConfirm: () => location.reload()
         }));
     }, []);
@@ -270,7 +270,7 @@ export default function PluginSettings() {
 
             if (isRequired) {
                 const tooltipText = p.required
-                    ? "This plugin is required for Vencord to function."
+                    ? "このプラグインは、Vencordが動作するのに必要です。"
                     : makeDependencyList(depMap[p.name]?.filter(d => settings.plugins[d].enabled));
 
                 requiredPlugins.push(
@@ -308,19 +308,19 @@ export default function PluginSettings() {
             <ReloadRequiredCard required={changes.hasChanges} />
 
             <Forms.FormTitle tag="h5" className={classes(Margins.top20, Margins.bottom8)}>
-                Filters
+                フィルター
             </Forms.FormTitle>
 
             <div className={cl("filter-controls")}>
-                <TextInput autoFocus value={searchValue.value} placeholder="Search for a plugin..." onChange={onSearch} className={Margins.bottom20} />
+                <TextInput autoFocus value={searchValue.value} placeholder="プラグインを検索..." onChange={onSearch} className={Margins.bottom20} />
                 <div className={InputStyles.inputWrapper}>
                     <Select
                         className={InputStyles.inputDefault}
                         options={[
-                            { label: "Show All", value: SearchStatus.ALL, default: true },
-                            { label: "Show Enabled", value: SearchStatus.ENABLED },
-                            { label: "Show Disabled", value: SearchStatus.DISABLED },
-                            { label: "Show New", value: SearchStatus.NEW }
+                            { label: "すべて表示", value: SearchStatus.ALL, default: true },
+                            { label: "有効なプラグインを表示", value: SearchStatus.ENABLED },
+                            { label: "無効のプラグインを表示", value: SearchStatus.DISABLED },
+                            { label: "新しいプラグインを表示", value: SearchStatus.NEW }
                         ]}
                         serialize={String}
                         select={onStatusChange}
@@ -330,7 +330,7 @@ export default function PluginSettings() {
                 </div>
             </div>
 
-            <Forms.FormTitle className={Margins.top20}>Plugins</Forms.FormTitle>
+            <Forms.FormTitle className={Margins.top20}>プラグイン</Forms.FormTitle>
 
             <div className={cl("grid")}>
                 {plugins}
@@ -339,7 +339,7 @@ export default function PluginSettings() {
             <Forms.FormDivider className={Margins.top20} />
 
             <Forms.FormTitle tag="h5" className={classes(Margins.top20, Margins.bottom8)}>
-                Required Plugins
+                必要なプラグイン:
             </Forms.FormTitle>
             <div className={cl("grid")}>
                 {requiredPlugins}
@@ -351,7 +351,7 @@ export default function PluginSettings() {
 function makeDependencyList(deps: string[]) {
     return (
         <React.Fragment>
-            <Forms.FormText>This plugin is required by:</Forms.FormText>
+            <Forms.FormText>このプラグインは次のプラグインに必要とされています:</Forms.FormText>
             {deps.map((dep: string) => <Forms.FormText className={cl("dep-text")}>{dep}</Forms.FormText>)}
         </React.Fragment>
     );

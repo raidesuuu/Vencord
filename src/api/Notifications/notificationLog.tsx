@@ -143,7 +143,7 @@ export function NotificationLog({ log, pending }: { log: PersistentNotificationD
             <div className={cl("container")}>
                 <div className={cl("empty")} />
                 <Forms.FormText style={{ textAlign: "center" }}>
-                    No notifications yet
+                    通知のログはありません。
                 </Forms.FormText>
             </div>
         );
@@ -161,7 +161,7 @@ function LogModal({ modalProps, close }: { modalProps: ModalProps; close(): void
     return (
         <ModalRoot {...modalProps} size={ModalSize.LARGE}>
             <ModalHeader>
-                <Text variant="heading-lg/semibold" style={{ flexGrow: 1 }}>Notification Log</Text>
+                <Text variant="heading-lg/semibold" style={{ flexGrow: 1 }}>通知のログ</Text>
                 <ModalCloseButton onClick={close} />
             </ModalHeader>
 
@@ -174,19 +174,19 @@ function LogModal({ modalProps, close }: { modalProps: ModalProps; close(): void
                     disabled={log.length === 0}
                     onClick={() => {
                         Alerts.show({
-                            title: "Are you sure?",
-                            body: `This will permanently remove ${log.length} notification${log.length === 1 ? "" : "s"}. This action cannot be undone.`,
+                            title: "本当に続行しますか？",
+                            body: `この操作は、${log.length} のログを永久的に削除します。${log.length === 1 ? "" : "s"}。この動作は元に戻せません。`,
                             async onConfirm() {
                                 await DataStore.set(KEY, []);
                                 signals.forEach(x => x());
                             },
-                            confirmText: "Do it!",
+                            confirmText: "続行",
                             confirmColor: "vc-notification-log-danger-btn",
-                            cancelText: "Nevermind"
+                            cancelText: "キャンセル"
                         });
                     }}
                 >
-                    Clear Notification Log
+                    通知のログをすべて削除する
                 </Button>
             </ModalFooter>
         </ModalRoot>

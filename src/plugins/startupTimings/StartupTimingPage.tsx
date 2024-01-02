@@ -130,7 +130,7 @@ function ServerTrace({ trace }: ServerTraceProps) {
 }
 
 function StartupTimingPage() {
-    if (!AppStartPerformance?.logs) return <div>Loading...</div>;
+    if (!AppStartPerformance?.logs) return <div>ロード中...</div>;
 
     const serverTrace = AppStartPerformance.logGroups.find(g => g.serverTrace)?.serverTrace;
 
