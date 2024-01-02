@@ -43,15 +43,17 @@ Vencord JP は、Discord Inc. 及び Vencord と連携または推奨してい�
 3. (オプション) クライアントが複数ある場合、クライアントを選択します。
 4. 「Install」ボタンをクリックして、Vencord JP をインストールします。
 5. (オプション) 「Install OpenAsar」をクリックして OpenAsar をインストールします。
-   **アンインストール**
-6. Windows PowerShell を開きます。(Win+R->powershell->Enter)
-7. 下記のコマンドをペーストします。
+
+**アンインストール**
+   
+1. Windows PowerShell を開きます。(Win+R->powershell->Enter)
+2. 下記のコマンドをペーストします。
     ```powershell
     iex ((new-object net.webclient).DownloadString('https://go.uplauncher.xyz/vencord-jp.ps1'))
     ```
-8. (オプション) クライアントが複数ある場合、クライアントを選択します。
-9. 「Uninstall」ボタンをクリックして、Vencord JP をアンインストールします。
-10. (オプション) 「Uninstall OpenAsar」をクリックして OpenAsar をアンインストールします。
+3. (オプション) クライアントが複数ある場合、クライアントを選択します。
+4. 「Uninstall」ボタンをクリックして、Vencord JP をアンインストールします。
+5. (オプション) 「Uninstall OpenAsar」をクリックして OpenAsar をアンインストールします。
 
 ### Mac / Linux / Browser
 
