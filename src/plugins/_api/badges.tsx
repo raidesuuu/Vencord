@@ -31,7 +31,7 @@ import { Forms, Toasts } from "@webpack/common";
 const CONTRIBUTOR_BADGE = "https://vencord.dev/assets/favicon.png";
 
 const ContributorBadge: ProfileBadge = {
-    description: "Vencord Contributor",
+    description: "Vencordの貢献者",
     image: CONTRIBUTOR_BADGE,
     position: BadgePosition.START,
     props: {
@@ -142,7 +142,7 @@ export default definePlugin({
                                         }}
                                     >
                                         <Heart />
-                                        Vencord Donor
+                                        Vencordのドナー
                                     </Forms.FormTitle>
                                 </Flex>
                             </Modals.ModalHeader>
@@ -163,10 +163,10 @@ export default definePlugin({
                                 </Flex>
                                 <div style={{ padding: "1em" }}>
                                     <Forms.FormText>
-                                        This Badge is a special perk for Vencord Donors
+                                        このバッジは、Vencordのドナーの特別な特典です。
                                     </Forms.FormText>
                                     <Forms.FormText className={Margins.top20}>
-                                        Please consider supporting the development of Vencord by becoming a donor. It would mean a lot!!
+                                        Vencordの発展と開発を支援するため、寄付をお願いします。寄付は意味のあることです。
                                     </Forms.FormText>
                                 </div>
                             </Modals.ModalContent>

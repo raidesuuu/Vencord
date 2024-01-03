@@ -16,20 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { Button } from "@webpack/common";
+import { Logger } from "@utils/Logger";
+import { Devs } from "@utils/constants";
+import definePlugin from "@utils/types";
 
-import { Heart } from "./Heart";
+export default definePlugin({
+    name: "Japanize",
+    required: true,
+    description: "このプラグインは常に有効です。Vencordを日本語化するために必要です。(無効にするには普通のVencordを使用)",
+    authors: [Devs.Rai],
 
-export default function DonateButton(props: any) {
-    return (
-        <Button
-            {...props}
-            look={Button.Looks.LINK}
-            color={Button.Colors.TRANSPARENT}
-            onClick={() => VencordNative.native.openExternal("https://github.com/sponsors/Vendicated")}
-        >
-            <Heart />
-            寄付
-        </Button>
-    );
-}
+    async start() {
+        var logger = new Logger("Japanize");
+        logger.log("Vencord Japanize Plugin is enabled!");
+    }
+});

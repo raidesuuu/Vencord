@@ -199,7 +199,7 @@ function Updater() {
 
     return (
         <SettingsTab title="Vencordの更新">
-            <Forms.FormTitle tag="h5">Updater Settings</Forms.FormTitle>
+            <Forms.FormTitle tag="h5">アップデートの設定</Forms.FormTitle>
             <Switch
                 value={settings.notifyAboutUpdates}
                 onChange={(v: boolean) => settings.notifyAboutUpdates = v}
@@ -224,7 +224,7 @@ function Updater() {
                 自動更新が完了した際に通知を表示する
             </Switch>
 
-            <Forms.FormTitle tag="h5">Repo</Forms.FormTitle>
+            <Forms.FormTitle tag="h5">レポジトリ</Forms.FormTitle>
 
             <Forms.FormText className="vc-text-selectable">
                 {repoPending
