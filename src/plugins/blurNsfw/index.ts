@@ -54,7 +54,7 @@ export default definePlugin({
     options: {
         blurAmount: {
             type: OptionType.NUMBER,
-            description: "ぼか市のレベル",
+            description: "ぼかしのレベル",
             default: 10,
             onChange: setCss
         }

@@ -104,7 +104,7 @@ function ContributorModal({ user }: { user: User; }) {
                         key={p.name}
                         plugin={p}
                         disabled={p.required ?? false}
-                        onRestartNeeded={() => showToast("Restart to apply changes!")}
+                        onRestartNeeded={() => showToast("変更を有効するには、再起動する必要があります。")}
                     />
                 )}
             </div>

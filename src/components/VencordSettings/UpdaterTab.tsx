@@ -142,7 +142,7 @@ function Updatable(props: CommonProps) {
                         }
                     })}
                 >
-                    Update Now
+                    今すぐアップデート
                 </Button>}
                 <Button
                     size={Button.Sizes.SMALL}

@@ -64,12 +64,12 @@ function ReloadRequiredCard({ required }: { required: boolean; }) {
         <Card className={cl("info-card", { "restart-card": required })}>
             {required ? (
                 <>
-                    <Forms.FormTitle tag="h5">Restart required!</Forms.FormTitle>
+                    <Forms.FormTitle tag="h5">再起動が必要です！</Forms.FormTitle>
                     <Forms.FormText className={cl("dep-text")}>
-                        Restart now to apply new plugins and their settings
+                        新しいプラグインと設定を有効にするには、再起動する必要があります。
                     </Forms.FormText>
                     <Button color={Button.Colors.YELLOW} onClick={() => location.reload()}>
-                        Restart
+                        再起動
                     </Button>
                 </>
             ) : (

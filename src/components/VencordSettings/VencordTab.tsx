@@ -229,7 +229,7 @@ function VencordSettings() {
 function NotificationSection({ settings }: { settings: typeof Settings["notifications"]; }) {
     return (
         <>
-            <Forms.FormTitle tag="h5">Notification Style</Forms.FormTitle>
+            <Forms.FormTitle tag="h5">通知の見た目</Forms.FormTitle>
             {settings.useNative !== "never" && Notification?.permission === "denied" && (
                 <ErrorCard style={{ padding: "1em" }} className={Margins.bottom8}>
                     <Forms.FormTitle tag="h5">デスクトップ通知の権限を拒否しました。</Forms.FormTitle>
@@ -256,7 +256,7 @@ function NotificationSection({ settings }: { settings: typeof Settings["notifica
                 serialize={identity}
             />
 
-            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>Notification Position</Forms.FormTitle>
+            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>通知の位置</Forms.FormTitle>
             <Select
                 isDisabled={settings.useNative === "always"}
                 placeholder="通知の位置"
