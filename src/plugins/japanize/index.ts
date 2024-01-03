@@ -28,6 +28,6 @@ export default definePlugin({
 
     async start() {
         var logger = new Logger("Japanize");
-        logger.log("Vencord Japanize Plugin is enabled!");
+        logger.log("Japanize Plugin (no features) is enabled!");
     }
 });

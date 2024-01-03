@@ -20,8 +20,8 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "NoRPC",
-    description: "Disables Discord's RPC server.",
+    name: "RPCを削除",
+    description: "DiscordのRPCサーバーを無効にします。",
     authors: [Devs.Cyn],
     patches: [
         {

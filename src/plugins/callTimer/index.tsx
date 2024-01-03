@@ -47,8 +47,8 @@ function formatDuration(ms: number) {
 }
 
 export default definePlugin({
-    name: "CallTimer",
-    description: "Adds a timer to vcs",
+    name: "通話の時間",
+    description: "通話の時間を計測して表示します。",
     authors: [Devs.Ven],
 
     startTime: 0,
@@ -57,7 +57,7 @@ export default definePlugin({
     options: {
         format: {
             type: OptionType.SELECT,
-            description: "The timer format. This can be any valid moment.js format",
+            description: "タイマーのフォーマットです。有効なmoment.jsフォーマットを使用すれば、自由に変更できます。",
             options: [
                 {
                     label: "30d 23:00:42",

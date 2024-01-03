@@ -20,8 +20,8 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "NoF1",
-    description: "Disables F1 help bind.",
+    name: "F1を削除",
+    description: "F1のヘルプキーを削除します。",
     authors: [Devs.Cyn],
     patches: [
         {

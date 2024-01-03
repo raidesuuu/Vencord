@@ -38,15 +38,15 @@ async function lookupApp(applicationId: string): Promise<string> {
 
 let ws: WebSocket;
 export default definePlugin({
-    name: "WebRichPresence (arRPC)",
-    description: "Client plugin for arRPC to enable RPC on Discord Web (experimental)",
+    name: "WebでのRPC (arRPC)",
+    description: "arRPCでDiscord Webを使用しているときにDiscord RPCを有効にします。",
     authors: [Devs.Ducko],
 
     settingsAboutComponent: () => (
         <>
-            <Forms.FormTitle tag="h3">How to use arRPC</Forms.FormTitle>
+            <Forms.FormTitle tag="h3">arRPCの使い方</Forms.FormTitle>
             <Forms.FormText>
-                <Link href="https://github.com/OpenAsar/arrpc/tree/main#server">Follow the instructions in the GitHub repo</Link> to get the server running, and then enable the plugin.
+                <Link href="https://github.com/OpenAsar/arrpc/tree/main#server">GitHubレポジトリ</Link>の手順に従ってセットアップをしたら、サーバーを起動し、このプラグインを有効にします。
             </Forms.FormText>
         </>
     ),

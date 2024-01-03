@@ -20,8 +20,8 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "ShowTimeouts",
-    description: "Display member timeout icons in chat regardless of permissions.",
+    name: "タイムアウトを確認",
+    description: "権限がなくても、タイムアウトされているユーザーを見ることができます。",
     authors: [Devs.Dolfies],
     patches: [
         {

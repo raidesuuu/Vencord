@@ -50,57 +50,57 @@ function closeFolders() {
 export const settings = definePluginSettings({
     sidebar: {
         type: OptionType.BOOLEAN,
-        description: "Display servers from folder on dedicated sidebar",
+        description: "フォルダを開いたときに専用サイドバーにサーバーを表示します。",
         restartNeeded: true,
         default: true
     },
     sidebarAnim: {
         type: OptionType.BOOLEAN,
-        description: "Animate opening the folder sidebar",
+        description: "サイドバーを開くときのアニメーションを有効にします。",
         default: true
     },
     closeAllFolders: {
         type: OptionType.BOOLEAN,
-        description: "Close all folders when selecting a server not in a folder",
+        description: "フォルダに入っていないサーバーを選択したときにすべてのフォルダを閉じます。",
         default: false
     },
     closeAllHomeButton: {
         type: OptionType.BOOLEAN,
-        description: "Close all folders when clicking on the home button",
+        description: "ホームボタンをクリックしたときにフォルダをすべて閉じます。",
         restartNeeded: true,
         default: false
     },
     closeOthers: {
         type: OptionType.BOOLEAN,
-        description: "Close other folders when opening a folder",
+        description: "現在開いているフォルダ以外を閉じます。",
         default: false
     },
     forceOpen: {
         type: OptionType.BOOLEAN,
-        description: "Force a folder to open when switching to a server of that folder",
+        description: "フォルダのサーバーに移動したときに、強制的にフォルダを開きます。",
         default: false
     },
     keepIcons: {
         type: OptionType.BOOLEAN,
-        description: "Keep showing guild icons in the primary guild bar folder when it's open in the BetterFolders sidebar",
+        description: "このプラグインのサイドバーが開いているときに、プライパリのサイドバーにサーバーアイコンを表示します。",
         restartNeeded: true,
         default: false
     },
     showFolderIcon: {
         type: OptionType.SELECT,
-        description: "Show the folder icon above the folder guilds in the BetterFolders sidebar",
+        description: "フォルダアイコンの表示設定",
         options: [
-            { label: "Never", value: FolderIconDisplay.Never },
-            { label: "Always", value: FolderIconDisplay.Always, default: true },
-            { label: "When more than one folder is expanded", value: FolderIconDisplay.MoreThanOneFolderExpanded }
+            { label: "しない", value: FolderIconDisplay.Never },
+            { label: "常にする", value: FolderIconDisplay.Always, default: true },
+            { label: "複数のフォルダを開いたときのみ", value: FolderIconDisplay.MoreThanOneFolderExpanded }
         ],
         restartNeeded: true
     }
 });
 
 export default definePlugin({
-    name: "BetterFolders",
-    description: "Shows server folders on dedicated sidebar and adds folder related improvements",
+    name: "フォルダーを改善",
+    description: "専用サイドバーに開いているフォルダのサーバーを表示することで、フォルダ体験を最適化します。",
     authors: [Devs.juby, Devs.AutumnVN, Devs.Nuckyz],
 
     settings,

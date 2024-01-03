@@ -29,9 +29,9 @@ const enum Methods {
 const tarExtMatcher = /\.tar\.\w+$/;
 
 export default definePlugin({
-    name: "AnonymiseFileNames",
+    name: "ファイル名を非公開",
     authors: [Devs.obscurity],
-    description: "Anonymise uploaded file names",
+    description: "アップロードしたファイル名を非公開にします。",
     patches: [
         {
             find: "instantBatchUpload:function",
@@ -45,22 +45,22 @@ export default definePlugin({
 
     options: {
         method: {
-            description: "Anonymising method",
+            description: "非公開にする方法",
             type: OptionType.SELECT,
             options: [
-                { label: "Random Characters", value: Methods.Random, default: true },
-                { label: "Consistent", value: Methods.Consistent },
-                { label: "Timestamp (4chan-like)", value: Methods.Timestamp },
+                { label: "ランダムの文字", value: Methods.Random, default: true },
+                { label: "特定の文字", value: Methods.Consistent },
+                { label: "タイムスタンプ（4chan風）", value: Methods.Timestamp },
             ],
         },
         randomisedLength: {
-            description: "Random characters length",
+            description: "ランダム文字の長さ",
             type: OptionType.NUMBER,
             default: 7,
             disabled: () => Settings.plugins.AnonymiseFileNames.method !== Methods.Random,
         },
         consistent: {
-            description: "Consistent filename",
+            description: "特定の文字を指定",
             type: OptionType.STRING,
             default: "image",
             disabled: () => Settings.plugins.AnonymiseFileNames.method !== Methods.Consistent,

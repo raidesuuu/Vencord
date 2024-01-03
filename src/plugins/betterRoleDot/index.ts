@@ -22,10 +22,10 @@ import definePlugin, { OptionType } from "@utils/types";
 import { Clipboard, Toasts } from "@webpack/common";
 
 export default definePlugin({
-    name: "BetterRoleDot",
+    name: "改善されたロールの色アイコン",
     authors: [Devs.Ven, Devs.AutumnVN],
     description:
-        "Copy role colour on RoleDot (accessibility setting) click. Also allows using both RoleDot and coloured names simultaneously",
+        "ロールの色アイコンをクリックしたときに、色をコピーします。",
 
     patches: [
         {
@@ -69,13 +69,13 @@ export default definePlugin({
     options: {
         bothStyles: {
             type: OptionType.BOOLEAN,
-            description: "Show both role dot and coloured names",
+            description: "ロールドットと色がついたユーザー名の両方を表示する",
             restartNeeded: true,
             default: false,
         },
         copyRoleColorInProfilePopout: {
             type: OptionType.BOOLEAN,
-            description: "Allow click on role dot in profile popout to copy role color",
+            description: "プロフィールのポップアップにロールドットを表示する",
             restartNeeded: true,
             default: false
         }
@@ -84,7 +84,7 @@ export default definePlugin({
     copyToClipBoard(color: string) {
         Clipboard.copy(color);
         Toasts.show({
-            message: "Copied to Clipboard!",
+            message: "クリップボードにコピーしました！",
             type: Toasts.Type.SUCCESS,
             id: Toasts.genId(),
             options: {

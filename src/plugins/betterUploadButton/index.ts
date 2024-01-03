@@ -20,9 +20,9 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "BetterUploadButton",
+    name: "改善されたアップロードボタン",
     authors: [Devs.obscurity, Devs.Ven],
-    description: "Upload with a single click, open menu with right click",
+    description: "クリックでアップロードし、右クリックでメニューを表示します。",
     patches: [
         {
             find: "Messages.CHAT_ATTACH_UPLOAD_OR_INVITE",

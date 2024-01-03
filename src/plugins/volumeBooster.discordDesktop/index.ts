@@ -23,7 +23,7 @@ import definePlugin, { OptionType } from "@utils/types";
 
 const settings = definePluginSettings({
     multiplier: {
-        description: "Volume Multiplier",
+        description: "ボリュームのレベル",
         type: OptionType.SLIDER,
         markers: makeRange(1, 5, 1),
         default: 2,
@@ -32,9 +32,9 @@ const settings = definePluginSettings({
 });
 
 export default definePlugin({
-    name: "VolumeBooster",
+    name: "音量ブースター",
     authors: [Devs.Nuckyz],
-    description: "Allows you to set the user and stream volume above the default maximum.",
+    description: "ユーザーと配信の音量の大きさをデフォルトより大きくできます。",
     settings,
 
     patches: [

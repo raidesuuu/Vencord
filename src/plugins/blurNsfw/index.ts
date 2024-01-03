@@ -37,8 +37,8 @@ function setCss() {
 }
 
 export default definePlugin({
-    name: "BlurNSFW",
-    description: "Blur attachments in NSFW channels until hovered",
+    name: "NSFWをぼかす",
+    description: "NSFWチャンネルのメディアをぼかします。",
     authors: [Devs.Ven],
 
     patches: [
@@ -54,7 +54,7 @@ export default definePlugin({
     options: {
         blurAmount: {
             type: OptionType.NUMBER,
-            description: "Blur Amount",
+            description: "ぼか市のレベル",
             default: 10,
             onChange: setCss
         }

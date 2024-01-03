@@ -20,10 +20,10 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "BetterGifAltText",
+    name: "GIFの説明を改善",
     authors: [Devs.Ven],
     description:
-        "Change GIF alt text from simply being 'GIF' to containing the gif tags / filename",
+        "GIFの説明をGIFのファイル名またはタグに変更します。",
     patches: [
         {
             find: "onCloseImage=",

@@ -38,8 +38,8 @@ function ThemeSettings() {
         <div className="client-theme-settings">
             <div className="client-theme-container">
                 <div className="client-theme-settings-labels">
-                    <Forms.FormTitle tag="h3">Theme Color</Forms.FormTitle>
-                    <Forms.FormText>Add a color to your Discord client theme</Forms.FormText>
+                    <Forms.FormTitle tag="h3">テーマの色</Forms.FormTitle>
+                    <Forms.FormText>Discordのクライアントに色を追加します。</Forms.FormText>
                 </div>
                 <ColorPicker
                     color={parseInt(settings.store.color, 16)}
@@ -51,9 +51,9 @@ function ThemeSettings() {
             {lightnessWarning || lightModeWarning
                 ? <div>
                     <Forms.FormDivider className={classes(Margins.top8, Margins.bottom8)} />
-                    <Forms.FormText className="client-theme-warning">Your theme won't look good:</Forms.FormText>
-                    {lightnessWarning && <Forms.FormText className="client-theme-warning">Selected color is very light</Forms.FormText>}
-                    {lightModeWarning && <Forms.FormText className="client-theme-warning">Light mode isn't supported</Forms.FormText>}
+                    <Forms.FormText className="client-theme-warning">注意が必要なテーマです:</Forms.FormText>
+                    {lightnessWarning && <Forms.FormText className="client-theme-warning">選択した色は明るすぎます！</Forms.FormText>}
+                    {lightModeWarning && <Forms.FormText className="client-theme-warning">ライトテーマはサポートされていません！</Forms.FormText>}
                 </div>
                 : null
             }
@@ -63,27 +63,27 @@ function ThemeSettings() {
 
 const settings = definePluginSettings({
     color: {
-        description: "Color your Discord client theme will be based around. Light mode isn't supported",
+        description: "Discordクライアントテーマの色を指定します。ライトテーマでは使用できません。",
         type: OptionType.COMPONENT,
         default: "313338",
         component: () => <ThemeSettings />
     },
     resetColor: {
-        description: "Reset Theme Color",
+        description: "テーマの色をリセットします。",
         type: OptionType.COMPONENT,
         default: "313338",
         component: () => (
             <Button onClick={() => onPickColor(0x313338)}>
-                Reset Theme Color
+                テーマの色をリセット
             </Button>
         )
     }
 });
 
 export default definePlugin({
-    name: "ClientTheme",
+    name: "クライアントのテーマ",
     authors: [Devs.F53, Devs.Nuckyz],
-    description: "Recreation of the old client theme experiment. Add a color to your Discord client theme",
+    description: "昔のクライアントテーマの実験の再現です。Discordクライアントテーマに色を追加します。",
     settings,
 
     startAt: StartAt.DOMContentLoaded,
