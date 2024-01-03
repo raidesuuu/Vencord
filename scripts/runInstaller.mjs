@@ -75,7 +75,7 @@ async function ensureBinary() {
 
     const res = await fetch(BASE_URL + filename, {
         headers: {
-            "User-Agent": "Vencord (https://github.com/vencordjp/Vencord)",
+            "User-Agent": "VencordJP (https://github.com/vencordjp/Vencord)",
             "If-None-Match": etag,
         },
     });
@@ -144,6 +144,6 @@ execFileSync(installerBin, {
     env: {
         ...process.env,
         VENCORD_USER_DATA_DIR: BASE_DIR,
-        VENCORD_DEV_INSTALL: "0",
+        VENCORD_DEV_INSTALL: "1",
     },
 });

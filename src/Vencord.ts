@@ -94,8 +94,8 @@ async function init() {
                 await update();
                 if (Settings.autoUpdateNotification)
                     setTimeout(() => showNotification({
-                        title: "Vencord has been updated!",
-                        body: "Click here to restart",
+                        title: "Vencordは自動で更新されました！",
+                        body: "クリックして再起動します",
                         permanent: true,
                         noPersist: true,
                         onClick: relaunch
@@ -105,8 +105,8 @@ async function init() {
 
             if (Settings.notifyAboutUpdates)
                 setTimeout(() => showNotification({
-                    title: "A Vencord update is available!",
-                    body: "Click here to view the update",
+                    title: "VencordJPのアップデートが利用可能です！",
+                    body: "クリックしてアップデートを見る",
                     permanent: true,
                     noPersist: true,
                     onClick() {
