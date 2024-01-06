@@ -58,8 +58,8 @@ async function loadBadges(noCache = false) {
 }
 
 export default definePlugin({
-    name: "BadgeAPI",
-    description: "API to add badges to users.",
+    name: "バッジAPI",
+    description: "バッジをユーザーへ追加します。",
     authors: [Devs.Megu, Devs.Ven, Devs.TheSun],
     required: true,
     patches: [

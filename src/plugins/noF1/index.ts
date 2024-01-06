@@ -21,7 +21,7 @@ import definePlugin from "@utils/types";
 
 export default definePlugin({
     name: "F1を削除",
-    description: "F1のヘルプキーを削除します。",
+    description: "F1のヘルプキーを無効にします。",
     authors: [Devs.Cyn],
     patches: [
         {

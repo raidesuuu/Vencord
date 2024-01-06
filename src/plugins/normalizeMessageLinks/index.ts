@@ -8,8 +8,8 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "NormalizeMessageLinks",
-    description: "Strip canary/ptb from message links",
+    name: "メッセージリンクを安定版にする",
+    description: "PTB/Canaryのメッセージリンクを安定版にします。",
     authors: [Devs.bb010g],
     patches: [
         {
