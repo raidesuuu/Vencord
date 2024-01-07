@@ -24,8 +24,8 @@ import { findByPropsLazy } from "@webpack";
 const UserPopoutSectionCssClasses = findByPropsLazy("section", "lastSection");
 
 export default definePlugin({
-    name: "改善されたメモ",
-    description: "ノートを非表示にしたり、スペルチェックを無効にできます。",
+    name: "BetterNotesBox",
+    description: "Hide notes or disable spellcheck (Configure in settings!!)",
     authors: [Devs.Ven],
 
     patches: [
@@ -63,13 +63,13 @@ export default definePlugin({
     options: {
         hide: {
             type: OptionType.BOOLEAN,
-            description: "ノートを非表示にする",
+            description: "Hide notes",
             default: false,
             restartNeeded: true
         },
         noSpellCheck: {
             type: OptionType.BOOLEAN,
-            description: "ノートでスペルチェックを無効にする",
+            description: "Disable spellcheck in notes",
             disabled: () => Settings.plugins.BetterNotesBox.hide,
             default: false
         }

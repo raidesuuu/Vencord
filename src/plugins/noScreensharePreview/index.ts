@@ -20,8 +20,8 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "画面共有を保護",
-    description: "画面共有のプレビューの送信を無効にします。",
+    name: "NoScreensharePreview",
+    description: "Disables screenshare previews from being sent.",
     authors: [Devs.Nuckyz],
     patches: [
         {

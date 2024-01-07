@@ -26,7 +26,7 @@ import gitHash from "~git-hash";
 
 export default definePlugin({
     name: "Settings",
-    description: "Adds Settings UI and debug info",
+    description: "設定UIとデバッグ情報を追加します。",
     authors: [Devs.Ven, Devs.Megu],
     required: true,
 
@@ -138,7 +138,7 @@ export default definePlugin({
     options: {
         settingsLocation: {
             type: OptionType.SELECT,
-            description: "Vencord設定のセクションを変更します。",
+            description: "Vencord設定の場所を設定します。",
             options: [
                 { label: "一番上", value: "top" },
                 { label: "Nitroセクションの上", value: "aboveNitro" },
@@ -171,7 +171,7 @@ export default definePlugin({
         if (IS_WEB) return " (Web, JP)";
         if (IS_VESKTOP) return ` (Vesktop v${VesktopNative.app.getVersion()}, JP)`;
         if (IS_STANDALONE) return " (Standalone, JP)";
-        return " (JP)";
+        return "";
     },
 
     makeInfoElements(Component: React.ComponentType<React.PropsWithChildren>, props: React.PropsWithChildren) {

@@ -20,8 +20,8 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "すべてを信頼",
-    description: "信頼していないドメインと悪質なファイルの警告を削除します。",
+    name: "AlwaysTrust",
+    description: "悪意のあるファイルのポップアップと信頼していないドメインの警告を無効にします。",
     authors: [Devs.zt],
     patches: [
         {

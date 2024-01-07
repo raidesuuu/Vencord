@@ -31,7 +31,7 @@ import { Forms, Toasts } from "@webpack/common";
 const CONTRIBUTOR_BADGE = "https://vencord.dev/assets/favicon.png";
 
 const ContributorBadge: ProfileBadge = {
-    description: "Vencordの貢献者",
+    description: "Vencord Contributor",
     image: CONTRIBUTOR_BADGE,
     position: BadgePosition.START,
     props: {
@@ -58,8 +58,8 @@ async function loadBadges(noCache = false) {
 }
 
 export default definePlugin({
-    name: "バッジAPI",
-    description: "バッジをユーザーへ追加します。",
+    name: "BadgeAPI",
+    description: "API to add badges to users.",
     authors: [Devs.Megu, Devs.Ven, Devs.TheSun],
     required: true,
     patches: [
@@ -142,7 +142,7 @@ export default definePlugin({
                                         }}
                                     >
                                         <Heart />
-                                        Vencordのドナー
+                                        Vencord Donor
                                     </Forms.FormTitle>
                                 </Flex>
                             </Modals.ModalHeader>
@@ -163,10 +163,10 @@ export default definePlugin({
                                 </Flex>
                                 <div style={{ padding: "1em" }}>
                                     <Forms.FormText>
-                                        このバッジは、Vencordのドナーの特別な特典です。
+                                        This Badge is a special perk for Vencord Donors
                                     </Forms.FormText>
                                     <Forms.FormText className={Margins.top20}>
-                                        Vencordの発展と開発を支援するため、寄付をお願いします。寄付は意味のあることです。
+                                        Please consider supporting the development of Vencord by becoming a donor. It would mean a lot!!
                                     </Forms.FormText>
                                 </div>
                             </Modals.ModalContent>

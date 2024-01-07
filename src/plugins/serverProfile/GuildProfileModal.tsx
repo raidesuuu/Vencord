@@ -115,19 +115,19 @@ function GuildProfileModal({ guild }: GuildProps) {
                     className={cl("tab", { selected: currentTab === Tabs.ServerInfo })}
                     id={Tabs.ServerInfo}
                 >
-                    サーバー情報
+                    Server Info
                 </TabBar.Item>
                 <TabBar.Item
                     className={cl("tab", { selected: currentTab === Tabs.Friends })}
                     id={Tabs.Friends}
                 >
-                    フレンド{friendCount !== undefined ? ` (${friendCount})` : ""}
+                    Friends{friendCount !== undefined ? ` (${friendCount})` : ""}
                 </TabBar.Item>
                 <TabBar.Item
                     className={cl("tab", { selected: currentTab === Tabs.BlockedUsers })}
                     id={Tabs.BlockedUsers}
                 >
-                    ブロックしたユーザー{blockedCount !== undefined ? ` (${blockedCount})` : ""}
+                    Blocked Users{blockedCount !== undefined ? ` (${blockedCount})` : ""}
                 </TabBar.Item>
             </TabBar>
 
@@ -168,15 +168,15 @@ function ServerInfoTab({ guild }: GuildProps) {
     });
 
     const Fields = {
-        "サーバーのオーナー": owner ? Owner(guild.id, owner) : "ロード中...",
-        "サーバーの作成日時": renderTimestamp(SnowflakeUtils.extractTimestamp(guild.id)),
-        "サーバー参加日時": guild.joinedAt ? renderTimestamp(guild.joinedAt.getTime()) : "-", // Not available in lurked guild
-        "カスタム招待リンク": guild.vanityURLCode ? (<a>{`discord.gg/${guild.vanityURLCode}`}</a>) : "-", // Making the anchor href valid would cause Discord to reload
-        "サーバーの言語": guild.preferredLocale || "-",
-        "認証レベル": ["なし", "低", "中", "高", "最高"][guild.verificationLevel] || "?",
-        "サーバーブースト": `${guild.premiumSubscriberCount ?? 0} (レベル ${guild.premiumTier ?? 0})`,
-        "チャンネルの数": GuildChannelStore.getChannels(guild.id)?.count - 1 || "?", // - null category
-        "ロールの数": Object.keys(guild.roles).length - 1, // - @everyone
+        "Server Owner": owner ? Owner(guild.id, owner) : "Loading...",
+        "Created At": renderTimestamp(SnowflakeUtils.extractTimestamp(guild.id)),
+        "Joined At": guild.joinedAt ? renderTimestamp(guild.joinedAt.getTime()) : "-", // Not available in lurked guild
+        "Vanity Link": guild.vanityURLCode ? (<a>{`discord.gg/${guild.vanityURLCode}`}</a>) : "-", // Making the anchor href valid would cause Discord to reload
+        "Preferred Locale": guild.preferredLocale || "-",
+        "Verification Level": ["None", "Low", "Medium", "High", "Highest"][guild.verificationLevel] || "?",
+        "Nitro Boosts": `${guild.premiumSubscriberCount ?? 0} (Level ${guild.premiumTier ?? 0})`,
+        "Channels": GuildChannelStore.getChannels(guild.id)?.count - 1 || "?", // - null category
+        "Roles": Object.keys(guild.roles).length - 1, // - @everyone
     };
 
     return (

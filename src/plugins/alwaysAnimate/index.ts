@@ -20,8 +20,8 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "すべてをアニメーション",
-    description: "アニメーション可能な場所をすべてアニメーションします。",
+    name: "AlwaysAnimate",
+    description: "アニメーションをできる要素をすべてアニメーションします。",
     authors: [Devs.FieryFlames],
 
     patches: [

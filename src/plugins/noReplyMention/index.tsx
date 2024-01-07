@@ -24,7 +24,7 @@ import type { Message } from "discord-types/general";
 const settings = definePluginSettings({
     userList: {
         description:
-            "メンションを許可するユーザーのリスト（カンマまたはスペースで区切る）",
+            "List of users to allow or exempt pings for (separated by commas or spaces)",
         type: OptionType.STRING,
         default: "1234567890123445,1234567890123445",
     },
@@ -33,26 +33,26 @@ const settings = definePluginSettings({
         type: OptionType.SELECT,
         options: [
             {
-                label: "リストのユーザーをメンションしない",
+                label: "Do not ping the listed users",
                 value: false,
             },
             {
-                label: "リストのユーザーにメンションする",
+                label: "Only ping the listed users",
                 value: true,
                 default: true,
             },
         ],
     },
     inverseShiftReply: {
-        description: "Shiftキーを押しながらの動作を反対する（Shiftキーを押しながら返信ボタンを押すとリプライメンションをオンにする)",
+        description: "Invert Discord's shift replying behaviour (enable to make shift reply mention user)",
         type: OptionType.BOOLEAN,
         default: false,
     }
 });
 
 export default definePlugin({
-    name: "自動的に返信のメンションを無効",
-    description: "デフォルトで返信のメンションを無効にします。",
+    name: "NoReplyMention",
+    description: "Disables reply pings by default",
     authors: [Devs.DustyAngel47, Devs.axyie, Devs.pylix, Devs.outfoxxed],
     settings,
 

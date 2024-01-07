@@ -33,8 +33,8 @@ const reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
 const reHasRegExpChar = RegExp(reRegExpChar.source);
 
 export default definePlugin({
-    name: "改善されたURL",
-    description: "URLからトラッキングを削除します。",
+    name: "ClearURLs",
+    description: "Removes tracking garbage from URLs",
     authors: [Devs.adryd],
     dependencies: ["MessageEventsAPI"],
 

@@ -66,7 +66,7 @@ export const addViewStreamContext: NavContextMenuPatchCallback = (children, { us
 
     const streamPreviewItem = (
         <Menu.MenuItem
-            label="配信のプレビューを見る"
+            label="View Stream Preview"
             id="view-stream-preview"
             icon={ScreenshareIcon}
             action={() => stream && handleViewPreview(stream)}
@@ -86,8 +86,8 @@ export const userContextPatch: NavContextMenuPatchCallback = (children, { user }
 };
 
 export default definePlugin({
-    name: "配信のプレビューを拡大",
-    description: "このプラグインは、配信のプレビューを拡大します。",
+    name: "BiggerStreamPreview",
+    description: "This plugin allows you to enlarge stream previews",
     authors: [Devs.phil],
     start: () => {
         addContextMenuPatch("user-context", userContextPatch);

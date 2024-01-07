@@ -18,15 +18,15 @@ const Patch: NavContextMenuPatchCallback = (children, { guild }: { guild: Guild;
     group?.push(
         <Menu.MenuItem
             id="vc-server-profile"
-            label="サーバー情報"
+            label="Server Info"
             action={() => openGuildProfileModal(guild)}
         />
     );
 };
 
 export default definePlugin({
-    name: "サーバー情報",
-    description: "サーバーリストを右クリックして、サーバー情報をクリックするとサーバー情報を見ることができます。",
+    name: "ServerProfile",
+    description: "Allows you to view info about a server by right clicking it in the server list",
     authors: [Devs.Ven, Devs.Nuckyz],
     tags: ["guild", "info"],
 

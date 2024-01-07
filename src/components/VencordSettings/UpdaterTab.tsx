@@ -159,7 +159,7 @@ function Updatable(props: CommonProps) {
                             Toasts.show({
                                 message: "アップデートが見つかりませんでした！",
                                 id: Toasts.genId(),
-                                type: Toasts.Type.MESSAGE,
+                                type: Toasts.Type.SUCCESS,
                                 options: {
                                     position: Toasts.Position.BOTTOM
                                 }

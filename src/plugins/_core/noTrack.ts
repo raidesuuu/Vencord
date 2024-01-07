@@ -20,8 +20,8 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "追跡を削除",
-    description: "Discordの追跡を無効にします。（'science'）、メトリクスとセントリークラッシュレポート",
+    name: "NoTrack",
+    description: "Discordの追跡（「science」）、メトリクスとSentryクラッシュレポートを無効にします。",
     authors: [Devs.Cyn, Devs.Ven, Devs.Nuckyz, Devs.Arrow],
     required: true,
     patches: [
