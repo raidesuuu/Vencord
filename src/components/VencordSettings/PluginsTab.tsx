@@ -20,4 +20,4 @@ import PluginSettings from "@components/PluginSettings";
 
 import { wrapTab } from "./shared";
 
-export default wrapTab(PluginSettings, "Plugins");
+export default wrapTab(PluginSettings, "プラグイン");

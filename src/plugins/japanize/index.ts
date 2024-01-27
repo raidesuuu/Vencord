@@ -1,6 +1,6 @@
 /*
  * Vencord, a modification for Discord's desktop app
- * Copyright (c) 2023 Vendicated and contributors
+ * Copyright (c) 2022 Vendicated and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,19 +17,17 @@
 */
 
 import { Devs } from "@utils/constants";
+import { Logger } from "@utils/Logger";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "FixCodeblockGap",
-    description: "Removes the gap between codeblocks and text below it",
-    authors: [Devs.Grzesiek11],
-    patches: [
-        {
-            find: ".default.Messages.DELETED_ROLE_PLACEHOLDER",
-            replacement: {
-                match: String.raw`/^${"```"}(?:([a-z0-9_+\-.#]+?)\n)?\n*([^\n][^]*?)\n*${"```"}`,
-                replace: "$&\\n?",
-            },
-        },
-    ],
+    name: "Japanize",
+    required: true,
+    description: "このプラグインは常に有効です。Vencordを日本語化するために必要です。(無効にするには普通のVencordを使用)",
+    authors: [Devs.Rai],
+
+    async start() {
+        var logger = new Logger("Japanize");
+        logger.log("Japanize Plugin (no features) is enabled!");
+    }
 });

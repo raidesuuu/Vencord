@@ -29,7 +29,7 @@ export default function DonateButton(props: any) {
             onClick={() => VencordNative.native.openExternal("https://github.com/sponsors/Vendicated")}
         >
             <Heart />
-            Donate
+            寄付
         </Button>
     );
 }

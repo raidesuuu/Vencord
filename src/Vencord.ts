@@ -48,9 +48,9 @@ async function syncSettings() {
     ) {
         // show a notification letting them know and tell them how to fix it
         showNotification({
-            title: "Cloud Integrations",
-            body: "We've noticed you have cloud integrations enabled in another client! Due to limitations, you will " +
-                "need to re-authenticate to continue using them. Click here to go to the settings page to do so!",
+            title: "クラウドとの連携",
+            body: "別のクライアントでクラウド同期が有効になったことを検知しました。制限により、" +
+                "再認証が必要になりました。設定から再認証が行えます。ここをクリックして設定へ移動します。",
             color: "var(--yellow-360)",
             onClick: () => SettingsRouter.open("VencordCloud")
         });
@@ -70,8 +70,8 @@ async function syncSettings() {
             // there was an error to notify the user, but besides that we only want to show one notification instead of all
             // of the possible ones it has (such as when your settings are newer).
             showNotification({
-                title: "Cloud Settings",
-                body: "Your settings have been updated! Click here to restart to fully apply changes!",
+                title: "クラウド設定",
+                body: "設定が更新されました！変更を適用するには、再起動が必要です。クリックして再起動します。",
                 color: "var(--green-360)",
                 onClick: relaunch
             });
@@ -94,8 +94,8 @@ async function init() {
                 await update();
                 if (Settings.autoUpdateNotification)
                     setTimeout(() => showNotification({
-                        title: "Vencord has been updated!",
-                        body: "Click here to restart",
+                        title: "Vencordは自動で更新されました！",
+                        body: "クリックして再起動します",
                         permanent: true,
                         noPersist: true,
                         onClick: relaunch
@@ -105,8 +105,8 @@ async function init() {
 
             if (Settings.notifyAboutUpdates)
                 setTimeout(() => showNotification({
-                    title: "A Vencord update is available!",
-                    body: "Click here to view the update",
+                    title: "VencordJPのアップデートが利用可能です！",
+                    body: "クリックしてアップデートを見る",
                     permanent: true,
                     noPersist: true,
                     onClick() {

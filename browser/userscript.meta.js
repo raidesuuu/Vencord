@@ -3,8 +3,8 @@
 // @description     A Discord client mod - Web version
 // @version         %version%
 // @author          Vendicated (https://github.com/Vendicated)
-// @namespace       https://github.com/Vendicated/Vencord
-// @supportURL      https://github.com/Vendicated/Vencord
+// @namespace       https://github.com/vencordjp/Vencord
+// @supportURL      https://github.com/vencordjp/Vencord
 // @license         GPL-3.0
 // @match           *://*.discord.com/*
 // @grant           GM_xmlhttpRequest
@@ -15,7 +15,6 @@
 // @compatible      edge Edge + Tampermonkey or Violentmonkey
 // @compatible      safari Safari + Tampermonkey or Violentmonkey
 // ==/UserScript==
-
 
 // this UserScript DOES NOT work on Firefox with Violentmonkey or Greasemonkey due to a bug that makes it impossible
 // to overwrite stuff on the window on sites that use CSP. Use Tampermonkey or use a chromium based browser

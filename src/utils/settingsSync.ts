@@ -68,16 +68,16 @@ const toast = (type: number, message: string) =>
     });
 
 const toastSuccess = () =>
-    toast(Toasts.Type.SUCCESS, "Settings successfully imported. Restart to apply changes!");
+    toast(Toasts.Type.SUCCESS, "設定がインポートされました。再起動して変更を適用します。");
 
 const toastFailure = (err: any) =>
-    toast(Toasts.Type.FAILURE, `Failed to import settings: ${String(err)}`);
+    toast(Toasts.Type.FAILURE, `設定をインポートできませんでした。詳細: ${String(err)}`);
 
 export async function uploadSettingsBackup(showToast = true): Promise<void> {
     if (IS_DISCORD_DESKTOP) {
         const [file] = await DiscordNative.fileManager.openFiles({
             filters: [
-                { name: "Vencord Settings Backup", extensions: ["json"] },
+                { name: "Vencordの設定バックアップ", extensions: ["json"] },
                 { name: "all", extensions: ["*"] }
             ]
         });
@@ -128,8 +128,8 @@ export async function putCloudSettings(manual?: boolean) {
         if (!res.ok) {
             cloudSettingsLogger.error(`Failed to sync up, API returned ${res.status}`);
             showNotification({
-                title: "Cloud Settings",
-                body: `Could not synchronize settings to cloud (API returned ${res.status}).`,
+                title: "クラウド設定",
+                body: `クラウドへ同期できませんでした。（APIが${res.status}を返しました）`,
                 color: "var(--red-360)"
             });
             return;
@@ -143,16 +143,16 @@ export async function putCloudSettings(manual?: boolean) {
 
         if (manual) {
             showNotification({
-                title: "Cloud Settings",
-                body: "Synchronized settings to the cloud!",
+                title: "クラウド設定",
+                body: "設定をクラウドと同期しました！",
                 noPersist: true,
             });
         }
     } catch (e: any) {
         cloudSettingsLogger.error("Failed to sync up", e);
         showNotification({
-            title: "Cloud Settings",
-            body: `Could not synchronize settings to the cloud (${e.toString()}).`,
+            title: "クラウド設定",
+            body: `クラウドと設定を同期できませんでした。(${e.toString()}).`,
             color: "var(--red-360)"
         });
     }
@@ -173,8 +173,8 @@ export async function getCloudSettings(shouldNotify = true, force = false) {
             cloudSettingsLogger.info("No settings on the cloud");
             if (shouldNotify)
                 showNotification({
-                    title: "Cloud Settings",
-                    body: "There are no settings in the cloud.",
+                    title: "クラウド設定",
+                    body: "設定がクラウドに見つかりませんでした。",
                     noPersist: true
                 });
             return false;
@@ -184,8 +184,8 @@ export async function getCloudSettings(shouldNotify = true, force = false) {
             cloudSettingsLogger.info("Settings up to date");
             if (shouldNotify)
                 showNotification({
-                    title: "Cloud Settings",
-                    body: "Your settings are up to date.",
+                    title: "クラウド設定",
+                    body: "設定はすでに最新です。",
                     noPersist: true
                 });
             return false;
@@ -194,8 +194,8 @@ export async function getCloudSettings(shouldNotify = true, force = false) {
         if (!res.ok) {
             cloudSettingsLogger.error(`Failed to sync down, API returned ${res.status}`);
             showNotification({
-                title: "Cloud Settings",
-                body: `Could not synchronize settings from the cloud (API returned ${res.status}).`,
+                title: "クラウド設定",
+                body: `クラウドから設定を同期できませんでした。（APIが${res.status}を返しました）`,
                 color: "var(--red-360)"
             });
             return false;
@@ -208,8 +208,8 @@ export async function getCloudSettings(shouldNotify = true, force = false) {
         if (!force && written < localWritten) {
             if (shouldNotify)
                 showNotification({
-                    title: "Cloud Settings",
-                    body: "Your local settings are newer than the cloud ones.",
+                    title: "クラウド",
+                    body: "ローカルの設定はクラウドより新しい設定です。",
                     noPersist: true,
                 });
             return;
@@ -227,8 +227,8 @@ export async function getCloudSettings(shouldNotify = true, force = false) {
         cloudSettingsLogger.info("Settings loaded from cloud successfully");
         if (shouldNotify)
             showNotification({
-                title: "Cloud Settings",
-                body: "Your settings have been updated! Click here to restart to fully apply changes!",
+                title: "クラウド設定",
+                body: "設定が更新されました！再起動して変更を適用します。",
                 color: "var(--green-360)",
                 onClick: IS_WEB ? () => location.reload() : relaunch,
                 noPersist: true
@@ -238,8 +238,8 @@ export async function getCloudSettings(shouldNotify = true, force = false) {
     } catch (e: any) {
         cloudSettingsLogger.error("Failed to sync down", e);
         showNotification({
-            title: "Cloud Settings",
-            body: `Could not synchronize settings from the cloud (${e.toString()}).`,
+            title: "クラウド設定",
+            body: `クラウドと設定を同期できませんでした。（${e.toString()}）`,
             color: "var(--red-360)"
         });
 
@@ -259,8 +259,8 @@ export async function deleteCloudSettings() {
         if (!res.ok) {
             cloudSettingsLogger.error(`Failed to delete, API returned ${res.status}`);
             showNotification({
-                title: "Cloud Settings",
-                body: `Could not delete settings (API returned ${res.status}).`,
+                title: "クラウド設定",
+                body: `設定を削除できませんでした。（APIが${res.status}を返しました）`,
                 color: "var(--red-360)"
             });
             return;
@@ -268,15 +268,15 @@ export async function deleteCloudSettings() {
 
         cloudSettingsLogger.info("Settings deleted from cloud successfully");
         showNotification({
-            title: "Cloud Settings",
-            body: "Settings deleted from cloud!",
+            title: "クラウド設定",
+            body: "設定をクラウドから削除しました。",
             color: "var(--green-360)"
         });
     } catch (e: any) {
         cloudSettingsLogger.error("Failed to delete", e);
         showNotification({
-            title: "Cloud Settings",
-            body: `Could not delete settings (${e.toString()}).`,
+            title: "クラウド設定",
+            body: `設定を削除できませんでした。（${e.toString()}）`,
             color: "var(--red-360)"
         });
     }

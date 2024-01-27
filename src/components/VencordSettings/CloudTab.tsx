@@ -47,8 +47,8 @@ async function eraseAllData() {
     if (!res.ok) {
         cloudLogger.error(`Failed to erase data, API returned ${res.status}`);
         showNotification({
-            title: "Cloud Integrations",
-            body: `Could not erase all data (API returned ${res.status}), please contact support.`,
+            title: "クラウド連携",
+            body: `すべてのデータを削除できませんでした。(APIの返答: ${res.status})、サポートに連絡してください。`,
             color: "var(--red-360)"
         });
         return;
@@ -58,8 +58,8 @@ async function eraseAllData() {
     await deauthorizeCloud();
 
     showNotification({
-        title: "Cloud Integrations",
-        body: "Successfully erased all data.",
+        title: "クラウド連携",
+        body: "すべてのデータを削除しました。",
         color: "var(--green-360)"
     });
 }
@@ -69,10 +69,9 @@ function SettingsSyncSection() {
     const sectionEnabled = cloud.authenticated && cloud.settingsSync;
 
     return (
-        <Forms.FormSection title="Settings Sync" className={Margins.top16}>
+        <Forms.FormSection title="設定の同期" className={Margins.top16}>
             <Forms.FormText variant="text-md/normal" className={Margins.bottom20}>
-                Synchronize your settings to the cloud. This allows easy synchronization across multiple devices with
-                minimal effort.
+                設定をクラウドに同期します。これにより、簡単に複数のデバイスでデータを同期できます。
             </Forms.FormText>
             <Switch
                 key="cloud-sync"
@@ -80,15 +79,15 @@ function SettingsSyncSection() {
                 value={cloud.settingsSync}
                 onChange={v => { cloud.settingsSync = v; }}
             >
-                Settings Sync
+                設定の同期
             </Switch>
             <div className="vc-cloud-settings-sync-grid">
                 <Button
                     size={Button.Sizes.SMALL}
                     disabled={!sectionEnabled}
                     onClick={() => putCloudSettings(true)}
-                >Sync to Cloud</Button>
-                <Tooltip text="This will overwrite your local settings with the ones on the cloud. Use wisely!">
+                >クラウドへ同期</Button>
+                <Tooltip text="これにより、ローカルの設定がクラウド上の設定で上書きされます。賢く使いましょう。">
                     {({ onMouseLeave, onMouseEnter }) => (
                         <Button
                             onMouseLeave={onMouseLeave}
@@ -97,7 +96,7 @@ function SettingsSyncSection() {
                             color={Button.Colors.RED}
                             disabled={!sectionEnabled}
                             onClick={() => getCloudSettings(true, true)}
-                        >Sync from Cloud</Button>
+                        >クラウドから同期</Button>
                     )}
                 </Tooltip>
                 <Button
@@ -105,7 +104,7 @@ function SettingsSyncSection() {
                     color={Button.Colors.RED}
                     disabled={!sectionEnabled}
                     onClick={() => deleteCloudSettings()}
-                >Delete Cloud Settings</Button>
+                >クラウドの設定を削除</Button>
             </div>
         </Forms.FormSection>
     );
@@ -115,25 +114,26 @@ function CloudTab() {
     const settings = useSettings(["cloud.authenticated", "cloud.url"]);
 
     return (
-        <SettingsTab title="Vencord Cloud">
-            <Forms.FormSection title="Cloud Settings" className={Margins.top16}>
+        <SettingsTab title="Vencord クラウド">
+            <Forms.FormSection title="クラウドの設定" className={Margins.top16}>
                 <Forms.FormText variant="text-md/normal" className={Margins.bottom20}>
-                    Vencord comes with a cloud integration that adds goodies like settings sync across devices.
-                    It <Link href="https://vencord.dev/cloud/privacy">respects your privacy</Link>, and
-                    the <Link href="https://github.com/Vencord/Backend">source code</Link> is AGPL 3.0 licensed so you
-                    can host it yourself.
+                    Vencordには、デバイス間で設定を同期できる機能が付属しています。
+                    あなたの<Link href="https://vencord.dev/cloud/privacy">プライバシー</Link>を尊敬し、
+                    <Link href="https://github.com/Vencord/Backend">ソースコード</Link>は、AGPL 3.0で
+                    ライセンスされているため、自分でホストすることが可能です。
+
                 </Forms.FormText>
                 <Switch
                     key="backend"
                     value={settings.cloud.authenticated}
                     onChange={v => { v && authorizeCloud(); if (!v) settings.cloud.authenticated = v; }}
-                    note="This will request authorization if you have not yet set up cloud integrations."
+                    note="クラウドとの連携をまだ設定していない場合、認証が要求されます。"
                 >
-                    Enable Cloud Integrations
+                    クラウドとの連携を有効にする
                 </Switch>
-                <Forms.FormTitle tag="h5">Backend URL</Forms.FormTitle>
+                <Forms.FormTitle tag="h5">バックエンドのURL</Forms.FormTitle>
                 <Forms.FormText className={Margins.bottom8}>
-                    Which backend to use when using cloud integrations.
+                    クラウドとの連携を使用するURLを入力します。
                 </Forms.FormText>
                 <CheckedTextInput
                     key="backendUrl"
@@ -147,14 +147,14 @@ function CloudTab() {
                     color={Button.Colors.RED}
                     disabled={!settings.cloud.authenticated}
                     onClick={() => Alerts.show({
-                        title: "Are you sure?",
-                        body: "Once your data is erased, we cannot recover it. There's no going back!",
+                        title: "本当に実行しますか？",
+                        body: "これにより、永久的にあなたのデータがクラウド上から削除されます。本当に続行しますか？",
                         onConfirm: eraseAllData,
-                        confirmText: "Erase it!",
+                        confirmText: "続行して削除",
                         confirmColor: "vc-cloud-erase-data-danger-btn",
-                        cancelText: "Nevermind"
+                        cancelText: "キャンセル"
                     })}
-                >Erase All Data</Button>
+                >すべてのデータを削除</Button>
                 <Forms.FormDivider className={Margins.top16} />
             </Forms.FormSection >
             <SettingsSyncSection />
@@ -162,4 +162,4 @@ function CloudTab() {
     );
 }
 
-export default wrapTab(CloudTab, "Cloud");
+export default wrapTab(CloudTab, "クラウド");

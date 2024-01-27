@@ -21,7 +21,7 @@ import definePlugin, { OptionType } from "@utils/types";
 
 export default definePlugin({
     name: "BANger",
-    description: "Replaces the GIF in the ban dialogue with a custom one.",
+    description: "BANダイアログのGIFをカスタムのGIFに変更します。",
     authors: [Devs.Xinto, Devs.Glitch],
     patches: [
         {
@@ -34,7 +34,7 @@ export default definePlugin({
     ],
     options: {
         source: {
-            description: "Source to replace ban GIF with (Video or Gif)",
+            description: "BANのGIFのソース（GIFかmp4)",
             type: OptionType.STRING,
             default: "https://i.imgur.com/wp5q52C.mp4",
             restartNeeded: true,

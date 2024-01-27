@@ -40,7 +40,7 @@ type KeysOfType<Object, Type> = {
 
 function VencordSettings() {
     const [settingsDir, , settingsDirPending] = useAwaiter(VencordNative.settings.getSettingsDir, {
-        fallbackValue: "Loading..."
+        fallbackValue: "ロード中..."
     });
     const settings = useSettings();
 
@@ -66,72 +66,72 @@ function VencordSettings() {
         [
             {
                 key: "useQuickCss",
-                title: "Enable Custom CSS",
-                note: "Loads your Custom CSS"
+                title: "クイックCSSを有効にする",
+                note: "あなたのカスタムCSSを有効にする"
             },
             !IS_WEB && {
                 key: "enableReactDevtools",
-                title: "Enable React Developer Tools",
-                note: "Requires a full restart"
+                title: "Reactのデベロッパーツールを有効にする",
+                note: "完全な再起動が必要です。"
             },
             !IS_WEB && (!IS_DISCORD_DESKTOP || !isWindows ? {
                 key: "frameless",
-                title: "Disable the window frame",
-                note: "Requires a full restart"
+                title: "ウインドウのフレームを無効にする",
+                note: "完全な再起動が必要です。"
             } : {
                 key: "winNativeTitleBar",
-                title: "Use Windows' native title bar instead of Discord's custom one",
-                note: "Requires a full restart"
+                title: "Windowsのタイトルバーを使用する",
+                note: "完全な再起動が必要です。"
             }),
-            !IS_WEB && {
+            !IS_WEB && false /* This causes electron to freeze / white screen for some people */ && {
                 key: "transparent",
-                title: "Enable window transparency.",
-                note: "You need a theme that supports transparency or this will do nothing. Will stop the window from being resizable. Requires a full restart"
+                title: "ウインドウの透過を有効にする",
+                note: "完全な再起動が必要です。この機能を使用する際に、Discordがフリーズしたりホワイトスクリーンが表示される可能性があります。"
             },
             !IS_WEB && isWindows && {
                 key: "winCtrlQ",
-                title: "Register Ctrl+Q as shortcut to close Discord (Alternative to Alt+F4)",
-                note: "Requires a full restart"
+                title: "Ctrl+QでDiscordを終了できるようにする (Alt+F4の代替)",
+                note: "完全な再起動が必要です。"
             },
             IS_DISCORD_DESKTOP && {
                 key: "disableMinSize",
-                title: "Disable minimum window size",
-                note: "Requires a full restart"
+                title: "ウインドウの最小サイズ制限を解除する",
+                note: "完全な再起動が必要です。"
             },
         ];
 
     return (
-        <SettingsTab title="Vencord Settings">
+        <SettingsTab title="Vencord 設定">
             <DonateCard image={donateImage} />
-            <Forms.FormSection title="Quick Actions">
+            <Forms.FormSection title="クイックアクション">
                 <Card className={cl("quick-actions-card")}>
                     <React.Fragment>
                         {!IS_WEB && (
                             <Button
                                 onClick={relaunch}
                                 size={Button.Sizes.SMALL}>
-                                Restart Client
+                                クライアントを再起動
                             </Button>
                         )}
                         <Button
                             onClick={() => VencordNative.quickCss.openEditor()}
                             size={Button.Sizes.SMALL}
-                            disabled={settingsDir === "Loading..."}>
-                            Open QuickCSS File
+                            disabled={settingsDir === "ロード中..."}>
+                            QuickCSSのファイルを開く
                         </Button>
                         {!IS_WEB && (
                             <Button
                                 onClick={() => showItemInFolder(settingsDir)}
                                 size={Button.Sizes.SMALL}
                                 disabled={settingsDirPending}>
-                                Open Settings Folder
+                                設定フォルダを開く
                             </Button>
                         )}
                         <Button
-                            onClick={() => VencordNative.native.openExternal("https://github.com/Vendicated/Vencord")}
+                            onClick={() => VencordNative.native.openExternal("https://github.com/vencordjp/Vencord")}
                             size={Button.Sizes.SMALL}
                             disabled={settingsDirPending}>
-                            Open in GitHub
+                            GitHubで開く
                         </Button>
                     </React.Fragment>
                 </Card>
@@ -139,9 +139,9 @@ function VencordSettings() {
 
             <Forms.FormDivider />
 
-            <Forms.FormSection className={Margins.top16} title="Settings" tag="h5">
+            <Forms.FormSection className={Margins.top16} title="設定" tag="h5">
                 <Forms.FormText className={Margins.bottom20}>
-                    Hint: You can change the position of this settings section in the settings of the "Settings" plugin!
+                    ヒント: 設定のセクションの場所は、「Settings」プラグインの設定を変更することで場所を変更できます。
                 </Forms.FormText>
                 {Switches.map(s => s && (
                     <Switch
@@ -229,26 +229,26 @@ function VencordSettings() {
 function NotificationSection({ settings }: { settings: typeof Settings["notifications"]; }) {
     return (
         <>
-            <Forms.FormTitle tag="h5">Notification Style</Forms.FormTitle>
+            <Forms.FormTitle tag="h5">通知の見た目</Forms.FormTitle>
             {settings.useNative !== "never" && Notification?.permission === "denied" && (
                 <ErrorCard style={{ padding: "1em" }} className={Margins.bottom8}>
-                    <Forms.FormTitle tag="h5">Desktop Notification Permission denied</Forms.FormTitle>
-                    <Forms.FormText>You have denied Notification Permissions. Thus, Desktop notifications will not work!</Forms.FormText>
+                    <Forms.FormTitle tag="h5">デスクトップ通知の権限を拒否しました。</Forms.FormTitle>
+                    <Forms.FormText>あなたはデスクトップ通知の権限を拒否したため、デスクトップ通知は配信されません。</Forms.FormText>
                 </ErrorCard>
             )}
             <Forms.FormText className={Margins.bottom8}>
-                Some plugins may show you notifications. These come in two styles:
+                いくつかのプラグインは、あなたに通知を配信します。それには、二つのスタイルがあります。:
                 <ul>
-                    <li><strong>Vencord Notifications</strong>: These are in-app notifications</li>
-                    <li><strong>Desktop Notifications</strong>: Native Desktop notifications (like when you get a ping)</li>
+                    <li><strong>Vencordの通知</strong>: アプリ内通知も配信します。</li>
+                    <li><strong>デスクトップ通知</strong>: ネイティブのデスクトップ通知 (メンションされた時の通知)</li>
                 </ul>
             </Forms.FormText>
             <Select
-                placeholder="Notification Style"
+                placeholder="通知のスタイル"
                 options={[
-                    { label: "Only use Desktop notifications when Discord is not focused", value: "not-focused", default: true },
-                    { label: "Always use Desktop notifications", value: "always" },
-                    { label: "Always use Vencord notifications", value: "never" },
+                    { label: "Discordにフォーカスされていない場合のみ、デスクトップ通知を使用する", value: "not-focused", default: true },
+                    { label: "常にデスクトップ通知を使用する", value: "always" },
+                    { label: "常にVencordの通知を使用する", value: "never" },
                 ] satisfies Array<{ value: typeof settings["useNative"]; } & Record<string, any>>}
                 closeOnSelect={true}
                 select={v => settings.useNative = v}
@@ -256,24 +256,24 @@ function NotificationSection({ settings }: { settings: typeof Settings["notifica
                 serialize={identity}
             />
 
-            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>Notification Position</Forms.FormTitle>
+            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>通知の位置</Forms.FormTitle>
             <Select
                 isDisabled={settings.useNative === "always"}
-                placeholder="Notification Position"
+                placeholder="通知の位置"
                 options={[
-                    { label: "Bottom Right", value: "bottom-right", default: true },
-                    { label: "Top Right", value: "top-right" },
+                    { label: "右下", value: "bottom-right", default: true },
+                    { label: "右上", value: "top-right" },
                 ] satisfies Array<{ value: typeof settings["position"]; } & Record<string, any>>}
                 select={v => settings.position = v}
                 isSelected={v => v === settings.position}
                 serialize={identity}
             />
 
-            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>Notification Timeout</Forms.FormTitle>
-            <Forms.FormText className={Margins.bottom16}>Set to 0s to never automatically time out</Forms.FormText>
+            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>通知のタイムアウト</Forms.FormTitle>
+            <Forms.FormText className={Margins.bottom16}>自動的に通知を非表示しない場合は、0秒を選択します。</Forms.FormText>
             <Slider
                 disabled={settings.useNative === "always"}
-                markers={[0, 1000, 2500, 5000, 10_000, 20_000]}
+                markers={[0, 1000, 2500, 5000, 10_000, 15_000, 20_000]}
                 minValue={0}
                 maxValue={20_000}
                 initialValue={settings.timeout}
@@ -283,13 +283,13 @@ function NotificationSection({ settings }: { settings: typeof Settings["notifica
                 stickToMarkers={false}
             />
 
-            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>Notification Log Limit</Forms.FormTitle>
+            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>通知のログ制限</Forms.FormTitle>
             <Forms.FormText className={Margins.bottom16}>
-                The amount of notifications to save in the log until old ones are removed.
-                Set to <code>0</code> to disable Notification log and <code>∞</code> to never automatically remove old Notifications
+                古い通知が削除されるまで、ログに保存される通知の量。
+                <code>0</code> に設定すると、通知のログを無効にし、 <code>∞</code> に設定すると無限に通知をログします。
             </Forms.FormText>
             <Slider
-                markers={[0, 25, 50, 75, 100, 200]}
+                markers={[0, 25, 50, 75, 100, 150, 200]}
                 minValue={0}
                 maxValue={200}
                 stickToMarkers={true}
@@ -303,7 +303,7 @@ function NotificationSection({ settings }: { settings: typeof Settings["notifica
                 onClick={openNotificationLogModal}
                 disabled={settings.logLimit === 0}
             >
-                Open Notification Log
+                通知のログを開く
             </Button>
         </>
     );
@@ -317,8 +317,8 @@ function DonateCard({ image }: DonateCardProps) {
     return (
         <Card className={cl("card", "donate")}>
             <div>
-                <Forms.FormTitle tag="h5">Support the Project</Forms.FormTitle>
-                <Forms.FormText>Please consider supporting the development of Vencord by donating!</Forms.FormText>
+                <Forms.FormTitle tag="h5">プロジェクトをサポート</Forms.FormTitle>
+                <Forms.FormText>寄付をして、Vencordをサポートしましょう！</Forms.FormText>
                 <DonateButton style={{ transform: "translateX(-1em)" }} />
             </div>
             <img
@@ -336,4 +336,4 @@ function DonateCard({ image }: DonateCardProps) {
     );
 }
 
-export default wrapTab(VencordSettings, "Vencord Settings");
+export default wrapTab(VencordSettings, "Vencord 設定");
