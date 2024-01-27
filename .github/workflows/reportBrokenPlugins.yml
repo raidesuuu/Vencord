@@ -7,7 +7,7 @@ on:
 
 jobs:
     TestPlugins:
-        if: github.repository == 'vencordjp/Vencord'
+        if: github.repository == 'Vendicated/Vencord'
         runs-on: ubuntu-latest
 
         steps:

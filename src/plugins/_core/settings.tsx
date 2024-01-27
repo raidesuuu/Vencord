@@ -26,7 +26,7 @@ import gitHash from "~git-hash";
 
 export default definePlugin({
     name: "Settings",
-    description: "設定UIとデバッグ情報を追加します。",
+    description: "Adds Settings UI and debug info",
     authors: [Devs.Ven, Devs.Megu],
     required: true,
 
@@ -94,37 +94,37 @@ export default definePlugin({
             },
             {
                 section: "VencordPlugins",
-                label: "プラグイン",
+                label: "Plugins",
                 element: require("@components/VencordSettings/PluginsTab").default,
                 className: "vc-plugins"
             },
             {
                 section: "VencordThemes",
-                label: "テーマ",
+                label: "Themes",
                 element: require("@components/VencordSettings/ThemesTab").default,
                 className: "vc-themes"
             },
             !IS_UPDATER_DISABLED && {
                 section: "VencordUpdater",
-                label: "アップデート",
+                label: "Updater",
                 element: require("@components/VencordSettings/UpdaterTab").default,
                 className: "vc-updater"
             },
             {
                 section: "VencordCloud",
-                label: "クラウド",
+                label: "Cloud",
                 element: require("@components/VencordSettings/CloudTab").default,
                 className: "vc-cloud"
             },
             {
                 section: "VencordSettingsSync",
-                label: "バックアップと復元",
+                label: "Backup & Restore",
                 element: require("@components/VencordSettings/BackupAndRestoreTab").default,
                 className: "vc-backup-restore"
             },
             IS_DEV && {
                 section: "VencordPatchHelper",
-                label: "パッチヘルパー",
+                label: "Patch Helper",
                 element: require("@components/VencordSettings/PatchHelperTab").default,
                 className: "vc-patch-helper"
             },
@@ -138,14 +138,14 @@ export default definePlugin({
     options: {
         settingsLocation: {
             type: OptionType.SELECT,
-            description: "Vencord設定の場所を設定します。",
+            description: "Where to put the Vencord settings section",
             options: [
-                { label: "一番上", value: "top" },
-                { label: "Nitroセクションの上", value: "aboveNitro" },
-                { label: "Nitroセクションの下", value: "belowNitro" },
-                { label: "アクティビティ設定の上", value: "aboveActivity", default: true },
-                { label: "アクティビティ設定の下", value: "belowActivity" },
-                { label: "一番下", value: "bottom" },
+                { label: "At the very top", value: "top" },
+                { label: "Above the Nitro section", value: "aboveNitro" },
+                { label: "Below the Nitro section", value: "belowNitro" },
+                { label: "Above Activity Settings", value: "aboveActivity", default: true },
+                { label: "Below Activity Settings", value: "belowActivity" },
+                { label: "At the very bottom", value: "bottom" },
             ],
             restartNeeded: true
         },
@@ -167,10 +167,10 @@ export default definePlugin({
     },
 
     get additionalInfo() {
-        if (IS_DEV) return " (Dev, JP)";
-        if (IS_WEB) return " (Web, JP)";
-        if (IS_VESKTOP) return ` (Vesktop v${VesktopNative.app.getVersion()}, JP)`;
-        if (IS_STANDALONE) return " (Standalone, JP)";
+        if (IS_DEV) return " (Dev)";
+        if (IS_WEB) return " (Web)";
+        if (IS_VESKTOP) return ` (Vesktop v${VesktopNative.app.getVersion()})`;
+        if (IS_STANDALONE) return " (Standalone)";
         return "";
     },
 

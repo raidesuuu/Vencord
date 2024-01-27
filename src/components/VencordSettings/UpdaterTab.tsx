@@ -37,24 +37,24 @@ function withDispatcher(dispatcher: React.Dispatch<React.SetStateAction<boolean>
         try {
             await action();
         } catch (e: any) {
-            UpdateLogger.error("アップデートに失敗", e);
+            UpdateLogger.error("Failed to update", e);
             if (!e) {
-                var err = "不明なエラーが発生しました。(エラーがundefined)\nもう一度お試しください。";
+                var err = "An unknown error occurred (error is undefined).\nPlease try again.";
             } else if (e.code && e.cmd) {
                 const { code, path, cmd, stderr } = e;
 
                 if (code === "ENOENT")
-                    var err = `パス \`${path}\` が見つかりませんでした。\nインストールしてやり直してください。`;
+                    var err = `Command \`${path}\` not found.\nPlease install it and try again`;
                 else {
-                    var err = `\`${cmd}\` を実行している際にエラーが発生しました。詳細:\n`;
-                    err += stderr || `コード \`${code}\`。詳細な情報はコンソールをご覧ください。`;
+                    var err = `An error occurred while running \`${cmd}\`:\n`;
+                    err += stderr || `Code \`${code}\`. See the console for more info`;
                 }
 
             } else {
-                var err = "不明なエラーが発生しました。もう一度お試しください。";
+                var err = "An unknown error occurred. See the console for more info.";
             }
             Alerts.show({
-                title: "おっと。アップデート中にエラーが発生しました。",
+                title: "Oops!",
                 body: (
                     <ErrorCard>
                         {err.split("\n").map(line => <div>{Parser.parse(line)}</div>)}
@@ -109,14 +109,14 @@ function Updatable(props: CommonProps) {
         <>
             {!updates && updateError ? (
                 <>
-                    <Forms.FormText>アップデートの確認に失敗しました。詳細な情報はコンソールをご覧ください。</Forms.FormText>
+                    <Forms.FormText>Failed to check updates. Check the console for more info</Forms.FormText>
                     <ErrorCard style={{ padding: "1em" }}>
-                        <p>{updateError.stderr || updateError.stdout || "不明なエラーが発生しました。"}</p>
+                        <p>{updateError.stderr || updateError.stdout || "An unknown error occurred"}</p>
                     </ErrorCard>
                 </>
             ) : (
                 <Forms.FormText className={Margins.bottom8}>
-                    {isOutdated ? `${updates.length}つのアップデートを発見しました。` : "最新の状態です！"}
+                    {isOutdated ? (updates.length === 1 ? "There is 1 Update" : `There are ${updates.length} Updates`) : "Up to Date!"}
                 </Forms.FormText>
             )}
 
@@ -131,10 +131,10 @@ function Updatable(props: CommonProps) {
                             setUpdates([]);
                             await new Promise<void>(r => {
                                 Alerts.show({
-                                    title: "アップデートに成功",
-                                    body: "アップデートに成功しました。Discordを再起動しますか？",
-                                    confirmText: "再起動",
-                                    cancelText: "後で",
+                                    title: "Update Success!",
+                                    body: "Successfully updated. Restart now to apply the changes?",
+                                    confirmText: "Restart",
+                                    cancelText: "Not now!",
                                     onConfirm() {
                                         relaunch();
                                         r();
@@ -145,7 +145,7 @@ function Updatable(props: CommonProps) {
                         }
                     })}
                 >
-                    今すぐアップデート
+                    Update Now
                 </Button>}
                 <Button
                     size={Button.Sizes.SMALL}
@@ -157,9 +157,9 @@ function Updatable(props: CommonProps) {
                         } else {
                             setUpdates([]);
                             Toasts.show({
-                                message: "アップデートが見つかりませんでした！",
+                                message: "No updates found!",
                                 id: Toasts.genId(),
-                                type: Toasts.Type.SUCCESS,
+                                type: Toasts.Type.MESSAGE,
                                 options: {
                                     position: Toasts.Position.BOTTOM
                                 }
@@ -167,7 +167,7 @@ function Updatable(props: CommonProps) {
                         }
                     })}
                 >
-                    アップデートを確認
+                    Check for Updates
                 </Button>
             </Flex>
         </>
@@ -178,7 +178,7 @@ function Newer(props: CommonProps) {
     return (
         <>
             <Forms.FormText className={Margins.bottom8}>
-                あなたのローカル コピーには、より最近のコミットがあります。それらをstashするか、リセットしてください。
+                Your local copy has more recent commits. Please stash or reset them.
             </Forms.FormText>
             <Changes {...props} updates={changes} />
         </>
@@ -188,7 +188,7 @@ function Newer(props: CommonProps) {
 function Updater() {
     const settings = useSettings(["notifyAboutUpdates", "autoUpdate", "autoUpdateNotification"]);
 
-    const [repo, err, repoPending] = useAwaiter(getRepo, { fallbackValue: "ロード中..." });
+    const [repo, err, repoPending] = useAwaiter(getRepo, { fallbackValue: "Loading..." });
 
     React.useEffect(() => {
         if (err)
@@ -201,39 +201,39 @@ function Updater() {
     };
 
     return (
-        <SettingsTab title="Vencordの更新">
-            <Forms.FormTitle tag="h5">アップデートの設定</Forms.FormTitle>
+        <SettingsTab title="Vencord Updater">
+            <Forms.FormTitle tag="h5">Updater Settings</Forms.FormTitle>
             <Switch
                 value={settings.notifyAboutUpdates}
                 onChange={(v: boolean) => settings.notifyAboutUpdates = v}
-                note="Discordの起動時に通知を表示します。"
+                note="Shows a notification on startup"
                 disabled={settings.autoUpdate}
             >
-                新しいアップデートを通知する
+                Get notified about new updates
             </Switch>
             <Switch
                 value={settings.autoUpdate}
                 onChange={(v: boolean) => settings.autoUpdate = v}
-                note="確認ダイアログを表示せずに、Vencordを更新します。"
+                note="Automatically update Vencord without confirmation prompt"
             >
-                自動更新を有効にする
+                Automatically update
             </Switch>
             <Switch
                 value={settings.autoUpdateNotification}
                 onChange={(v: boolean) => settings.autoUpdateNotification = v}
-                note="自動更新でVencordが更新された際に、通知を表示します。"
+                note="Shows a notification when Vencord automatically updates"
                 disabled={!settings.autoUpdate}
             >
-                自動更新が完了した際に通知を表示する
+                Get notified when an automatic update completes
             </Switch>
 
-            <Forms.FormTitle tag="h5">レポジトリ</Forms.FormTitle>
+            <Forms.FormTitle tag="h5">Repo</Forms.FormTitle>
 
             <Forms.FormText className="vc-text-selectable">
                 {repoPending
                     ? repo
                     : err
-                        ? "取得に失敗しました。コンソールをご覧ください。"
+                        ? "Failed to retrieve - check console"
                         : (
                             <Link href={repo}>
                                 {repo.split("/").slice(-2).join("/")}
@@ -245,11 +245,11 @@ function Updater() {
 
             <Forms.FormDivider className={Margins.top8 + " " + Margins.bottom8} />
 
-            <Forms.FormTitle tag="h5">アップデート</Forms.FormTitle>
+            <Forms.FormTitle tag="h5">Updates</Forms.FormTitle>
 
             {isNewer ? <Newer {...commonProps} /> : <Updatable {...commonProps} />}
         </SettingsTab>
     );
 }
 
-export default IS_UPDATER_DISABLED ? null : wrapTab(Updater, "アップデート");
+export default IS_UPDATER_DISABLED ? null : wrapTab(Updater, "Updater");

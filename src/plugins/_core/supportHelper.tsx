@@ -40,13 +40,13 @@ const AllowedChannelIds = [
 export default definePlugin({
     name: "SupportHelper",
     required: true,
-    description: "あなたにサポートを提供します。",
+    description: "Helps us provide support to you",
     authors: [Devs.Ven],
     dependencies: ["CommandsAPI"],
 
     commands: [{
         name: "vencord-debug",
-        description: "Vencordのデバッグ情報を送信",
+        description: "Send Vencord Debug info",
         predicate: ctx => AllowedChannelIds.includes(ctx.channel.id),
         async execute() {
             const { RELEASE_CHANNEL } = window.GLOBAL_ENV;
@@ -99,26 +99,16 @@ ${makeCodeblock(enabledPlugins.join(", ") + "\n\n" + enabledApiPlugins.join(", "
 
             if (isPluginDev(UserStore.getCurrentUser().id)) return;
 
-            Alerts.show({
-                title: "お待ちください！",
-                body: <div>
-                    <Forms.FormText>あなたはVencordのサポートに連絡しようとしています。</Forms.FormText>
-                    <Forms.FormText>
-                        その際に、注意することがあります。それは、Vencordの日本語翻訳についてを報告してはいけないことです。
-                        Vencordの日本語翻訳の問題を報告するには、雷のDiscordサーバーで報告してください。(GitHubで確認できます)
-                    </Forms.FormText>
-                </div>
-            });
-
             if (isOutdated && gitHash !== await DataStore.get(REMEMBER_DISMISS_KEY)) {
                 const rememberDismiss = () => DataStore.set(REMEMBER_DISMISS_KEY, gitHash);
 
                 Alerts.show({
-                    title: "お待ちください！",
+                    title: "Hold on!",
                     body: <div>
-                        <Forms.FormText>あなたは古いVencordJPを使用しています。新しいバージョンだと問題が修正されている可能性があります。</Forms.FormText>
+                        <Forms.FormText>You are using an outdated version of Vencord! Chances are, your issue is already fixed.</Forms.FormText>
                         <Forms.FormText>
-                            設定のアップデートページでVencordJPをアップデートするか、VencordInstallerを使用してアップデートしてください。
+                            Please first update using the Updater Page in Settings, or use the VencordInstaller (Update Vencord Button)
+                            to do so, in case you can't access the Updater page.
                         </Forms.FormText>
                     </div>,
                     onCancel: rememberDismiss,

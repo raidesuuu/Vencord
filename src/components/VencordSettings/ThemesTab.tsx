@@ -21,9 +21,11 @@ import { classNameFactory } from "@api/Styles";
 import { Flex } from "@components/Flex";
 import { DeleteIcon } from "@components/Icons";
 import { Link } from "@components/Link";
+import PluginModal from "@components/PluginSettings/PluginModal";
 import { openInviteModal } from "@utils/discord";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
+import { openModal } from "@utils/modal";
 import { showItemInFolder } from "@utils/native";
 import { useAwaiter } from "@utils/react";
 import { findByPropsLazy, findLazy } from "@webpack";
@@ -200,17 +202,17 @@ function ThemesTab() {
         return (
             <>
                 <Card className="vc-settings-card">
-                    <Forms.FormTitle tag="h5">テーマを見つける:</Forms.FormTitle>
+                    <Forms.FormTitle tag="h5">Find Themes:</Forms.FormTitle>
                     <div style={{ marginBottom: ".5em", display: "flex", flexDirection: "column" }}>
                         <Link style={{ marginRight: ".5em" }} href="https://betterdiscord.app/themes">
-                            BetterDiscordのテーマ
+                            BetterDiscord Themes
                         </Link>
                         <Link href="https://github.com/search?q=discord+theme">GitHub</Link>
                     </div>
-                    <Forms.FormText>BetterDiscordのサイトを使用している場合、「Download」をクリックして、テーマフォルダにダウンロードした「.theme.css」ファイルをペーストします。</Forms.FormText>
+                    <Forms.FormText>If using the BD site, click on "Download" and place the downloaded .theme.css file into your themes folder.</Forms.FormText>
                 </Card>
 
-                <Forms.FormSection title="ローカルテーマ">
+                <Forms.FormSection title="Local Themes">
                     <Card className="vc-settings-quick-actions-card">
                         <>
                             {IS_WEB ?
@@ -219,7 +221,7 @@ function ThemesTab() {
                                         size={Button.Sizes.SMALL}
                                         disabled={themeDirPending}
                                     >
-                                        テーマをアップロード
+                                        Upload Theme
                                         <FileInput
                                             ref={fileInputRef}
                                             onChange={onFileUpload}
@@ -233,21 +235,36 @@ function ThemesTab() {
                                         size={Button.Sizes.SMALL}
                                         disabled={themeDirPending}
                                     >
-                                        テーマフォルダを開く
+                                        Open Themes Folder
                                     </Button>
                                 )}
                             <Button
                                 onClick={refreshLocalThemes}
                                 size={Button.Sizes.SMALL}
                             >
-                                正しくないプラグインをロード
+                                Load missing Themes
                             </Button>
                             <Button
                                 onClick={() => VencordNative.quickCss.openEditor()}
                                 size={Button.Sizes.SMALL}
                             >
-                                QuickCSSを編集
+                                Edit QuickCSS
                             </Button>
+
+                            {Vencord.Settings.plugins.ClientTheme.enabled && (
+                                <Button
+                                    onClick={() => openModal(modalProps => (
+                                        <PluginModal
+                                            {...modalProps}
+                                            plugin={Vencord.Plugins.plugins.ClientTheme}
+                                            onRestartNeeded={() => { }}
+                                        />
+                                    ))}
+                                    size={Button.Sizes.SMALL}
+                                >
+                                    Edit ClientTheme
+                                </Button>
+                            )}
                         </>
                     </Card>
 
@@ -286,17 +303,17 @@ function ThemesTab() {
         return (
             <>
                 <Card className="vc-settings-card vc-text-selectable">
-                    <Forms.FormTitle tag="h5">CSSファイルのURLをペースト</Forms.FormTitle>
-                    <Forms.FormText>1 行で 1 プラグイン</Forms.FormText>
-                    <Forms.FormText>直リンクのファイルURLをペーストしてください。(raw か github.io)</Forms.FormText>
+                    <Forms.FormTitle tag="h5">Paste links to css files here</Forms.FormTitle>
+                    <Forms.FormText>One link per line</Forms.FormText>
+                    <Forms.FormText>Make sure to use direct links to files (raw or github.io)!</Forms.FormText>
                 </Card>
 
-                <Forms.FormSection title="オンラインテーマ" tag="h5">
+                <Forms.FormSection title="Online Themes" tag="h5">
                     <TextArea
                         value={themeText}
                         onChange={setThemeText}
                         className={classes(TextAreaProps.textarea, "vc-settings-theme-links")}
-                        placeholder="テーマリンク"
+                        placeholder="Theme Links"
                         spellCheck={false}
                         onBlur={onBlur}
                         rows={10}
@@ -320,13 +337,13 @@ function ThemesTab() {
                     className="vc-settings-tab-bar-item"
                     id={ThemeTab.LOCAL}
                 >
-                    ローカルテーマ
+                    Local Themes
                 </TabBar.Item>
                 <TabBar.Item
                     className="vc-settings-tab-bar-item"
                     id={ThemeTab.ONLINE}
                 >
-                    オンラインテーマ
+                    Online Themes
                 </TabBar.Item>
             </TabBar>
 

@@ -21,7 +21,7 @@ import definePlugin from "@utils/types";
 
 export default definePlugin({
     name: "AlwaysTrust",
-    description: "悪意のあるファイルのポップアップと信頼していないドメインの警告を無効にします。",
+    description: "Removes the annoying untrusted domain and suspicious file popup",
     authors: [Devs.zt],
     patches: [
         {

@@ -26,23 +26,24 @@ import { SettingsTab, wrapTab } from "./shared";
 
 function BackupRestoreTab() {
     return (
-        <SettingsTab title="バックアップと復元">
+        <SettingsTab title="Backup & Restore">
             <Card className={classes("vc-settings-card", "vc-backup-restore-card")}>
                 <Flex flexDirection="column">
-                    <strong>注意</strong>
-                    <span>設定ファイルをインポートすると、現在の設定を上書きします。</span>
+                    <strong>Warning</strong>
+                    <span>Importing a settings file will overwrite your current settings.</span>
                 </Flex>
             </Card>
             <Text variant="text-md/normal" className={Margins.bottom8}>
-                Vencordの設定をJSONファイルとしてインポートしたりエクスポートしたりできます。
-                これは簡単に別のデバイスにVencordの設定を以降したり、VencordまたはDiscordを修復した際にデータを復元できます。
+                You can import and export your Vencord settings as a JSON file.
+                This allows you to easily transfer your settings to another device,
+                or recover your settings after reinstalling Vencord or Discord.
             </Text>
             <Text variant="text-md/normal" className={Margins.bottom8}>
-                エクスポートされる設定項目:
+                Settings Export contains:
                 <ul>
-                    <li>&mdash; カスタムのQuickCSS</li>
-                    <li>&mdash; テーマリンク</li>
-                    <li>&mdash; プラグイン設定</li>
+                    <li>&mdash; Custom QuickCSS</li>
+                    <li>&mdash; Theme Links</li>
+                    <li>&mdash; Plugin Settings</li>
                 </ul>
             </Text>
             <Flex>
@@ -50,17 +51,17 @@ function BackupRestoreTab() {
                     onClick={() => uploadSettingsBackup()}
                     size={Button.Sizes.SMALL}
                 >
-                    設定をインポート
+                    Import Settings
                 </Button>
                 <Button
                     onClick={downloadSettingsBackup}
                     size={Button.Sizes.SMALL}
                 >
-                    設定をエクスポート
+                    Export Settings
                 </Button>
             </Flex>
         </SettingsTab>
     );
 }
 
-export default wrapTab(BackupRestoreTab, "バックアップと復元");
+export default wrapTab(BackupRestoreTab, "Backup & Restore");

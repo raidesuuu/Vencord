@@ -83,8 +83,8 @@ export async function authorizeCloud() {
         var { clientId, redirectUri } = await oauthConfiguration.json();
     } catch {
         showNotification({
-            title: "クラウドとの統合",
-            body: "セットアップに失敗。(OAuth情報を取得できませんでした)"
+            title: "Cloud Integration",
+            body: "Setup failed (couldn't retrieve OAuth configuration)."
         });
         Settings.cloud.authenticated = false;
         return;
@@ -113,22 +113,22 @@ export async function authorizeCloud() {
                     cloudLogger.info("Authorized with secret");
                     await setAuthorization(secret);
                     showNotification({
-                        title: "クラウドとの統合",
-                        body: "クラウドとの統合が有効になりました。"
+                        title: "Cloud Integration",
+                        body: "Cloud integrations enabled!"
                     });
                     Settings.cloud.authenticated = true;
                 } else {
                     showNotification({
-                        title: "クラウドとの統合",
-                        body: "セットアップに失敗。(シークレットが見つかりません)"
+                        title: "Cloud Integration",
+                        body: "Setup failed (no secret returned?)."
                     });
                     Settings.cloud.authenticated = false;
                 }
             } catch (e: any) {
                 cloudLogger.error("Failed to authorize", e);
                 showNotification({
-                    title: "クラウドとの統合",
-                    body: `セットアップに失敗。(${e.toString()})`
+                    title: "Cloud Integration",
+                    body: `Setup failed (${e.toString()}).`
                 });
                 Settings.cloud.authenticated = false;
             }
