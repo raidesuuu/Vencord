@@ -4,7 +4,6 @@ labels: [bug]
 title: "[バグ] <title>"
 
 body:
-body:
 - type: markdown
   attributes:
     value: "## 必ず読んでください"
