@@ -1,4 +1,4 @@
-name: Build DevBuild
+name: Build
 on:
     push:
         branches:
@@ -48,6 +48,13 @@ jobs:
               id: release_values
               run: |
                   echo "release_tag=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: dist
+                  path: |
+                    dist
 
             - name: Upload DevBuild as release
               if: github.repository == 'Vendicated/Vencord'
