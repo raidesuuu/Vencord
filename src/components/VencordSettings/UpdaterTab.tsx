@@ -201,7 +201,7 @@ function Updater() {
     };
 
     return (
-        <SettingsTab title="Vencord アップデーター">
+        <SettingsTab title="Vencordの更新">
             <Forms.FormTitle tag="h5">アップデーターの設定</Forms.FormTitle>
             <Switch
                 value={settings.notifyAboutUpdates}

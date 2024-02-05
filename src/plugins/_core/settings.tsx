@@ -1,19 +1,14 @@
 /*
- * Vencord, a modification for Discord's desktop app
- * Copyright (c) 2022 Vendicated and Megumin
+ * Vencord、Discordのデスクトップアプリの改造
+ * 著作権 (c) 2022 Vendicated および Megumin
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * このプログラムはフリーソフトウェアです。再配布や修正は
+ * GNU General Public License の条件の下で行うことができます。
+ * このプログラムは無保証です。詳細は
+ * GNU General Public License を参照してください。
+ * プログラムと一緒に GNU General Public License のコピーが
+ * 提供されているはずです。もし提供されていない場合は、
+ * <https://www.gnu.org/licenses/> を参照してください。
 */
 
 import { addContextMenuPatch } from "@api/ContextMenu";
@@ -26,16 +21,16 @@ import gitHash from "~git-hash";
 
 export default definePlugin({
     name: "Settings",
-    description: "Adds Settings UI and debug info",
+    description: "設定UIとデバッグ情報を追加します",
     authors: [Devs.Ven, Devs.Megu],
     required: true,
 
     start() {
-        // The settings shortcuts in the user settings cog context menu
-        // read the elements from a hardcoded map which for obvious reason
-        // doesn't contain our sections. This patches the actions of our
-        // sections to manually use SettingsRouter (which only works on desktop
-        // but the context menu is usually not available on mobile anyway)
+        // ユーザー設定の歯車コンテキストメニューの設定ショートカットは、
+        // ハードコードされたマップから要素を読み取りますが、
+        // これには明らかな理由でセクションが含まれていません。
+        // これは、セクションのアクションを手動でSettingsRouterを使用するようにパッチします
+        // （これはデスクトップでのみ機能しますが、コンテキストメニューは通常モバイルでは利用できません）
         addContextMenuPatch("user-settings-cog", children => () => {
             const section = children.find(c => Array.isArray(c) && c.some(it => it?.props?.id === "VencordSettings")) as any;
             section?.forEach(c => {
@@ -94,37 +89,37 @@ export default definePlugin({
             },
             {
                 section: "VencordPlugins",
-                label: "Plugins",
+                label: "プラグイン",
                 element: require("@components/VencordSettings/PluginsTab").default,
                 className: "vc-plugins"
             },
             {
                 section: "VencordThemes",
-                label: "Themes",
+                label: "テーマ",
                 element: require("@components/VencordSettings/ThemesTab").default,
                 className: "vc-themes"
             },
             !IS_UPDATER_DISABLED && {
                 section: "VencordUpdater",
-                label: "Updater",
+                label: "更新",
                 element: require("@components/VencordSettings/UpdaterTab").default,
                 className: "vc-updater"
             },
             {
                 section: "VencordCloud",
-                label: "Cloud",
+                label: "クラウド",
                 element: require("@components/VencordSettings/CloudTab").default,
                 className: "vc-cloud"
             },
             {
                 section: "VencordSettingsSync",
-                label: "Backup & Restore",
+                label: "バックアップと復元",
                 element: require("@components/VencordSettings/BackupAndRestoreTab").default,
                 className: "vc-backup-restore"
             },
             IS_DEV && {
                 section: "VencordPatchHelper",
-                label: "Patch Helper",
+                label: "パッチヘルパー",
                 element: require("@components/VencordSettings/PatchHelperTab").default,
                 className: "vc-patch-helper"
             },
@@ -138,14 +133,14 @@ export default definePlugin({
     options: {
         settingsLocation: {
             type: OptionType.SELECT,
-            description: "Where to put the Vencord settings section",
+            description: "Vencordの設定セクションを配置する場所",
             options: [
-                { label: "At the very top", value: "top" },
-                { label: "Above the Nitro section", value: "aboveNitro" },
-                { label: "Below the Nitro section", value: "belowNitro" },
-                { label: "Above Activity Settings", value: "aboveActivity", default: true },
-                { label: "Below Activity Settings", value: "belowActivity" },
-                { label: "At the very bottom", value: "bottom" },
+                { label: "一番上", value: "top" },
+                { label: "Nitroセクションの上", value: "aboveNitro" },
+                { label: "Nitroセクションの下", value: "belowNitro" },
+                { label: "アクティビティ設定の上", value: "aboveActivity", default: true },
+                { label: "アクティビティ設定の下", value: "belowActivity" },
+                { label: "一番下", value: "bottom" },
             ],
             restartNeeded: true
         },
