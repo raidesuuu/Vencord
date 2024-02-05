@@ -40,7 +40,7 @@ type KeysOfType<Object, Type> = {
 
 function VencordSettings() {
     const [settingsDir, , settingsDirPending] = useAwaiter(VencordNative.settings.getSettingsDir, {
-        fallbackValue: "Loading..."
+        fallbackValue: "読み込み中..."
     });
     const settings = useSettings();
 
@@ -66,37 +66,37 @@ function VencordSettings() {
         [
             {
                 key: "useQuickCss",
-                title: "Enable Custom CSS",
-                note: "Loads your Custom CSS"
+                title: "カスタムCSSを有効にする",
+                note: "カスタムCSSを読み込みます"
             },
             !IS_WEB && {
                 key: "enableReactDevtools",
-                title: "Enable React Developer Tools",
-                note: "Requires a full restart"
+                title: "React Developer Toolsを有効にする",
+                note: "完全な再起動が必要です"
             },
             !IS_WEB && (!IS_DISCORD_DESKTOP || !isWindows ? {
                 key: "frameless",
-                title: "Disable the window frame",
-                note: "Requires a full restart"
+                title: "ウィンドウフレームを無効にする",
+                note: "完全な再起動が必要です"
             } : {
                 key: "winNativeTitleBar",
-                title: "Use Windows' native title bar instead of Discord's custom one",
-                note: "Requires a full restart"
+                title: "Discordのカスタムタイトルバーの代わりにWindowsのネイティブタイトルバーを使用する",
+                note: "完全な再起動が必要です"
             }),
             !IS_WEB && {
                 key: "transparent",
-                title: "Enable window transparency.",
-                note: "You need a theme that supports transparency or this will do nothing. Will stop the window from being resizable. Requires a full restart"
+                title: "ウィンドウの透明化を有効にする",
+                note: "透明化をサポートするテーマが必要です。ウィンドウのサイズ変更ができなくなります。完全な再起動が必要です"
             },
             !IS_WEB && isWindows && {
                 key: "winCtrlQ",
-                title: "Register Ctrl+Q as shortcut to close Discord (Alternative to Alt+F4)",
-                note: "Requires a full restart"
+                title: "Discordを閉じるショートカットとしてCtrl+Qを登録する（Alt+F4の代替）",
+                note: "完全な再起動が必要です"
             },
             IS_DISCORD_DESKTOP && {
                 key: "disableMinSize",
-                title: "Disable minimum window size",
-                note: "Requires a full restart"
+                title: "最小ウィンドウサイズを無効にする",
+                note: "完全な再起動が必要です"
             },
         ];
 
@@ -117,14 +117,14 @@ function VencordSettings() {
                             onClick={() => VencordNative.quickCss.openEditor()}
                             size={Button.Sizes.SMALL}
                             disabled={settingsDir === "Loading..."}>
-                            Open QuickCSS File
+                            クイックCSSファイルを開く
                         </Button>
                         {!IS_WEB && (
                             <Button
                                 onClick={() => showItemInFolder(settingsDir)}
                                 size={Button.Sizes.SMALL}
                                 disabled={settingsDirPending}>
-                                Open Settings Folder
+                                設定フォルダを開く
                             </Button>
                         )}
                         <Button
@@ -245,8 +245,8 @@ function NotificationSection({ settings }: { settings: typeof Settings["notifica
             <Forms.FormText className={Margins.bottom8}>
                 一部のプラグインは通知を表示する場合があります。これらには2つのスタイルがあります：
                 <ul>
-                    <li><strong>Vencord Notifications</strong>: これらはアプリ内通知です</li>
-                    <li><strong>デスクトップ通知</strong>: ネイティブのデスクトップ通知（例：pingを受け取ったとき）</li>
+                    <li><strong>Vencordの通知</strong>: これらはアプリ内通知です</li>
+                    <li><strong>デスクトップ通知</strong>: ネイティブのデスクトップ通知（例：メンションを受け取ったとき）</li>
                 </ul>
             </Forms.FormText>
             <Select
