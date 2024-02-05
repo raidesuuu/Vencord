@@ -38,9 +38,9 @@ const findCandidates = debounce(function ({ find, setModule, setError }) {
     const keys = Object.keys(candidates);
     const len = keys.length;
     if (len === 0)
-        setError("No match. Perhaps that module is lazy loaded?");
+        setError("一致するものが見つかりません。おそらくそのモジュールは遅延読み込みされていますか？");
     else if (len !== 1)
-        setError("Multiple matches. Please refine your filter");
+        setError("複数の一致が見つかりました。フィルタを絞り込んでください。");
     else
         setModule([keys[0], candidates[keys[0]]]);
 });
@@ -76,10 +76,10 @@ function ReplacementComponent({ module, match, replacement, setReplacementError 
 
         const changeSize = patched.length - original.length;
 
-        // Use 200 surrounding characters of context
+        // 前後200文字のコンテキストを使用
         const start = Math.max(0, match.index! - 200);
         const end = Math.min(original.length, match.index! + match[0].length + 200);
-        // (changeSize may be negative)
+        // (changeSizeは負の値かもしれません)
         const endPatched = end + changeSize;
 
         const context = original.slice(start, end);
@@ -90,11 +90,11 @@ function ReplacementComponent({ module, match, replacement, setReplacementError 
 
     function renderMatch() {
         if (!matchResult)
-            return <Forms.FormText>Regex doesn't match!</Forms.FormText>;
+            return <Forms.FormText>正規表現が一致しません！</Forms.FormText>;
 
         const fullMatch = matchResult[0] ? makeCodeblock(matchResult[0], "js") : "";
         const groups = matchResult.length > 1
-            ? makeCodeblock(matchResult.slice(1).map((g, i) => `Group ${i + 1}: ${g}`).join("\n"), "yml")
+            ? makeCodeblock(matchResult.slice(1).map((g, i) => `グループ ${i + 1}: ${g}`).join("\n"), "yml")
             : "";
 
         return (
@@ -114,18 +114,18 @@ function ReplacementComponent({ module, match, replacement, setReplacementError 
 
     return (
         <>
-            <Forms.FormTitle>Module {id}</Forms.FormTitle>
+            <Forms.FormTitle>モジュール {id}</Forms.FormTitle>
 
             {!!matchResult?.[0]?.length && (
                 <>
-                    <Forms.FormTitle>Match</Forms.FormTitle>
+                    <Forms.FormTitle>一致</Forms.FormTitle>
                     {renderMatch()}
                 </>)
             }
 
             {!!diff?.length && (
                 <>
-                    <Forms.FormTitle>Diff</Forms.FormTitle>
+                    <Forms.FormTitle>差分</Forms.FormTitle>
                     {renderDiff()}
                 </>
             )}
@@ -134,11 +134,11 @@ function ReplacementComponent({ module, match, replacement, setReplacementError 
                 <Button className={Margins.top20} onClick={() => {
                     try {
                         Function(patchedCode.replace(/^function\(/, "function patchedModule("));
-                        setCompileResult([true, "Compiled successfully"]);
+                        setCompileResult([true, "コンパイルに成功しました"]);
                     } catch (err) {
                         setCompileResult([false, (err as Error).message]);
                     }
-                }}>Compile</Button>
+                }}>コンパイル</Button>
             )}
 
             {compileResult &&
@@ -163,7 +163,7 @@ function ReplacementInput({ replacement, setReplacement, replacementError }) {
                 if (typeof func === "function")
                     setReplacement(() => func);
                 else
-                    setError("Replacement must be a function");
+                    setError("置換は関数である必要があります");
             } catch (e) {
                 setReplacement(v);
                 setError((e as Error).message);
@@ -188,15 +188,15 @@ function ReplacementInput({ replacement, setReplacement, replacementError }) {
             />
             {!isFunc && (
                 <div className="vc-text-selectable">
-                    <Forms.FormTitle>Cheat Sheet</Forms.FormTitle>
+                    <Forms.FormTitle>チートシート</Forms.FormTitle>
                     {Object.entries({
-                        "\\i": "Special regex escape sequence that matches identifiers (varnames, classnames, etc.)",
-                        "$$": "Insert a $",
-                        "$&": "Insert the entire match",
-                        "$`\u200b": "Insert the substring before the match",
-                        "$'": "Insert the substring after the match",
-                        "$n": "Insert the nth capturing group ($1, $2...)",
-                        "$self": "Insert the plugin instance",
+                        "\\i": "識別子（変数名、クラス名など）に一致する特殊な正規表現エスケープシーケンス",
+                        "$$": "$ を挿入",
+                        "$&": "一致した全体の文字列を挿入",
+                        "$`\u200b": "一致した部分の前の部分文字列を挿入",
+                        "$'": "一致した部分の後の部分文字列を挿入",
+                        "$n": "n番目のキャプチャグループを挿入（$1、$2...）",
+                        "$self": "プラグインインスタンスを挿入",
                     }).map(([placeholder, desc]) => (
                         <Forms.FormText key={placeholder}>
                             {Parser.parse("`" + placeholder + "`")}: {desc}
@@ -209,10 +209,10 @@ function ReplacementInput({ replacement, setReplacement, replacementError }) {
                 className={Margins.top8}
                 value={isFunc}
                 onChange={setIsFunc}
-                note="'replacement' will be evaled if this is toggled"
+                note="このトグルがオンになっている場合、'replacement' は eval されます"
                 hideBorder={true}
             >
-                Treat as Function
+                関数として扱う
             </Switch>
         </>
     );
@@ -259,7 +259,7 @@ function PatchHelper() {
     }
 
     return (
-        <SettingsTab title="Patch Helper">
+        <SettingsTab title="パッチヘルパー">
             <Forms.FormTitle>find</Forms.FormTitle>
             <TextInput
                 type="text"
@@ -299,13 +299,13 @@ function PatchHelper() {
 
             {!!(find && match && replacement) && (
                 <>
-                    <Forms.FormTitle className={Margins.top20}>Code</Forms.FormTitle>
+                    <Forms.FormTitle className={Margins.top20}>コード</Forms.FormTitle>
                     <CodeBlock lang="js" content={code} />
-                    <Button onClick={() => Clipboard.copy(code)}>Copy to Clipboard</Button>
+                    <Button onClick={() => Clipboard.copy(code)}>クリップボードにコピー</Button>
                 </>
             )}
         </SettingsTab>
     );
 }
 
-export default IS_DEV ? wrapTab(PatchHelper, "PatchHelper") : null;
+export default IS_DEV ? wrapTab(PatchHelper, "パッチヘルパー") : null;

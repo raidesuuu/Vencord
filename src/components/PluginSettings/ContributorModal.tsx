@@ -1,6 +1,6 @@
 /*
- * Vencord, a Discord client mod
- * Copyright (c) 2023 Vendicated and contributors
+ * Vencord、Discordクライアントの改造版
+ * 著作権 (c) 2023 Vendicated および貢献者
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -45,7 +45,7 @@ function GithubIcon() {
 
 function WebsiteIcon() {
     const src = getTheme() === Theme.Light ? WebsiteIconLight : WebsiteIconDark;
-    return <img src={src} alt="Website" />;
+    return <img src={src} alt="ウェブサイト" />;
 }
 
 function ContributorModal({ user }: { user: User; }) {
@@ -104,7 +104,7 @@ function ContributorModal({ user }: { user: User; }) {
                         key={p.name}
                         plugin={p}
                         disabled={p.required ?? false}
-                        onRestartNeeded={() => showToast("Restart to apply changes!")}
+                        onRestartNeeded={() => showToast("変更を適用するには再起動が必要です！")}
                     />
                 )}
             </div>

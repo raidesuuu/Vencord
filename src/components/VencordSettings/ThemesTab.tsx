@@ -121,17 +121,17 @@ function ThemeCard({ theme, enabled, onChange, onDelete }: ThemeCardProps) {
             }
             footer={
                 <Flex flexDirection="row" style={{ gap: "0.2em" }}>
-                    {!!theme.website && <Link href={theme.website}>Website</Link>}
+                    {!!theme.website && <Link href={theme.website}>ウェブサイト</Link>}
                     {!!(theme.website && theme.invite) && " • "}
                     {!!theme.invite && (
                         <Link
                             href={`https://discord.gg/${theme.invite}`}
                             onClick={async e => {
                                 e.preventDefault();
-                                theme.invite != null && openInviteModal(theme.invite).catch(() => showToast("Invalid or expired invite"));
+                                theme.invite != null && openInviteModal(theme.invite).catch(() => showToast("無効または期限切れの招待"));
                             }}
                         >
-                            Discord Server
+                            Discordサーバー
                         </Link>
                     )}
                 </Flex>
@@ -163,7 +163,7 @@ function ThemesTab() {
         setUserThemes(themes);
     }
 
-    // When a local theme is enabled/disabled, update the settings
+    // ローカルテーマが有効/無効になったときに設定を更新する
     function onLocalThemeChange(fileName: string, value: boolean) {
         if (value) {
             if (settings.enabledThemes.includes(fileName)) return;
@@ -202,17 +202,17 @@ function ThemesTab() {
         return (
             <>
                 <Card className="vc-settings-card">
-                    <Forms.FormTitle tag="h5">Find Themes:</Forms.FormTitle>
+                    <Forms.FormTitle tag="h5">テーマを検索する:</Forms.FormTitle>
                     <div style={{ marginBottom: ".5em", display: "flex", flexDirection: "column" }}>
                         <Link style={{ marginRight: ".5em" }} href="https://betterdiscord.app/themes">
-                            BetterDiscord Themes
+                            BetterDiscordテーマ
                         </Link>
                         <Link href="https://github.com/search?q=discord+theme">GitHub</Link>
                     </div>
-                    <Forms.FormText>If using the BD site, click on "Download" and place the downloaded .theme.css file into your themes folder.</Forms.FormText>
+                    <Forms.FormText>BDサイトを使用する場合は、「ダウンロード」をクリックして、ダウンロードした.theme.cssファイルをテーマフォルダに配置してください。</Forms.FormText>
                 </Card>
 
-                <Forms.FormSection title="Local Themes">
+                <Forms.FormSection title="ローカルテーマ">
                     <Card className="vc-settings-quick-actions-card">
                         <>
                             {IS_WEB ?
@@ -221,7 +221,7 @@ function ThemesTab() {
                                         size={Button.Sizes.SMALL}
                                         disabled={themeDirPending}
                                     >
-                                        Upload Theme
+                                        テーマをアップロード
                                         <FileInput
                                             ref={fileInputRef}
                                             onChange={onFileUpload}
@@ -235,20 +235,20 @@ function ThemesTab() {
                                         size={Button.Sizes.SMALL}
                                         disabled={themeDirPending}
                                     >
-                                        Open Themes Folder
+                                        テーマフォルダを開く
                                     </Button>
                                 )}
                             <Button
                                 onClick={refreshLocalThemes}
                                 size={Button.Sizes.SMALL}
                             >
-                                Load missing Themes
+                                不足しているテーマを読み込む
                             </Button>
                             <Button
                                 onClick={() => VencordNative.quickCss.openEditor()}
                                 size={Button.Sizes.SMALL}
                             >
-                                Edit QuickCSS
+                                QuickCSSを編集する
                             </Button>
 
                             {Vencord.Settings.plugins.ClientTheme.enabled && (
@@ -262,7 +262,7 @@ function ThemesTab() {
                                     ))}
                                     size={Button.Sizes.SMALL}
                                 >
-                                    Edit ClientTheme
+                                    ClientThemeを編集する
                                 </Button>
                             )}
                         </>
@@ -288,7 +288,7 @@ function ThemesTab() {
         );
     }
 
-    // When the user leaves the online theme textbox, update the settings
+    // オンラインテーマのテキストボックスからフォーカスが外れたときに設定を更新する
     function onBlur() {
         settings.themeLinks = [...new Set(
             themeText
@@ -303,17 +303,17 @@ function ThemesTab() {
         return (
             <>
                 <Card className="vc-settings-card vc-text-selectable">
-                    <Forms.FormTitle tag="h5">Paste links to css files here</Forms.FormTitle>
-                    <Forms.FormText>One link per line</Forms.FormText>
-                    <Forms.FormText>Make sure to use direct links to files (raw or github.io)!</Forms.FormText>
+                    <Forms.FormTitle tag="h5">ここにCSSファイルへのリンクを貼り付ける</Forms.FormTitle>
+                    <Forms.FormText>1行に1つのリンク</Forms.FormText>
+                    <Forms.FormText>ファイルへの直接リンク（rawまたはgithub.io）を使用してください！</Forms.FormText>
                 </Card>
 
-                <Forms.FormSection title="Online Themes" tag="h5">
+                <Forms.FormSection title="オンラインテーマ" tag="h5">
                     <TextArea
                         value={themeText}
                         onChange={setThemeText}
                         className={classes(TextAreaProps.textarea, "vc-settings-theme-links")}
-                        placeholder="Theme Links"
+                        placeholder="テーマリンク"
                         spellCheck={false}
                         onBlur={onBlur}
                         rows={10}
@@ -325,7 +325,7 @@ function ThemesTab() {
     }
 
     return (
-        <SettingsTab title="Themes">
+        <SettingsTab title="テーマ">
             <TabBar
                 type="top"
                 look="brand"
@@ -337,13 +337,13 @@ function ThemesTab() {
                     className="vc-settings-tab-bar-item"
                     id={ThemeTab.LOCAL}
                 >
-                    Local Themes
+                    ローカルテーマ
                 </TabBar.Item>
                 <TabBar.Item
                     className="vc-settings-tab-bar-item"
                     id={ThemeTab.ONLINE}
                 >
-                    Online Themes
+                    オンラインテーマ
                 </TabBar.Item>
             </TabBar>
 
@@ -353,4 +353,4 @@ function ThemesTab() {
     );
 }
 
-export default wrapTab(ThemesTab, "Themes");
+export default wrapTab(ThemesTab, "テーマ");

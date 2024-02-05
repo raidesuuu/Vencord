@@ -1,19 +1,13 @@
 /*
- * Vencord, a modification for Discord's desktop app
- * Copyright (c) 2022 Vendicated and contributors
+ * Vencord、Discordのデスクトップアプリの改造版
+ * 著作権 (c) 2022 Vendicated および貢献者
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * このプログラムはフリーソフトウェアです。再配布や修正は
+ * GNU General Public License の条件の下で行うことができます。
+ * このプログラムは無保証です。詳細は
+ * GNU General Public License を参照してください。
+ * ライセンスのコピーは、このプログラムと一緒に提供されます。
+ * 提供されていない場合は、<https://www.gnu.org/licenses/> を参照してください。
 */
 
 import { Flex } from "@components/Flex";
@@ -26,24 +20,24 @@ import { SettingsTab, wrapTab } from "./shared";
 
 function BackupRestoreTab() {
     return (
-        <SettingsTab title="Backup & Restore">
+        <SettingsTab title="バックアップと復元">
             <Card className={classes("vc-settings-card", "vc-backup-restore-card")}>
                 <Flex flexDirection="column">
-                    <strong>Warning</strong>
-                    <span>Importing a settings file will overwrite your current settings.</span>
+                    <strong>警告</strong>
+                    <span>設定ファイルをインポートすると、現在の設定が上書きされます。</span>
                 </Flex>
             </Card>
             <Text variant="text-md/normal" className={Margins.bottom8}>
-                You can import and export your Vencord settings as a JSON file.
-                This allows you to easily transfer your settings to another device,
-                or recover your settings after reinstalling Vencord or Discord.
+                Vencordの設定をJSONファイルとしてインポートおよびエクスポートできます。
+                これにより、設定を別のデバイスに簡単に転送したり、
+                VencordまたはDiscordを再インストールした後に設定を復元したりできます。
             </Text>
             <Text variant="text-md/normal" className={Margins.bottom8}>
-                Settings Export contains:
+                設定のエクスポートには以下が含まれます：
                 <ul>
-                    <li>&mdash; Custom QuickCSS</li>
-                    <li>&mdash; Theme Links</li>
-                    <li>&mdash; Plugin Settings</li>
+                    <li>&mdash; カスタムQuickCSS</li>
+                    <li>&mdash; テーマリンク</li>
+                    <li>&mdash; プラグインの設定</li>
                 </ul>
             </Text>
             <Flex>
@@ -51,17 +45,17 @@ function BackupRestoreTab() {
                     onClick={() => uploadSettingsBackup()}
                     size={Button.Sizes.SMALL}
                 >
-                    Import Settings
+                    設定をインポート
                 </Button>
                 <Button
                     onClick={downloadSettingsBackup}
                     size={Button.Sizes.SMALL}
                 >
-                    Export Settings
+                    設定をエクスポート
                 </Button>
             </Flex>
         </SettingsTab>
     );
 }
 
-export default wrapTab(BackupRestoreTab, "Backup & Restore");
+export default wrapTab(BackupRestoreTab, "バックアップと復元");

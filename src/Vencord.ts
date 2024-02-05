@@ -1,19 +1,17 @@
 /*!
- * Vencord, a modification for Discord's desktop app
- * Copyright (c) 2022 Vendicated and contributors
+ * Vencord、Discordのデスクトップアプリの改造版
+ * 著作権 (c) 2022 Vendicated および貢献者
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * このプログラムはフリーソフトウェアです。再配布や修正は、
+ * GNU General Public License の条件の下で行うことができます。
+ * このライセンスのバージョン 3 またはそれ以降を選択することができます。
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * このプログラムは有用であることを期待して配布されていますが、
+ * 保証なしで提供されます。商品性や特定の目的への適合性についての
+ * 暗黙の保証もありません。詳細については、GNU General Public License を参照してください。
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * このプログラムと一緒に GNU General Public License のコピーを受け取るはずです。
+ * 受け取っていない場合は、<https://www.gnu.org/licenses/> を参照してください。
 */
 
 export * as Api from "./api";
@@ -41,16 +39,15 @@ import { onceReady } from "./webpack";
 import { SettingsRouter } from "./webpack/common";
 
 async function syncSettings() {
-    // pre-check for local shared settings
+    // ローカル共有設定の事前チェック
     if (
         Settings.cloud.authenticated &&
-        !await dsGet("Vencord_cloudSecret") // this has been enabled due to local settings share or some other bug
+        !await dsGet("Vencord_cloudSecret") // ローカル設定の共有またはその他のバグにより有効になっています
     ) {
-        // show a notification letting them know and tell them how to fix it
+        // 通知を表示して、修正方法を伝える
         showNotification({
-            title: "Cloud Integrations",
-            body: "We've noticed you have cloud integrations enabled in another client! Due to limitations, you will " +
-                "need to re-authenticate to continue using them. Click here to go to the settings page to do so!",
+            title: "クラウド統合",
+            body: "他のクライアントでクラウド統合が有効になっていることに気付きました！制限のため、継続して使用するには再認証が必要です。設定ページに移動して再認証してください。",
             color: "var(--yellow-360)",
             onClick: () => SettingsRouter.open("VencordCloud")
         });
@@ -58,20 +55,19 @@ async function syncSettings() {
     }
 
     if (
-        Settings.cloud.settingsSync && // if it's enabled
-        Settings.cloud.authenticated // if cloud integrations are enabled
+        Settings.cloud.settingsSync && // 有効になっている場合
+        Settings.cloud.authenticated // クラウド統合が有効な場合
     ) {
         if (localStorage.Vencord_settingsDirty) {
             await putCloudSettings();
             delete localStorage.Vencord_settingsDirty;
-        } else if (await getCloudSettings(false)) { // if we synchronized something (false means no sync)
-            // we show a notification here instead of allowing getCloudSettings() to show one to declutter the amount of
-            // potential notifications that might occur. getCloudSettings() will always send a notification regardless if
-            // there was an error to notify the user, but besides that we only want to show one notification instead of all
-            // of the possible ones it has (such as when your settings are newer).
+        } else if (await getCloudSettings(false)) { // 同期されたものがある場合 (false は同期しないことを意味します)
+            // ここで通知を表示し、getCloudSettings() がユーザーに通知するのを防ぐために、
+            // 可能な通知の数を減らすために通知を表示します。getCloudSettings() は、エラーがあるかどうかに関係なく、
+            // ユーザーに通知するため、可能な通知の数だけ表示するだけで十分です (設定が新しい場合など)。
             showNotification({
-                title: "Cloud Settings",
-                body: "Your settings have been updated! Click here to restart to fully apply changes!",
+                title: "クラウド設定",
+                body: "設定が更新されました！完全な変更を適用するために再起動するにはここをクリックしてください。",
                 color: "var(--green-360)",
                 onClick: relaunch
             });
@@ -94,8 +90,8 @@ async function init() {
                 await update();
                 if (Settings.autoUpdateNotification)
                     setTimeout(() => showNotification({
-                        title: "Vencord has been updated!",
-                        body: "Click here to restart",
+                        title: "Vencord が更新されました！",
+                        body: "再起動するにはここをクリックしてください",
                         permanent: true,
                         noPersist: true,
                         onClick: relaunch
@@ -105,8 +101,8 @@ async function init() {
 
             if (Settings.notifyAboutUpdates)
                 setTimeout(() => showNotification({
-                    title: "A Vencord update is available!",
-                    body: "Click here to view the update",
+                    title: "Vencord の更新が利用可能です！",
+                    body: "アップデートを表示するにはここをクリックしてください",
                     permanent: true,
                     noPersist: true,
                     onClick() {
@@ -114,7 +110,7 @@ async function init() {
                     }
                 }), 10_000);
         } catch (err) {
-            UpdateLogger.error("Failed to check for updates", err);
+            UpdateLogger.error("アップデートのチェックに失敗しました", err);
         }
     }
 
@@ -122,11 +118,11 @@ async function init() {
         const pendingPatches = patches.filter(p => !p.all && p.predicate?.() !== false);
         if (pendingPatches.length)
             PMLogger.warn(
-                "Webpack has finished initialising, but some patches haven't been applied yet.",
-                "This might be expected since some Modules are lazy loaded, but please verify",
-                "that all plugins are working as intended.",
-                "You are seeing this warning because this is a Development build of Vencord.",
-                "\nThe following patches have not been applied:",
+                "Webpack の初期化が完了しましたが、まだ一部のパッチが適用されていません。",
+                "これは、一部のモジュールが遅延読み込みされるため、予想される動作ですが、",
+                "すべてのプラグインが意図したとおりに動作していることを確認してください。",
+                "これは Vencord の開発ビルドですので、この警告が表示されます。",
+                "\n次のパッチが適用されていません:",
                 "\n\n" + pendingPatches.map(p => `${p.plugin}: ${p.find}`).join("\n")
             );
     }

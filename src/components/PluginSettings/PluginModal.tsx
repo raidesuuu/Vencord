@@ -129,7 +129,7 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
 
     function renderSettings() {
         if (!hasSettings || !plugin.options) {
-            return <Forms.FormText>There are no settings for this plugin.</Forms.FormText>;
+            return <Forms.FormText>このプラグインには設定がありません。</Forms.FormText>;
         } else {
             const options = Object.entries(plugin.options).map(([key, setting]) => {
                 if (setting.hidden) return null;
@@ -220,7 +220,7 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
                 {!!plugin.settingsAboutComponent && (
                     <div className={classes(Margins.bottom8, "vc-text-selectable")}>
                         <Forms.FormSection>
-                            <ErrorBoundary message="An error occurred while rendering this plugin's custom InfoComponent">
+                            <ErrorBoundary message="このプラグインのカスタム情報コンポーネントのレンダリング中にエラーが発生しました">
                                 <plugin.settingsAboutComponent tempSettings={tempSettings} />
                             </ErrorBoundary>
                         </Forms.FormSection>
@@ -242,7 +242,7 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
                         >
                             Cancel
                         </Button>
-                        <Tooltip text="You must fix all errors before saving" shouldShow={!canSubmit()}>
+                        <Tooltip text="保存する前にエラーを修正してください" shouldShow={!canSubmit()}>
                             {({ onMouseEnter, onMouseLeave }) => (
                                 <Button
                                     size={Button.Sizes.SMALL}
@@ -252,12 +252,12 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
                                     onMouseLeave={onMouseLeave}
                                     disabled={!canSubmit()}
                                 >
-                                    Save & Close
+                                    保存して閉じる
                                 </Button>
                             )}
                         </Tooltip>
                     </Flex>
-                    {saveError && <Text variant="text-md/semibold" style={{ color: "var(--text-danger)" }}>Error while saving: {saveError}</Text>}
+                    {saveError && <Text variant="text-md/semibold" style={{ color: "var(--text-danger)" }}>保存中にエラーが発生しました: {saveError}</Text>}
                 </Flex>
             </ModalFooter>}
         </ModalRoot>

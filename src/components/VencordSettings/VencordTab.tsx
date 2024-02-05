@@ -101,9 +101,9 @@ function VencordSettings() {
         ];
 
     return (
-        <SettingsTab title="Vencord Settings">
+        <SettingsTab title="Vencordの設定">
             <DonateCard image={donateImage} />
-            <Forms.FormSection title="Quick Actions">
+            <Forms.FormSection title="クイックアクション">
                 <Card className={cl("quick-actions-card")}>
                     <React.Fragment>
                         {!IS_WEB && (
@@ -131,7 +131,13 @@ function VencordSettings() {
                             onClick={() => VencordNative.native.openExternal("https://github.com/Vendicated/Vencord")}
                             size={Button.Sizes.SMALL}
                             disabled={settingsDirPending}>
-                            Open in GitHub
+                            GitHubで開く(JP)
+                        </Button>
+                        <Button
+                            onClick={() => VencordNative.native.openExternal("https://github.com/VencordJP/Vencord")}
+                            size={Button.Sizes.SMALL}
+                            disabled={settingsDirPending}>
+                            GitHubで開く(オリジナル)
                         </Button>
                     </React.Fragment>
                 </Card>
@@ -139,9 +145,9 @@ function VencordSettings() {
 
             <Forms.FormDivider />
 
-            <Forms.FormSection className={Margins.top16} title="Settings" tag="h5">
+            <Forms.FormSection className={Margins.top16} title="設定" tag="h5">
                 <Forms.FormText className={Margins.bottom20}>
-                    Hint: You can change the position of this settings section in the settings of the "Settings" plugin!
+                    ヒント：「設定」プラグインの設定で、この設定セクションの位置を変更できます！
                 </Forms.FormText>
                 {Switches.map(s => s && (
                     <Switch
@@ -157,62 +163,62 @@ function VencordSettings() {
 
 
             {needsVibrancySettings && <>
-                <Forms.FormTitle tag="h5">Window vibrancy style (requires restart)</Forms.FormTitle>
+                <Forms.FormTitle tag="h5">ウィンドウの透明度設定 (再起動が必要)</Forms.FormTitle>
                 <Select
                     className={Margins.bottom20}
-                    placeholder="Window vibrancy style"
+                    placeholder="ウィンドウの透明度設定"
                     options={[
-                        // Sorted from most opaque to most transparent
+                        // 最も不透明から最も透明に並べ替えられた順に並べる
                         {
-                            label: "No vibrancy", default: !settings.macosTranslucency, value: undefined
+                            label: "透明度なし", default: !settings.macosTranslucency, value: undefined
                         },
                         {
-                            label: "Under Page (window tinting)",
+                            label: "ページの下（ウィンドウの色調整）",
                             value: "under-page"
                         },
                         {
-                            label: "Content",
+                            label: "コンテンツ",
                             value: "content"
                         },
                         {
-                            label: "Window",
+                            label: "ウィンドウ",
                             value: "window"
                         },
                         {
-                            label: "Selection",
+                            label: "選択",
                             value: "selection"
                         },
                         {
-                            label: "Titlebar",
+                            label: "タイトルバー",
                             value: "titlebar"
                         },
                         {
-                            label: "Header",
+                            label: "ヘッダー",
                             value: "header"
                         },
                         {
-                            label: "Sidebar (old value for transparent windows)",
+                            label: "サイドバー（透明なウィンドウの古い値）",
                             value: "sidebar",
                             default: settings.macosTranslucency
                         },
                         {
-                            label: "Tooltip",
+                            label: "ツールチップ",
                             value: "tooltip"
                         },
                         {
-                            label: "Menu",
+                            label: "メニュー",
                             value: "menu"
                         },
                         {
-                            label: "Popover",
+                            label: "ポップオーバー",
                             value: "popover"
                         },
                         {
-                            label: "Fullscreen UI (transparent but slightly muted)",
+                            label: "フルスクリーンUI（透明ですがわずかに静か）",
                             value: "fullscreen-ui"
                         },
                         {
-                            label: "HUD (Most transparent)",
+                            label: "HUD（最も透明）",
                             value: "hud"
                         },
                     ]}
@@ -229,26 +235,26 @@ function VencordSettings() {
 function NotificationSection({ settings }: { settings: typeof Settings["notifications"]; }) {
     return (
         <>
-            <Forms.FormTitle tag="h5">Notification Style</Forms.FormTitle>
+            <Forms.FormTitle tag="h5">通知のスタイル</Forms.FormTitle>
             {settings.useNative !== "never" && Notification?.permission === "denied" && (
                 <ErrorCard style={{ padding: "1em" }} className={Margins.bottom8}>
-                    <Forms.FormTitle tag="h5">Desktop Notification Permission denied</Forms.FormTitle>
-                    <Forms.FormText>You have denied Notification Permissions. Thus, Desktop notifications will not work!</Forms.FormText>
+                    <Forms.FormTitle tag="h5">デスクトップ通知が拒否されました</Forms.FormTitle>
+                    <Forms.FormText>あなたはデスクトップ通知を設定で無効にしました。そのため、デスクトップ通知を受信できません。</Forms.FormText>
                 </ErrorCard>
             )}
             <Forms.FormText className={Margins.bottom8}>
-                Some plugins may show you notifications. These come in two styles:
+                一部のプラグインは通知を表示する場合があります。これらには2つのスタイルがあります：
                 <ul>
-                    <li><strong>Vencord Notifications</strong>: These are in-app notifications</li>
-                    <li><strong>Desktop Notifications</strong>: Native Desktop notifications (like when you get a ping)</li>
+                    <li><strong>Vencord Notifications</strong>: これらはアプリ内通知です</li>
+                    <li><strong>デスクトップ通知</strong>: ネイティブのデスクトップ通知（例：pingを受け取ったとき）</li>
                 </ul>
             </Forms.FormText>
             <Select
-                placeholder="Notification Style"
+                placeholder="通知スタイル"
                 options={[
-                    { label: "Only use Desktop notifications when Discord is not focused", value: "not-focused", default: true },
-                    { label: "Always use Desktop notifications", value: "always" },
-                    { label: "Always use Vencord notifications", value: "never" },
+                    { label: "Discordがフォーカスされていない場合にのみデスクトップ通知を使用する", value: "not-focused", default: true },
+                    { label: "常にデスクトップ通知を使用する", value: "always" },
+                    { label: "常にVencord通知を使用する", value: "never" },
                 ] satisfies Array<{ value: typeof settings["useNative"]; } & Record<string, any>>}
                 closeOnSelect={true}
                 select={v => settings.useNative = v}
@@ -256,21 +262,21 @@ function NotificationSection({ settings }: { settings: typeof Settings["notifica
                 serialize={identity}
             />
 
-            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>Notification Position</Forms.FormTitle>
+            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>通知の位置</Forms.FormTitle>
             <Select
                 isDisabled={settings.useNative === "always"}
-                placeholder="Notification Position"
+                placeholder="通知の位置"
                 options={[
-                    { label: "Bottom Right", value: "bottom-right", default: true },
-                    { label: "Top Right", value: "top-right" },
+                    { label: "右下", value: "bottom-right", default: true },
+                    { label: "右上", value: "top-right" },
                 ] satisfies Array<{ value: typeof settings["position"]; } & Record<string, any>>}
                 select={v => settings.position = v}
                 isSelected={v => v === settings.position}
                 serialize={identity}
             />
 
-            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>Notification Timeout</Forms.FormTitle>
-            <Forms.FormText className={Margins.bottom16}>Set to 0s to never automatically time out</Forms.FormText>
+            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>通知のタイムアウト</Forms.FormTitle>
+            <Forms.FormText className={Margins.bottom16}>自動的にタイムアウトしないようにするには、0秒に設定します</Forms.FormText>
             <Slider
                 disabled={settings.useNative === "always"}
                 markers={[0, 1000, 2500, 5000, 10_000, 20_000]}
@@ -278,15 +284,15 @@ function NotificationSection({ settings }: { settings: typeof Settings["notifica
                 maxValue={20_000}
                 initialValue={settings.timeout}
                 onValueChange={v => settings.timeout = v}
-                onValueRender={v => (v / 1000).toFixed(2) + "s"}
-                onMarkerRender={v => (v / 1000) + "s"}
+                onValueRender={v => (v / 1000).toFixed(2) + "秒"}
+                onMarkerRender={v => (v / 1000) + "秒"}
                 stickToMarkers={false}
             />
 
-            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>Notification Log Limit</Forms.FormTitle>
+            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>通知ログの制限</Forms.FormTitle>
             <Forms.FormText className={Margins.bottom16}>
-                The amount of notifications to save in the log until old ones are removed.
-                Set to <code>0</code> to disable Notification log and <code>∞</code> to never automatically remove old Notifications
+                古い通知が削除されるまでログに保存する通知の数。
+                通知ログを無効にするには<code>0</code>、古い通知を自動的に削除しないには<code>∞</code>に設定します
             </Forms.FormText>
             <Slider
                 markers={[0, 25, 50, 75, 100, 200]}
@@ -303,7 +309,7 @@ function NotificationSection({ settings }: { settings: typeof Settings["notifica
                 onClick={openNotificationLogModal}
                 disabled={settings.logLimit === 0}
             >
-                Open Notification Log
+                通知ログを開く
             </Button>
         </>
     );
@@ -317,8 +323,8 @@ function DonateCard({ image }: DonateCardProps) {
     return (
         <Card className={cl("card", "donate")}>
             <div>
-                <Forms.FormTitle tag="h5">Support the Project</Forms.FormTitle>
-                <Forms.FormText>Please consider supporting the development of Vencord by donating!</Forms.FormText>
+                <Forms.FormTitle tag="h5">プロジェクトのサポート</Forms.FormTitle>
+                <Forms.FormText>Vencordの開発をサポートするために寄付をご検討ください！</Forms.FormText>
                 <DonateButton style={{ transform: "translateX(-1em)" }} />
             </div>
             <img
@@ -336,4 +342,4 @@ function DonateCard({ image }: DonateCardProps) {
     );
 }
 
-export default wrapTab(VencordSettings, "Vencord Settings");
+export default wrapTab(VencordSettings, "Vencordの設定");
