@@ -25,7 +25,7 @@ const UserPopoutSectionCssClasses = findByPropsLazy("section", "lastSection");
 
 export default definePlugin({
     name: "BetterNotesBox",
-    description: "Hide notes or disable spellcheck (Configure in settings!!)",
+    description: "メモ、またはスペルチェックを無効にする（設定から変更）",
     authors: [Devs.Ven],
 
     patches: [

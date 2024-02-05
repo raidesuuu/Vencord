@@ -23,7 +23,7 @@ export default definePlugin({
     name: "BetterGifAltText",
     authors: [Devs.Ven],
     description:
-        "Change GIF alt text from simply being 'GIF' to containing the gif tags / filename",
+        "GIFのaltテキストを単に'GIF'からgifタグ/ファイル名を含むものに変更",
     patches: [
         {
             find: "onCloseImage=",

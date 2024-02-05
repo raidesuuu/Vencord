@@ -78,177 +78,177 @@ const enum TimestampMode {
 const settings = definePluginSettings({
     appID: {
         type: OptionType.STRING,
-        description: "Application ID (required)",
+        description: "アプリケーションID（必須）",
         onChange: onChange,
         isValid: (value: string) => {
-            if (!value) return "Application ID is required.";
-            if (value && !/^\d+$/.test(value)) return "Application ID must be a number.";
+            if (!value) return "アプリケーションIDが必要です。";
+            if (value && !/^\d+$/.test(value)) return "アプリケーションIDは数字である必要があります";
             return true;
         }
     },
     appName: {
         type: OptionType.STRING,
-        description: "Application name (required)",
+        description: "アプリケーション名 （必須）",
         onChange: onChange,
         isValid: (value: string) => {
-            if (!value) return "Application name is required.";
-            if (value.length > 128) return "Application name must be not longer than 128 characters.";
+            if (!value) return "アプリケーション名は必須です。";
+            if (value.length > 128) return "アプリケーション名は128文字以内でお願いします。";
             return true;
         }
     },
     details: {
         type: OptionType.STRING,
-        description: "Details (line 1)",
+        description: "詳細 （２行目）",
         onChange: onChange,
         isValid: (value: string) => {
-            if (value && value.length > 128) return "Details (line 1) must be not longer than 128 characters.";
+            if (value && value.length > 128) return "詳細（１行目）は128文字以内でお願いします。";
             return true;
         }
     },
     state: {
         type: OptionType.STRING,
-        description: "State (line 2)",
+        description: "状態 （２行目）",
         onChange: onChange,
         isValid: (value: string) => {
-            if (value && value.length > 128) return "State (line 2) must be not longer than 128 characters.";
+            if (value && value.length > 128) return "状態（２行目）は128文字以内でお願いします。";
             return true;
         }
     },
     type: {
         type: OptionType.SELECT,
-        description: "Activity type",
+        description: "アクティビティの状態",
         onChange: onChange,
         options: [
             {
-                label: "Playing",
+                label: "プレイ中",
                 value: ActivityType.PLAYING,
                 default: true
             },
             {
-                label: "Streaming",
+                label: "配信中",
                 value: ActivityType.STREAMING
             },
             {
-                label: "Listening",
+                label: "再生中",
                 value: ActivityType.LISTENING
             },
             {
-                label: "Watching",
+                label: "視聴中",
                 value: ActivityType.WATCHING
             },
             {
-                label: "Competing",
+                label: "競合中",
                 value: ActivityType.COMPETING
             }
         ]
     },
     streamLink: {
         type: OptionType.STRING,
-        description: "Twitch.tv or Youtube.com link (only for Streaming activity type)",
+        description: "Twitch.tv またはYouTube.comのリンク（配信中の状態が選択されている場合のみ）",
         onChange: onChange,
         disabled: isStreamLinkDisabled,
         isValid: isStreamLinkValid
     },
     timestampMode: {
         type: OptionType.SELECT,
-        description: "Timestamp mode",
+        description: "タイムスタンプモード",
         onChange: onChange,
         options: [
             {
-                label: "None",
+                label: "なし",
                 value: TimestampMode.NONE,
                 default: true
             },
             {
-                label: "Since discord open",
+                label: "Discordが開いてから",
                 value: TimestampMode.NOW
             },
             {
-                label: "Same as your current time",
+                label: "現在時刻と同じ",
                 value: TimestampMode.TIME
             },
             {
-                label: "Custom",
+                label: "カスタム",
                 value: TimestampMode.CUSTOM
             }
         ]
     },
     startTime: {
         type: OptionType.NUMBER,
-        description: "Start timestamp (only for custom timestamp mode)",
+        description: "タイムスタンプを開始（カスタムタイムスタンプモードのみ）",
         onChange: onChange,
         disabled: isTimestampDisabled,
         isValid: (value: number) => {
-            if (value && value < 0) return "Start timestamp must be greater than 0.";
+            if (value && value < 0) return "開始タイムスタンプは0より大きくある必要があります";
             return true;
         }
     },
     endTime: {
         type: OptionType.NUMBER,
-        description: "End timestamp (only for custom timestamp mode)",
+        description: "タイムスタンプを終了（タイムスタンプモードがカスタムの場合のみ）",
         onChange: onChange,
         disabled: isTimestampDisabled,
         isValid: (value: number) => {
-            if (value && value < 0) return "End timestamp must be greater than 0.";
+            if (value && value < 0) return "終了タイムスタンプは0より大きくある必要があります";
             return true;
         }
     },
     imageBig: {
         type: OptionType.STRING,
-        description: "Big image key/link",
+        description: "ビッグイメージのキー／リンク",
         onChange: onChange,
         isValid: isImageKeyValid
     },
     imageBigTooltip: {
         type: OptionType.STRING,
-        description: "Big image tooltip",
+        description: "ビッグイメージのツールチップ",
         onChange: onChange,
         isValid: (value: string) => {
-            if (value && value.length > 128) return "Big image tooltip must be not longer than 128 characters.";
+            if (value && value.length > 128) return "ビッグイメージのツールチップは128文字以内である必要があります。";
             return true;
         }
     },
     imageSmall: {
         type: OptionType.STRING,
-        description: "Small image key/link",
+        description: "スモールイメージのキー／リンク",
         onChange: onChange,
         isValid: isImageKeyValid
     },
     imageSmallTooltip: {
         type: OptionType.STRING,
-        description: "Small image tooltip",
+        description: "スモールイメージのツールチップ",
         onChange: onChange,
         isValid: (value: string) => {
-            if (value && value.length > 128) return "Small image tooltip must be not longer than 128 characters.";
+            if (value && value.length > 128) return "スモールイメージのツールチップは128文字以内である必要があります。";
             return true;
         }
     },
     buttonOneText: {
         type: OptionType.STRING,
-        description: "Button 1 text",
+        description: "ボタン１のテキスト",
         onChange: onChange,
         isValid: (value: string) => {
-            if (value && value.length > 31) return "Button 1 text must be not longer than 31 characters.";
+            if (value && value.length > 31) return "ボタン１のテキストは31文字以内である必要があります。";
             return true;
         }
     },
     buttonOneURL: {
         type: OptionType.STRING,
-        description: "Button 1 URL",
+        description: "ボタン１のURL",
         onChange: onChange
     },
     buttonTwoText: {
         type: OptionType.STRING,
-        description: "Button 2 text",
+        description: "ボタン２のテキスト",
         onChange: onChange,
         isValid: (value: string) => {
-            if (value && value.length > 31) return "Button 2 text must be not longer than 31 characters.";
+            if (value && value.length > 31) return "ボタン２のテキストは31文字以内である必要があります。";
             return true;
         }
     },
     buttonTwoURL: {
         type: OptionType.STRING,
-        description: "Button 2 URL",
+        description: "ボタン２のURL",
         onChange: onChange
     }
 });
@@ -272,8 +272,8 @@ function isTimestampDisabled() {
 }
 
 function isImageKeyValid(value: string) {
-    if (/https?:\/\/(?!i\.)?imgur\.com\//.test(value)) return "Imgur link must be a direct link to the image. (e.g. https://i.imgur.com/...)";
-    if (/https?:\/\/(?!media\.)?tenor\.com\//.test(value)) return "Tenor link must be a direct link to the image. (e.g. https://media.tenor.com/...)";
+    if (/https?:\/\/(?!i\.)?imgur\.com\//.test(value)) return "Imgurのリンクは画像へのダイレクトリンクでなければなりません。 (例. https://i.imgur.com/...)";
+    if (/https?:\/\/(?!media\.)?tenor\.com\//.test(value)) return "Tenorのリンクは画像へのダイレクトリンクでなければなりません。 (例. https://media.tenor.com/...)";
     return true;
 }
 
@@ -385,7 +385,7 @@ async function setRpc(disable?: boolean) {
 
 export default definePlugin({
     name: "CustomRPC",
-    description: "Allows you to set a custom rich presence.",
+    description: "Custom RPCの設定をすることができます",
     authors: [Devs.captain, Devs.AutumnVN],
     start: setRpc,
     stop: () => setRpc(true),
@@ -396,14 +396,13 @@ export default definePlugin({
         return (
             <>
                 <Forms.FormText>
-                    Go to <Link href="https://discord.com/developers/applications">Discord Developer Portal</Link> to create an application and
-                    get the application ID.
+                    最初に <Link href="https://discord.com/developers/applications">Discord Developer Portal</Link> に行ってアプリケーションを作り、アプリケーションIDを取得する必要があります
                 </Forms.FormText>
                 <Forms.FormText>
-                    Upload images in the Rich Presence tab to get the image keys.
+                    Rich Presenceタブで画像をアップロードしてイメージキーを取得します
                 </Forms.FormText>
                 <Forms.FormText>
-                    If you want to use image link, download your image and reupload the image to <Link href="https://imgur.com">Imgur</Link> and get the image link by right-clicking the image and select "Copy image address".
+                    画像リンクを使用したい場合は、画像をダウンロードし <Link href="https://imgur.com">Imgur</Link> に画像を再アップロードし、画像を右クリックして「画像アドレスをコピー」を選択して画像リンクを取得します。
                 </Forms.FormText>
                 <Forms.FormDivider />
                 <div style={{ width: "284px" }} className={Colors.profileColors}>

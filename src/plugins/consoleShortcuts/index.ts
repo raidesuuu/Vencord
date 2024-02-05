@@ -31,7 +31,7 @@ const WEB_ONLY = (f: string) => () => {
 
 export default definePlugin({
     name: "ConsoleShortcuts",
-    description: "Adds shorter Aliases for many things on the window. Run `shortcutList` for a list.",
+    description: "ウィンドウ上の多くのものに対して短いエイリアスを追加します。`shortcutList`を実行するとリストが表示されます。",
     authors: [Devs.Ven],
 
     getShortcuts() {
@@ -51,7 +51,7 @@ export default definePlugin({
                         default:
                             const uniqueMatches = [...new Set(matches)];
                             if (uniqueMatches.length > 1)
-                                console.warn(`Warning: This filter matches ${matches.length} modules. Make it more specific!\n`, uniqueMatches);
+                                console.warn(`警告: このフィルタは${matches.length}モジュールに一致します。もっと具体的にしてください\n`, uniqueMatches);
 
                             return matches[0];
                     }
@@ -93,7 +93,7 @@ export default definePlugin({
             canonicalizeReplacement,
             fakeRender: (component: ComponentType, props: any) => {
                 const prevWin = fakeRenderWin?.deref();
-                const win = prevWin?.closed === false ? prevWin : window.open("about:blank", "Fake Render", "popup,width=500,height=500")!;
+                const win = prevWin?.closed === false ? prevWin : window.open("about:blank", "フェイクレンダリング", "popup,width=500,height=500")!;
                 fakeRenderWin = new WeakRef(win);
                 win.focus();
 

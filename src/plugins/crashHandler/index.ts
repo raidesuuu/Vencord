@@ -47,12 +47,12 @@ const { ModalStack, DraftManager, DraftType, closeExpressionPicker } = proxyLazy
 const settings = definePluginSettings({
     attemptToPreventCrashes: {
         type: OptionType.BOOLEAN,
-        description: "Whether to attempt to prevent Discord crashes.",
+        description: "Discordのクラッシュを防ぐかどうか",
         default: true
     },
     attemptToNavigateToHome: {
         type: OptionType.BOOLEAN,
-        description: "Whether to attempt to navigate to the home when preventing Discord crashes.",
+        description: "Discordのクラッシュを防ぐ際にホーム画面への移動を試みるかどうか。",
         default: false
     }
 });
@@ -63,7 +63,7 @@ let shouldAttemptNextHandle = false;
 
 export default definePlugin({
     name: "CrashHandler",
-    description: "Utility plugin for handling and possibly recovering from Crashes without a restart",
+    description: "再起動なしでクラッシュを処理し、回復させるプラグイン",
     authors: [Devs.Nuckyz],
     enabledByDefault: true,
 
@@ -88,8 +88,8 @@ export default definePlugin({
             try {
                 showNotification({
                     color: "#eed202",
-                    title: "Discord has crashed!",
-                    body: "Awn :( Discord has crashed more than five times, not attempting to recover.",
+                    title: "Discordがクラッシュしました",
+                    body: "おっと :( Discordが5回以上クラッシュし、回復のしようがありません。",
                     noPersist: true,
                 });
             } catch { }
@@ -101,7 +101,7 @@ export default definePlugin({
         setTimeout(() => crashCount--, 60_000);
 
         try {
-            if (crashCount === 1) maybePromptToUpdate("Uh oh, Discord has just crashed... but good news, there is a Vencord update available that might fix this issue! Would you like to update now?", true);
+            if (crashCount === 1) maybePromptToUpdate("おっと、Discordがクラッシュしてしまいました...ですが、この問題を解決できるかもしれないVencordのアップデートがあります。今すぐアップデートしますか？", true);
 
             if (settings.store.attemptToPreventCrashes) {
                 this.handlePreventCrash(_this);
@@ -110,7 +110,7 @@ export default definePlugin({
 
             return false;
         } catch (err) {
-            CrashHandlerLogger.error("Failed to handle crash", err);
+            CrashHandlerLogger.error("クラッシュの処理に失敗しました", err);
             return false;
         } finally {
             lastCrashTimestamp = Date.now();
@@ -122,8 +122,8 @@ export default definePlugin({
             try {
                 showNotification({
                     color: "#eed202",
-                    title: "Discord has crashed!",
-                    body: "Attempting to recover...",
+                    title: "Discordがクラッシュしました",
+                    body: "復旧を試みています",
                     noPersist: true,
                 });
             } catch { }
@@ -135,44 +135,44 @@ export default definePlugin({
             DraftManager.clearDraft(channelId, DraftType.ChannelMessage);
             DraftManager.clearDraft(channelId, DraftType.FirstThreadMessage);
         } catch (err) {
-            CrashHandlerLogger.debug("Failed to clear drafts.", err);
+            CrashHandlerLogger.debug("ドラフトをクリアできませんでした。", err);
         }
         try {
             closeExpressionPicker();
         }
         catch (err) {
-            CrashHandlerLogger.debug("Failed to close expression picker.", err);
+            CrashHandlerLogger.debug("エクスプレッション・ピッカーを閉じるのに失敗しました。", err);
         }
         try {
             FluxDispatcher.dispatch({ type: "CONTEXT_MENU_CLOSE" });
         } catch (err) {
-            CrashHandlerLogger.debug("Failed to close open context menu.", err);
+            CrashHandlerLogger.debug("開いているコンテキストメニューを閉じることができませんでした。", err);
         }
         try {
             ModalStack.popAll();
         } catch (err) {
-            CrashHandlerLogger.debug("Failed to close old modals.", err);
+            CrashHandlerLogger.debug("古いモーダルを閉じるのに失敗しました。", err);
         }
         try {
             closeAllModals();
         } catch (err) {
-            CrashHandlerLogger.debug("Failed to close all open modals.", err);
+            CrashHandlerLogger.debug("開いているすべてのモーダルを閉じることができませんでした。", err);
         }
         try {
             FluxDispatcher.dispatch({ type: "USER_PROFILE_MODAL_CLOSE" });
         } catch (err) {
-            CrashHandlerLogger.debug("Failed to close user popout.", err);
+            CrashHandlerLogger.debug("ユーザーポップアウトを閉じることができませんでした。", err);
         }
         try {
             FluxDispatcher.dispatch({ type: "LAYER_POP_ALL" });
         } catch (err) {
-            CrashHandlerLogger.debug("Failed to pop all layers.", err);
+            CrashHandlerLogger.debug("すべてのレイヤーのポップに失敗", err);
         }
         if (settings.store.attemptToNavigateToHome) {
             try {
                 NavigationRouter.transitionTo("/channels/@me");
             } catch (err) {
-                CrashHandlerLogger.debug("Failed to navigate to home", err);
+                CrashHandlerLogger.debug("ホーム画面への移動へ失敗しました", err);
             }
         }
 
@@ -180,7 +180,7 @@ export default definePlugin({
             shouldAttemptNextHandle = true;
             _this.forceUpdate();
         } catch (err) {
-            CrashHandlerLogger.debug("Failed to update crash handler component.", err);
+            CrashHandlerLogger.debug("クラッシュハンドラ・コンポーネントの更新に失敗しました。", err);
         }
     }
 });

@@ -25,7 +25,7 @@ export default definePlugin({
     name: "BetterRoleDot",
     authors: [Devs.Ven, Devs.AutumnVN],
     description:
-        "Copy role colour on RoleDot (accessibility setting) click. Also allows using both RoleDot and coloured names simultaneously",
+        "Roledot(アクセシビリティ設定)をクリックすると、ロールの色がコピーされ、RoleDotと色の付いた名前の両方を同時に使用できる",
 
     patches: [
         {
@@ -69,13 +69,13 @@ export default definePlugin({
     options: {
         bothStyles: {
             type: OptionType.BOOLEAN,
-            description: "Show both role dot and coloured names",
+            description: "Roledotとカラーネームの両方を表示",
             restartNeeded: true,
             default: false,
         },
         copyRoleColorInProfilePopout: {
             type: OptionType.BOOLEAN,
-            description: "Allow click on role dot in profile popout to copy role color",
+            description: "プロフィールのポップアウトのRoledotをクリックして、ロールの色をコピー",
             restartNeeded: true,
             default: false
         }
@@ -84,7 +84,7 @@ export default definePlugin({
     copyToClipBoard(color: string) {
         Clipboard.copy(color);
         Toasts.show({
-            message: "Copied to Clipboard!",
+            message: "クリップボードにコピーしました",
             type: Toasts.Type.SUCCESS,
             id: Toasts.genId(),
             options: {
