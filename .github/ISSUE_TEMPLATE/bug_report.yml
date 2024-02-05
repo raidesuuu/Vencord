@@ -15,7 +15,7 @@ body:
     id: discord
     attributes:
       label: Discordのアカウント
-      description: あなたのDiscordアカウントのIDをここに入力してください。(方式: username#0000, username)
+      description: あなたのDiscordアカウントのIDをここに入力してください。
       placeholder: username#0000, username
     validations:
       required: false
