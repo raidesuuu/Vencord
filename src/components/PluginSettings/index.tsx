@@ -64,19 +64,19 @@ function ReloadRequiredCard({ required }: { required: boolean; }) {
         <Card className={cl("info-card", { "restart-card": required })}>
             {required ? (
                 <>
-                    <Forms.FormTitle tag="h5">Restart required!</Forms.FormTitle>
+                    <Forms.FormTitle tag="h5">再起動が必要です！</Forms.FormTitle>
                     <Forms.FormText className={cl("dep-text")}>
-                        Restart now to apply new plugins and their settings
+                        新しいプラグインとその設定を適用するために、今すぐ再起動してください
                     </Forms.FormText>
                     <Button color={Button.Colors.YELLOW} onClick={() => location.reload()}>
-                        Restart
+                        再起動
                     </Button>
                 </>
             ) : (
                 <>
-                    <Forms.FormTitle tag="h5">Plugin Management</Forms.FormTitle>
-                    <Forms.FormText>Press the cog wheel or info icon to get more info on a plugin</Forms.FormText>
-                    <Forms.FormText>Plugins with a cog wheel have settings you can modify!</Forms.FormText>
+                    <Forms.FormTitle tag="h5">プラグイン管理</Forms.FormTitle>
+                    <Forms.FormText>歯車アイコンまたは情報アイコンを押して、プラグインの詳細情報を表示します</Forms.FormText>
+                    <Forms.FormText>歯車アイコンのあるプラグインには、変更できる設定があります！</Forms.FormText>
                 </>
             )}
         </Card>
