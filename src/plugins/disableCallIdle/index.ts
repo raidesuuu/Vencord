@@ -16,12 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { migratePluginSettings } from "@api/Settings";
 import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
+migratePluginSettings("DisableCallIdle", "DisableDMCallIdle");
 export default definePlugin({
     name: "DM通話の自動切断を無効化",
-    description: "DMの音声通話から3分後に自動的に切断される機能を無効にします。",
+    description: "DMの音声通話から3分後に自動的に切断される機能とAFKボイスチャンネルに移動される機能を無効にします。",
     authors: [Devs.Nuckyz],
     patches: [
         {
@@ -29,6 +31,13 @@ export default definePlugin({
             replacement: {
                 match: /,?(?=this\.idleTimeout=new \i\.Timeout)/,
                 replace: ";return;"
+            }
+        },
+        {
+            find: "handleIdleUpdate(){",
+            replacement: {
+                match: /(?<=_initialize\(\){)/,
+                replace: "return;"
             }
         }
     ]

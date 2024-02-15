@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ */
 
 import { showNotification } from "@api/Notifications";
 import { definePluginSettings } from "@api/Settings";
@@ -24,42 +24,47 @@ import { closeAllModals } from "@utils/modal";
 import definePlugin, { OptionType } from "@utils/types";
 import { maybePromptToUpdate } from "@utils/updater";
 import { filters, findBulk, proxyLazyWebpack } from "@webpack";
-import { FluxDispatcher, NavigationRouter, SelectedChannelStore } from "@webpack/common";
-import type { ReactElement } from "react";
+import {
+    FluxDispatcher,
+    NavigationRouter,
+    SelectedChannelStore,
+} from "@webpack/common";
 
 const CrashHandlerLogger = new Logger("CrashHandler");
-const { ModalStack, DraftManager, DraftType, closeExpressionPicker } = proxyLazyWebpack(() => {
-    const modules = findBulk(
-        filters.byProps("pushLazy", "popAll"),
-        filters.byProps("clearDraft", "saveDraft"),
-        filters.byProps("DraftType"),
-        filters.byProps("closeExpressionPicker", "openExpressionPicker"),
-    );
+const { ModalStack, DraftManager, DraftType, closeExpressionPicker } =
+    proxyLazyWebpack(() => {
+        const modules = findBulk(
+            filters.byProps("pushLazy", "popAll"),
+            filters.byProps("clearDraft", "saveDraft"),
+            filters.byProps("DraftType"),
+            filters.byProps("closeExpressionPicker", "openExpressionPicker")
+        );
 
-    return {
-        ModalStack: modules[0],
-        DraftManager: modules[1],
-        DraftType: modules[2]?.DraftType,
-        closeExpressionPicker: modules[3]?.closeExpressionPicker,
-    };
-});
+        return {
+            ModalStack: modules[0],
+            DraftManager: modules[1],
+            DraftType: modules[2]?.DraftType,
+            closeExpressionPicker: modules[3]?.closeExpressionPicker,
+        };
+    });
 
 const settings = definePluginSettings({
     attemptToPreventCrashes: {
         type: OptionType.BOOLEAN,
         description: "Discordのクラッシュを防ぐかどうか",
-        default: true
+        default: true,
     },
     attemptToNavigateToHome: {
         type: OptionType.BOOLEAN,
-        description: "Discordのクラッシュを防ぐ際にホーム画面への移動を試みるかどうか。",
-        default: false
-    }
+        description:
+            "Discordのクラッシュを防ぐ際にホーム画面への移動を試みるかどうか。",
+        default: false,
+    },
 });
 
-let crashCount: number = 0;
-let lastCrashTimestamp: number = 0;
-let shouldAttemptNextHandle = false;
+let hasCrashedOnce = false;
+let isRecovering = false;
+let shouldAttemptRecover = true;
 
 export default definePlugin({
     name: "CrashHandler",
@@ -73,61 +78,70 @@ export default definePlugin({
         {
             find: ".Messages.ERRORS_UNEXPECTED_CRASH",
             replacement: {
-                match: /(?=this\.setState\()/,
-                replace: "$self.handleCrash(this)||"
-            }
-        }
+                match: /this\.setState\((.+?)\)/,
+                replace: "$self.handleCrash(this,$1);",
+            },
+        },
     ],
 
-    handleCrash(_this: ReactElement & { forceUpdate: () => void; }) {
-        if (Date.now() - lastCrashTimestamp <= 1_000 && !shouldAttemptNextHandle) return true;
+    handleCrash(_this: any, errorState: any) {
+        _this.setState(errorState);
 
-        shouldAttemptNextHandle = false;
+        // Already recovering, prevent error which happens more than once too fast to trigger another recover
+        if (isRecovering) return;
+        isRecovering = true;
 
-        if (++crashCount > 5) {
+        // 1 ms timeout to avoid react breaking when re-rendering
+        setTimeout(() => {
             try {
-                showNotification({
-                    color: "#eed202",
-                    title: "Discordがクラッシュしました",
-                    body: "おっと :( Discordが5回以上クラッシュし、回復のしようがありません。",
-                    noPersist: true,
-                });
-            } catch { }
+                // Prevent a crash loop with an error that could not be handled
+                if (!shouldAttemptRecover) {
+                    try {
+                        showNotification({
+                            color: "#eed202",
+                            title: "Discordがクラッシュしました",
+                            body: "おっと :( Discordが5回以上クラッシュし、回復のしようがありません。",
+                            noPersist: true,
+                        });
+                    } catch {}
 
-            lastCrashTimestamp = Date.now();
-            return false;
-        }
+                    return;
+                }
 
-        setTimeout(() => crashCount--, 60_000);
+                shouldAttemptRecover = false;
+                // This is enough to avoid a crash loop
+                setTimeout(() => (shouldAttemptRecover = true), 500);
+            } catch {}
 
-        try {
-            if (crashCount === 1) maybePromptToUpdate("おっと、Discordがクラッシュしてしまいました...ですが、この問題を解決できるかもしれないVencordのアップデートがあります。今すぐアップデートしますか？", true);
+            try {
+                if (!hasCrashedOnce) {
+                    hasCrashedOnce = true;
+                    maybePromptToUpdate(
+                        "Uh oh, Discord has just crashed... but good news, there is a Vencord update available that might fix this issue! Would you like to update now?",
+                        true
+                    );
+                }
+            } catch {}
 
-            if (settings.store.attemptToPreventCrashes) {
-                this.handlePreventCrash(_this);
-                return true;
+            try {
+                if (settings.store.attemptToPreventCrashes) {
+                    this.handlePreventCrash(_this);
+                }
+            } catch (err) {
+                CrashHandlerLogger.error("Failed to handle crash", err);
             }
-
-            return false;
-        } catch (err) {
-            CrashHandlerLogger.error("クラッシュの処理に失敗しました", err);
-            return false;
-        } finally {
-            lastCrashTimestamp = Date.now();
-        }
+        }, 1);
     },
 
-    handlePreventCrash(_this: ReactElement & { forceUpdate: () => void; }) {
-        if (Date.now() - lastCrashTimestamp >= 1_000) {
-            try {
-                showNotification({
-                    color: "#eed202",
-                    title: "Discordがクラッシュしました",
-                    body: "復旧を試みています",
-                    noPersist: true,
-                });
-            } catch { }
-        }
+    handlePreventCrash(_this: any) {
+        try {
+            showNotification({
+                color: "#eed202",
+                title: "Discordがクラッシュしました",
+                body: "復旧を試みています",
+                noPersist: true,
+            });
+        } catch {}
 
         try {
             const channelId = SelectedChannelStore.getChannelId();
@@ -139,29 +153,43 @@ export default definePlugin({
         }
         try {
             closeExpressionPicker();
-        }
-        catch (err) {
-            CrashHandlerLogger.debug("エクスプレッション・ピッカーを閉じるのに失敗しました。", err);
+        } catch (err) {
+            CrashHandlerLogger.debug(
+                "エクスプレッション・ピッカーを閉じるのに失敗しました。",
+                err
+            );
         }
         try {
             FluxDispatcher.dispatch({ type: "CONTEXT_MENU_CLOSE" });
         } catch (err) {
-            CrashHandlerLogger.debug("開いているコンテキストメニューを閉じることができませんでした。", err);
+            CrashHandlerLogger.debug(
+                "開いているコンテキストメニューを閉じることができませんでした。",
+                err
+            );
         }
         try {
             ModalStack.popAll();
         } catch (err) {
-            CrashHandlerLogger.debug("古いモーダルを閉じるのに失敗しました。", err);
+            CrashHandlerLogger.debug(
+                "古いモーダルを閉じるのに失敗しました。",
+                err
+            );
         }
         try {
             closeAllModals();
         } catch (err) {
-            CrashHandlerLogger.debug("開いているすべてのモーダルを閉じることができませんでした。", err);
+            CrashHandlerLogger.debug(
+                "開いているすべてのモーダルを閉じることができませんでした。",
+                err
+            );
         }
         try {
             FluxDispatcher.dispatch({ type: "USER_PROFILE_MODAL_CLOSE" });
         } catch (err) {
-            CrashHandlerLogger.debug("ユーザーポップアウトを閉じることができませんでした。", err);
+            CrashHandlerLogger.debug(
+                "ユーザーポップアウトを閉じることができませんでした。",
+                err
+            );
         }
         try {
             FluxDispatcher.dispatch({ type: "LAYER_POP_ALL" });
@@ -172,15 +200,23 @@ export default definePlugin({
             try {
                 NavigationRouter.transitionTo("/channels/@me");
             } catch (err) {
-                CrashHandlerLogger.debug("ホーム画面への移動へ失敗しました", err);
+                CrashHandlerLogger.debug(
+                    "ホーム画面への移動へ失敗しました",
+                    err
+                );
             }
         }
 
+        // Set isRecovering to false before setting the state to allow us to handle the next crash error correcty, in case it happens
+        setImmediate(() => (isRecovering = false));
+
         try {
-            shouldAttemptNextHandle = true;
-            _this.forceUpdate();
+            _this.setState({ error: null, info: null });
         } catch (err) {
-            CrashHandlerLogger.debug("クラッシュハンドラ・コンポーネントの更新に失敗しました。", err);
+            CrashHandlerLogger.debug(
+                "クラッシュハンドラ・コンポーネントの更新に失敗しました。",
+                err
+            );
         }
-    }
+    },
 });
