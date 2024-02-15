@@ -20,9 +20,9 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "ServerListAPI",
+    name: "サーバーリストAPI",
     authors: [Devs.kemo],
-    description: "Api required for plugins that modify the server list",
+    description: "サーバーリストを変更するプラグインに必要なAPI",
     patches: [
         {
             find: "Messages.DISCODO_DISABLED",

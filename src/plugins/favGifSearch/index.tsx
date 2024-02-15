@@ -65,18 +65,18 @@ const containerClasses: { searchBar: string; } = findByPropsLazy("searchBar", "s
 export const settings = definePluginSettings({
     searchOption: {
         type: OptionType.SELECT,
-        description: "The part of the url you want to search",
+        description: "検索したいURLの部分",
         options: [
             {
-                label: "Entire Url",
+                label: "全体のURL",
                 value: "url"
             },
             {
-                label: "Path Only (/somegif.gif)",
+                label: "パスのみ (/somegif.gif)",
                 value: "path"
             },
             {
-                label: "Host & Path (tenor.com somgif.gif)",
+                label: "ホストとパス (tenor.com somgif.gif)",
                 value: "hostandpath",
                 default: true
             }
@@ -85,23 +85,19 @@ export const settings = definePluginSettings({
 });
 
 export default definePlugin({
-    name: "FavoriteGifSearch",
+    name: "お気に入りのGIF検索",
     authors: [Devs.Aria],
-    description: "Adds a search bar to favorite gifs.",
+    description: "お気に入りのGIFに検索バーを追加します。",
 
     patches: [
         {
             find: "renderHeaderContent()",
             replacement: [
                 {
-                    // https://regex101.com/r/07gpzP/1
-                    // ($1 renderHeaderContent=function { ... switch (x) ... case FAVORITES:return) ($2) ($3 case default:return r.jsx(($<searchComp>), {...props}))
                     match: /(renderHeaderContent\(\).{1,150}FAVORITES:return)(.{1,150});(case.{1,200}default:return\(0,\i\.jsx\)\((?<searchComp>\i\..{1,10}),)/,
                     replace: "$1 this.state.resultType === 'Favorites' ? $self.renderSearchBar(this, $<searchComp>) : $2;$3"
                 },
                 {
-                    // to persist filtered favorites when component re-renders.
-                    // when resizing the window the component rerenders and we loose the filtered favorites and have to type in the search bar to get them again
                     match: /(,suggestions:\i,favorites:)(\i),/,
                     replace: "$1$self.getFav($2),favCopy:$2,"
                 }
@@ -142,15 +138,12 @@ function SearchBar({ instance, SearchBarComponent }: { instance: Instance; Searc
         setQuery(searchQuery);
         const { props } = instance;
 
-        // return early
         if (searchQuery === "") {
             props.favorites = props.favCopy;
             instance.forceUpdate();
             return;
         }
 
-
-        // scroll back to top
         ref.current?.containerRef?.current
             .closest("#gif-picker-tab-panel")
             ?.querySelector("[class|=\"content\"]")
@@ -192,7 +185,7 @@ function SearchBar({ instance, SearchBarComponent }: { instance: Instance; Searc
                 }
             }}
             query={query}
-            placeholder="Search Favorite Gifs"
+            placeholder="お気に入りのGIFを検索"
         />
     );
 }

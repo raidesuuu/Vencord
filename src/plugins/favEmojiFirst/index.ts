@@ -34,9 +34,9 @@ interface EmojiAutocompleteState {
 }
 
 export default definePlugin({
-    name: "FavoriteEmojiFirst",
+    name: "お気に入りの絵文字を最初に",
     authors: [Devs.Aria, Devs.Ven],
-    description: "Puts your favorite emoji first in the emoji autocomplete.",
+    description: "絵文字の自動補完でお気に入りの絵文字を最初に表示します。",
     patches: [
         {
             find: "renderResults({results:",

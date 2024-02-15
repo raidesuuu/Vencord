@@ -1,6 +1,6 @@
 /*
- * Vencord, a Discord client mod
- * Copyright (c) 2024 Vendicated and contributors
+ * Vencord、Discordクライアントの修正
+ * 著作権 (c) 2024 Vendicatedと貢献者
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -8,8 +8,8 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "ChatInputButtonAPI",
-    description: "API to add buttons to the chat input",
+    name: "チャット入力ボタンAPI",
+    description: "チャット入力にボタンを追加するAPI",
     authors: [Devs.Ven],
 
     patches: [{

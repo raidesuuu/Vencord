@@ -1,27 +1,27 @@
 /*
- * Vencord, a modification for Discord's desktop app
- * Copyright (c) 2023 Vendicated and contributors
+ * Vencord、Discordのデスクトップアプリのための改造
+ * Copyright (c) 2023 Vendicatedとその貢献者
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * このプログラムはフリーソフトウェアです: あなたはそれを再配布することができ、または
+ * Free Software Foundationによって公開されたGNU General Public Licenseの
+ * 条件の下でそれを変更することができます、ライセンスのバージョン3、または
+ * （あなたの選択により）任意の後続のバージョン。
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * このプログラムは有用であることを期待して配布されます、
+ * しかし、いかなる保証もなく; さえ暗黙の保証もなく
+ * 商品性または特定の目的への適合性。 詳細については
+ * GNU General Public Licenseを参照してください。
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * あなたはこのプログラムと一緒にGNU General Public Licenseのコピーを
+ * 受け取るべきでした。 そうでない場合は、<https://www.gnu.org/licenses/>を参照してください。
 */
 
 import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "AlwaysTrust",
-    description: "Removes the annoying untrusted domain and suspicious file popup",
+    name: "常に信頼",
+    description: "厄介な信頼できないドメインと怪しいファイルのポップアップを削除します",
     authors: [Devs.zt],
     patches: [
         {

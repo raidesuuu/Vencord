@@ -1,19 +1,19 @@
 /*
- * Vencord, a modification for Discord's desktop app
+ * Vencord, Discordのデスクトップアプリのための改造
  * Copyright (c) 2022 Vendicated and contributors
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * このプログラムはフリーソフトウェアです: あなたはそれを再配布することができます、そして/または
+ * Free Software Foundationによって公開されたGNU General Public Licenseの
+ * 条件の下でそれを変更することができます、ライセンスのバージョン3、または
+ * （あなたの選択により）任意の後のバージョン。
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * このプログラムは有用であることを期待して配布されます、
+ * しかし、何の保証もありません。 連邦法上の黙示の保証も含めて、
+ * 商品性または特定の目的への適合性。 詳細については
+ * GNU General Public Licenseを参照してください。
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * あなたはこのプログラムと一緒にGNU General Public Licenseのコピーを
+ * 受け取るべきでした。 そうでない場合は、<https://www.gnu.org/licenses/>を参照してください。
 */
 
 import { BadgePosition, BadgeUserArgs, ProfileBadge } from "@api/Badges";
@@ -31,13 +31,13 @@ import { Forms, Toasts } from "@webpack/common";
 const CONTRIBUTOR_BADGE = "https://vencord.dev/assets/favicon.png";
 
 const ContributorBadge: ProfileBadge = {
-    description: "Vencord Contributor",
+    description: "Vencordの貢献者",
     image: CONTRIBUTOR_BADGE,
     position: BadgePosition.START,
     props: {
         style: {
             borderRadius: "50%",
-            transform: "scale(0.9)" // The image is a bit too big compared to default badges
+            transform: "scale(0.9)" // 画像がデフォルトのバッジに比べて少し大きすぎます
         }
     },
     shouldShow: ({ user }) => isPluginDev(user.id),
@@ -59,11 +59,11 @@ async function loadBadges(noCache = false) {
 
 export default definePlugin({
     name: "BadgeAPI",
-    description: "API to add badges to users.",
+    description: "ユーザーにバッジを追加するAPI。",
     authors: [Devs.Megu, Devs.Ven, Devs.TheSun],
     required: true,
     patches: [
-        /* Patch the badge list component on user profiles */
+        /* ユーザープロフィールのバッジリストコンポーネントをパッチ */
         {
             find: "Messages.PROFILE_USER_BADGES,role:",
             replacement: [
@@ -92,11 +92,11 @@ export default definePlugin({
     ],
 
     toolboxActions: {
-        async "Refetch Badges"() {
+        async "バッジを再取得"() {
             await loadBadges(true);
             Toasts.show({
                 id: Toasts.genId(),
-                message: "Successfully refetched badges!",
+                message: "バッジを正常に再取得しました！",
                 type: Toasts.Type.SUCCESS
             });
         }
@@ -121,7 +121,7 @@ export default definePlugin({
             props: {
                 style: {
                     borderRadius: "50%",
-                    transform: "scale(0.9)" // The image is a bit too big compared to default badges
+                    transform: "scale(0.9)" // 画像がデフォルトのバッジに比べて少し大きすぎます
                 }
             },
             onClick() {
@@ -142,7 +142,7 @@ export default definePlugin({
                                         }}
                                     >
                                         <Heart />
-                                        Vencord Donor
+                                        Vencordの寄付者
                                     </Forms.FormTitle>
                                 </Flex>
                             </Modals.ModalHeader>
@@ -163,10 +163,10 @@ export default definePlugin({
                                 </Flex>
                                 <div style={{ padding: "1em" }}>
                                     <Forms.FormText>
-                                        This Badge is a special perk for Vencord Donors
+                                        このバッジはVencordの寄付者の特別な特典です
                                     </Forms.FormText>
                                     <Forms.FormText className={Margins.top20}>
-                                        Please consider supporting the development of Vencord by becoming a donor. It would mean a lot!!
+                                        Vencordの開発を支援するために寄付者になることを検討してください。それには意味があります！
                                     </Forms.FormText>
                                 </div>
                             </Modals.ModalContent>

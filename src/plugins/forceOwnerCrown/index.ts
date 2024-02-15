@@ -22,8 +22,8 @@ import { GuildStore } from "@webpack/common";
 import { Channel, User } from "discord-types/general";
 
 export default definePlugin({
-    name: "ForceOwnerCrown",
-    description: "Force the owner crown next to usernames even if the server is large.",
+    name: "オーナークラウンを強制",
+    description: "サーバーが大きくても、ユーザー名の隣にオーナークラウンを強制的に表示します。",
     authors: [Devs.D3SOX, Devs.Nickyux],
     patches: [
         {

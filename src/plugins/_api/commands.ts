@@ -1,37 +1,36 @@
 /*
- * Vencord, a modification for Discord's desktop app
+ * Vencord、Discordのデスクトップアプリのための改変
  * Copyright (c) 2022 Vendicated and contributors
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * このプログラムはフリーソフトウェアです: あなたはそれを再配布することができます、そして/または
+ * それを変更する、フリーソフトウェア財団によって公表されたGNU General Public Licenseの
+ * 条件の下で、ライセンスのバージョン3、または
+ * （あなたの選択により）任意の後のバージョン。
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * このプログラムは有用であることを期待して配布されます、
+ * しかし、何の保証もありません; さらには、暗黙の保証もありません
+ * 商品性または特定の目的への適合性。 詳細については
+ * GNU General Public Licenseを参照してください。
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * あなたはこのプログラムと一緒にGNU General Public Licenseのコピーを
+ * 受け取るべきでした。 そうでない場合は、<https://www.gnu.org/licenses/>を参照してください。
 */
 
 import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "CommandsAPI",
+    name: "コマンドAPI",
     authors: [Devs.Arjix],
-    description: "Api required by anything that uses commands",
+    description: "コマンドを使用するものに必要なAPI",
     patches: [
-        // obtain BUILT_IN_COMMANDS instance
+        // BUILT_IN_COMMANDS インスタンスを取得
         {
             find: ',"tenor"',
             replacement: [
                 {
-                    // Matches BUILT_IN_COMMANDS. This is not exported so this is
-                    // the only way. _init() just returns the same object to make the
-                    // patch simpler
+                    // BUILT_IN_COMMANDSに一致します。これはエクスポートされていないので、これが唯一の方法です。
+                    // _init()は同じオブジェクトを返すだけで、パッチを簡単にします。
 
                     // textCommands = builtInCommands.filter(...)
                     match: /(?<=\w=)(\w)(\.filter\(.{0,60}tenor)/,
@@ -39,7 +38,7 @@ export default definePlugin({
                 }
             ],
         },
-        // command error handling
+        // コマンドエラーハンドリング
         {
             find: "Unexpected value for option",
             replacement: {
@@ -48,7 +47,7 @@ export default definePlugin({
                 replace: (_, cmd, args, ctx) => `,Vencord.Api.Commands._handleCommand(${cmd}, ${args}, ${ctx})`
             }
         },
-        // Show plugin name instead of "Built-In"
+        // "Built-In"の代わりにプラグイン名を表示
         {
             find: ".source,children",
             replacement: {

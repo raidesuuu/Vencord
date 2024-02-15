@@ -650,7 +650,7 @@ export default definePlugin({
 
             const match = attachment.url.match(fakeNitroGifStickerRegex);
             if (match) {
-                // There is no way to differentiate a regular gif attachment from a fake nitro animated sticker, so we check if the StickerStore contains the id of the fake sticker
+                // 通常のgif添付ファイルとFakeNitroのアニメーションステッカーを区別する方法はないため、StickerStoreが偽のステッカーのIDを含んでいるかどうかを確認します
                 if (StickerStore.getStickerById(match[1])) return false;
             }
 
@@ -669,12 +669,12 @@ export default definePlugin({
 
         switch (type) {
             case FakeNoticeType.Sticker: {
-                node.push(" This is a FakeNitro sticker and renders like a real sticker only for you. Appears as a link to non-plugin users.");
+                node.push("これはFakeNitroのステッカーで、あなたに対しては本物のステッカーのようにレンダリングされます。プラグインを使用していないユーザーにはリンクとして表示されます。");
 
                 return node;
             }
             case FakeNoticeType.Emoji: {
-                node.push(" This is a FakeNitro emoji and renders like a real emoji only for you. Appears as a link to non-plugin users.");
+                node.push("これはFakeNitroの絵文字で、あなたに対しては本物の絵文字のようにレンダリングされます。プラグインを使用していないユーザーにはリンクとして表示されます。");
 
                 return node;
             }
@@ -779,7 +779,7 @@ export default definePlugin({
                 if (!sticker)
                     break stickerBypass;
 
-                // Discord Stickers are now free yayyy!! :D
+                // Discordのステッカーは今や無料です！ :D
                 if ("pack_id" in sticker)
                     break stickerBypass;
 
@@ -788,9 +788,8 @@ export default definePlugin({
                     break stickerBypass;
 
                 // [12/12/2023]
-                // Work around an annoying bug where getStickerLink will return StickerType.GIF,
-                // but will give us a normal non animated png for no reason
-                // TODO: Remove this workaround when it's not needed anymore
+                // getStickerLinkがStickerType.GIFを返すが、理由もなく通常の非アニメーションpngを提供するという厄介なバグを回避する
+                // TODO: これが必要なくなったらこのワークアラウンドを削除する
                 let link = this.getStickerLink(sticker.id);
                 if (sticker.format_type === StickerType.GIF && link.includes(".png")) {
                     link = link.replace(".png", ".gif");

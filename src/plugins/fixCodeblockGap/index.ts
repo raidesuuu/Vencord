@@ -20,8 +20,8 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "FixCodeblockGap",
-    description: "Removes the gap between codeblocks and text below it",
+    name: "コードブロックの隙間を削除",
+    description: "コードブロックとその下のテキストの間の隙間を削除します",
     authors: [Devs.Grzesiek11],
     patches: [
         {

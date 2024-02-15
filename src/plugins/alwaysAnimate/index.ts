@@ -1,34 +1,34 @@
 /*
- * Vencord, a modification for Discord's desktop app
- * Copyright (c) 2023 Vendicated and contributors
+ * Vencord、Discordのデスクトップアプリのための改変
+ * Copyright (c) 2023 Vendicatedと貢献者
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * このプログラムはフリーソフトウェアです: あなたはそれを再配布することができます、そして/または
+ * それを修正する、自由ソフトウェア財団によって公表されたGNU一般公衆ライセンスの
+ * 条項の下で、ライセンスのバージョン3、または
+ * （あなたの選択により）任意の後のバージョン。
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * このプログラムは有用であることを期待して配布されます、
+ * しかし、何の保証もなしに; さえ暗黙の保証もなし
+ * 商品性または特定の目的への適合性。 詳細については
+ * GNU一般公衆ライセンスを参照してください。
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * あなたはこのプログラムと一緒にGNU一般公衆ライセンスのコピーを
+ * 受け取るべきでした。 そうでない場合は、<https://www.gnu.org/licenses/>を参照してください。
 */
 
 import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "AlwaysAnimate",
-    description: "Animates anything that can be animated",
+    name: "常にアニメーション",
+    description: "アニメーション可能なものは何でもアニメーションします",
     authors: [Devs.FieryFlames],
 
     patches: [
         {
             find: "canAnimate:",
             all: true,
-            // Some modules match the find but the replacement is returned untouched
+            // 一部のモジュールはfindに一致しますが、置換はそのまま返されます
             noWarn: true,
             replacement: {
                 match: /canAnimate:.+?(?=([,}].*?\)))/g,
@@ -40,7 +40,7 @@ export default definePlugin({
             }
         },
         {
-            // Status emojis
+            // ステータス絵文字
             find: ".Messages.GUILD_OWNER,",
             replacement: {
                 match: /(?<=\.activityEmoji,.+?animate:)\i/,
@@ -48,7 +48,7 @@ export default definePlugin({
             }
         },
         {
-            // Guild Banner
+            // ギルドバナー
             find: ".animatedBannerHoverLayer,onMouseEnter:",
             replacement: {
                 match: /(?<=guildBanner:\i,animate:)\i(?=}\))/,

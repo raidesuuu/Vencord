@@ -24,8 +24,8 @@ import { findByPropsLazy } from "@webpack";
 const { closeExpressionPicker } = findByPropsLazy("closeExpressionPicker");
 
 export default definePlugin({
-    name: "GifPaste",
-    description: "Makes picking a gif in the gif picker insert a link into the chatbox instead of instantly sending it",
+    name: "Gifを貼り付け",
+    description: "GifピッカーでGifを選択すると、即座に送信する代わりにチャットボックスにリンクを挿入します",
     authors: [Devs.Ven],
 
     patches: [{

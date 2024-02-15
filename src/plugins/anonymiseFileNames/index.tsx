@@ -38,27 +38,27 @@ const tarExtMatcher = /\.tar\.\w+$/;
 
 const settings = definePluginSettings({
     anonymiseByDefault: {
-        description: "Whether to anonymise file names by default",
+        description: "デフォルトでファイル名を匿名化するかどうか",
         type: OptionType.BOOLEAN,
         default: true,
     },
     method: {
-        description: "Anonymising method",
+        description: "匿名化方法",
         type: OptionType.SELECT,
         options: [
-            { label: "Random Characters", value: Methods.Random, default: true },
-            { label: "Consistent", value: Methods.Consistent },
-            { label: "Timestamp", value: Methods.Timestamp },
+            { label: "ランダムな文字", value: Methods.Random, default: true },
+            { label: "一貫性", value: Methods.Consistent },
+            { label: "タイムスタンプ", value: Methods.Timestamp },
         ],
     },
     randomisedLength: {
-        description: "Random characters length",
+        description: "ランダムな文字の長さ",
         type: OptionType.NUMBER,
         default: 7,
         disabled: () => settings.store.method !== Methods.Random,
     },
     consistent: {
-        description: "Consistent filename",
+        description: "一貫したファイル名",
         type: OptionType.STRING,
         default: "image",
         disabled: () => settings.store.method !== Methods.Consistent,
@@ -66,9 +66,9 @@ const settings = definePluginSettings({
 });
 
 export default definePlugin({
-    name: "AnonymiseFileNames",
+    name: "ファイル名を匿名化",
     authors: [Devs.obscurity],
-    description: "Anonymise uploaded file names",
+    description: "アップロードされたファイル名を匿名化する",
     patches: [
         {
             find: "instantBatchUpload:function",
@@ -92,10 +92,10 @@ export default definePlugin({
         const anonymise = upload.anonymise ?? settings.store.anonymiseByDefault;
         return (
             <ActionBarIcon
-                tooltip={anonymise ? "Using anonymous file name" : "Using normal file name"}
+                tooltip={anonymise ? "匿名のファイル名を使用" : "通常のファイル名を使用"}
                 onClick={() => {
                     upload.anonymise = !anonymise;
-                    UploadDraft.update(channelId, upload.id, draftType, {}); // dummy update so component rerenders
+                    UploadDraft.update(channelId, upload.id, draftType, {}); // コンポーネントが再レンダリングされるようにダミーの更新
                 }}
             >
                 {anonymise

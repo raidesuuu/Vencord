@@ -1,19 +1,19 @@
 /*
- * Vencord, a modification for Discord's desktop app
+ * Vencord, Discordのデスクトップアプリのための修正
  * Copyright (c) 2023 Vendicated and contributors
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * このプログラムはフリーソフトウェアです: あなたはそれを再配布することができます、そして/または
+ * Free Software Foundationによって公開されたGNU General Public Licenseの
+ * 条件の下でそれを変更することができます、ライセンスのバージョン3、または
+ * （あなたの選択により）任意の後のバージョン。
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * このプログラムは有用であることを期待して配布されます、
+ * しかし、いかなる保証もありません; さらには商品性または特定の目的への適合性の
+ * 暗黙の保証もありません。 詳細については
+ * GNU General Public Licenseをご覧ください。
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * あなたはこのプログラムと一緒にGNU General Public Licenseのコピーを
+ * 受け取るべきでした。 そうでない場合は、<https://www.gnu.org/licenses/>をご覧ください。
 */
 
 import { DataStore } from "@api/index";
@@ -40,13 +40,13 @@ const AllowedChannelIds = [
 export default definePlugin({
     name: "SupportHelper",
     required: true,
-    description: "Helps us provide support to you",
+    description: "私たちがあなたにサポートを提供するのを助けます",
     authors: [Devs.Ven],
     dependencies: ["CommandsAPI"],
 
     commands: [{
         name: "vencord-debug",
-        description: "Send Vencord Debug info",
+        description: "Vencord デバッグ情報を送信",
         predicate: ctx => AllowedChannelIds.includes(ctx.channel.id),
         async execute() {
             const { RELEASE_CHANNEL } = window.GLOBAL_ENV;
@@ -67,7 +67,7 @@ export default definePlugin({
             const enabledApiPlugins = Object.keys(plugins).filter(p => Vencord.Plugins.isPluginEnabled(p) && isApiPlugin(p));
 
             const info = {
-                Vencord: `v${VERSION} • ${gitHash}${settings.additionalInfo} - ${Intl.DateTimeFormat("en-GB", { dateStyle: "medium" }).format(BUILD_TIMESTAMP)}`,
+                Vencord: `v${VERSION} • ${gitHash}${settings.additionalInfo} - ${Intl.DateTimeFormat("ja-JP", { dateStyle: "medium" }).format(BUILD_TIMESTAMP)}`,
                 "Discord Branch": RELEASE_CHANNEL,
                 Client: client,
                 Platform: window.navigator.platform,
@@ -76,14 +76,14 @@ export default definePlugin({
             };
 
             if (IS_DISCORD_DESKTOP) {
-                info["Last Crash Reason"] = (await DiscordNative.processUtils.getLastCrash())?.rendererCrashReason ?? "N/A";
+                info["最後のクラッシュの理由"] = (await DiscordNative.processUtils.getLastCrash())?.rendererCrashReason ?? "N/A";
             }
 
             const debugInfo = `
-**Vencord Debug Info**
+**Vencord デバッグ情報**
 >>> ${Object.entries(info).map(([k, v]) => `${k}: ${v}`).join("\n")}
 
-Enabled Plugins (${enabledPlugins.length + enabledApiPlugins.length}):
+有効なプラグイン (${enabledPlugins.length + enabledApiPlugins.length}):
 ${makeCodeblock(enabledPlugins.join(", ") + "\n\n" + enabledApiPlugins.join(", "))}
 `;
 
@@ -103,12 +103,12 @@ ${makeCodeblock(enabledPlugins.join(", ") + "\n\n" + enabledApiPlugins.join(", "
                 const rememberDismiss = () => DataStore.set(REMEMBER_DISMISS_KEY, gitHash);
 
                 Alerts.show({
-                    title: "Hold on!",
+                    title: "ちょっと待って！",
                     body: <div>
-                        <Forms.FormText>You are using an outdated version of Vencord! Chances are, your issue is already fixed.</Forms.FormText>
+                        <Forms.FormText>あなたはVencordの古いバージョンを使用しています！ おそらく、あなたの問題はすでに修正されています。</Forms.FormText>
                         <Forms.FormText>
-                            Please first update using the Updater Page in Settings, or use the VencordInstaller (Update Vencord Button)
-                            to do so, in case you can't access the Updater page.
+                            まず、設定の更新ページを使用して更新するか、VencordInstaller（Vencord更新ボタン）
+                            を使用して更新してください。更新ページにアクセスできない場合は、これを使用してください。
                         </Forms.FormText>
                     </div>,
                     onCancel: rememberDismiss,

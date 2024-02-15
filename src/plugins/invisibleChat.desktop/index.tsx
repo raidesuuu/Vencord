@@ -47,10 +47,10 @@ function PopOverIcon() {
 
 function Indicator() {
     return (
-        <Tooltip text="This message has a hidden message! (InvisibleChat)">
+        <Tooltip text="このメッセージには隠されたメッセージがあります！(InvisibleChat)">
             {({ onMouseEnter, onMouseLeave }) => (
                 <img
-                    aria-label="Hidden Message Indicator (InvisibleChat)"
+                    aria-label="隠されたメッセージのインジケーター (InvisibleChat)"
                     onMouseEnter={onMouseEnter}
                     onMouseLeave={onMouseLeave}
                     src="https://github.com/SammCheese/invisible-chat/raw/NewReplugged/src/assets/lock.png"
@@ -70,7 +70,7 @@ const ChatBarIcon: ChatBarButton = ({ isMainChat }) => {
 
     return (
         <ChatBarButton
-            tooltip="Encrypt Message"
+            tooltip="メッセージを暗号化"
             onClick={() => buildEncModal()}
 
             buttonProps={{
@@ -95,18 +95,18 @@ const settings = definePluginSettings({
     savedPasswords: {
         type: OptionType.STRING,
         default: "password, Password",
-        description: "Saved Passwords (Seperated with a , )"
+        description: "保存されたパスワード (, で区切る)"
     }
 });
 
 export default definePlugin({
-    name: "InvisibleChat",
-    description: "Encrypt your Messages in a non-suspicious way!",
+    name: "透明のチャット",
+    description: "メッセージを目立たない方法で暗号化します！",
     authors: [Devs.SammCheese],
     dependencies: ["MessagePopoverAPI", "ChatInputButtonAPI"],
     patches: [
         {
-            // Indicator
+            // インジケーター
             find: ".Messages.MESSAGE_EDITED,",
             replacement: {
                 match: /let\{className:\i,message:\i[^}]*\}=(\i)/,
@@ -125,7 +125,7 @@ export default definePlugin({
         addButton("InvisibleChat", message => {
             return this.INV_REGEX.test(message?.content)
                 ? {
-                    label: "Decrypt Message",
+                    label: "メッセージを復号化",
                     icon: this.popOverIcon,
                     message: message,
                     channel: ChannelStore.getChannel(message.channel_id),
@@ -150,7 +150,7 @@ export default definePlugin({
         removeButton("InvisibleChat");
     },
 
-    // Gets the Embed of a Link
+    // リンクの埋め込みを取得
     async getEmbed(url: URL): Promise<Object | {}> {
         const { body } = await RestAPI.post({
             url: "/unfurler/embed-urls",
@@ -166,11 +166,11 @@ export default definePlugin({
 
         message.embeds.push({
             type: "rich",
-            title: "Decrypted Message",
+            title: "復号化されたメッセージ",
             color: "0x45f5f5",
             description: revealed,
             footer: {
-                text: "Made with ❤️ by c0dine and Sammy!",
+                text: "c0dineとSammyによって❤️で作られました！",
             },
         });
 
@@ -214,7 +214,7 @@ export async function iteratePasswords(message: Message): Promise<string | false
 
     let { content } = message;
 
-    // we use an extra variable so we dont have to edit the message content directly
+    // メッセージの内容を直接編集しないように、追加の変数を使用します
     if (/^\W/.test(message.content)) content = `d ${message.content}d`;
 
     for (let i = 0; i < passwords.length; i++) {

@@ -20,8 +20,8 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "MessagePopoverAPI",
-    description: "API to add buttons to message popovers.",
+    name: "メッセージポップオーバーAPI",
+    description: "メッセージポップオーバーにボタンを追加するAPI。",
     authors: [Devs.KingFish, Devs.Ven, Devs.Nuckyz],
     patches: [{
         find: "Messages.MESSAGE_UTILITIES_A11Y_LABEL",

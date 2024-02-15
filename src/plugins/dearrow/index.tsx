@@ -70,7 +70,7 @@ async function embedDidMount(this: Component<Props>) {
 
         this.forceUpdate();
     } catch (err) {
-        new Logger("Dearrow").error("Failed to dearrow embed", err);
+        new Logger("Dearrow").error("埋め込みのdearrowに失敗しました", err);
     }
 }
 
@@ -79,7 +79,7 @@ function DearrowButton({ component }: { component: Component<Props>; }) {
     if (!embed?.dearrow) return null;
 
     return (
-        <Tooltip text={embed.dearrow.enabled ? "This embed has been dearrowed, click to restore" : "Click to dearrow"}>
+        <Tooltip text={embed.dearrow.enabled ? "この埋め込みはdearrowされています、クリックして元に戻す" : "クリックしてdearrowする"}>
             {({ onMouseEnter, onMouseLeave }) => (
                 <button
                     onMouseEnter={onMouseEnter}
@@ -130,7 +130,7 @@ function DearrowButton({ component }: { component: Component<Props>; }) {
 
 export default definePlugin({
     name: "Dearrow",
-    description: "Makes YouTube embed titles and thumbnails less sensationalist, powered by Dearrow",
+    description: "YouTubeの埋め込みタイトルとサムネイルをよりセンセーショナルにするDearrowによって動かされます",
     authors: [Devs.Ven],
 
     embedDidMount,

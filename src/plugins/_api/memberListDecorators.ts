@@ -20,8 +20,8 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "MemberListDecoratorsAPI",
-    description: "API to add decorators to member list (both in servers and DMs)",
+    name: "メンバーリストデコレータAPI",
+    description: "メンバーリストにデコレータを追加するAPI（サーバーとDMの両方）",
     authors: [Devs.TheSun, Devs.Ven],
     patches: [
         {

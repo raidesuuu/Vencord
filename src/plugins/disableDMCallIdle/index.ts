@@ -20,8 +20,8 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "DisableDMCallIdle",
-    description: "Disables automatically getting kicked from a DM voice call after 3 minutes.",
+    name: "DM通話の自動切断を無効化",
+    description: "DMの音声通話から3分後に自動的に切断される機能を無効にします。",
     authors: [Devs.Nuckyz],
     patches: [
         {

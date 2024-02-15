@@ -11,13 +11,13 @@ import definePlugin, { OptionType } from "@utils/types";
 
 // The entire code of this plugin can be found in ipcPlugins
 export default definePlugin({
-    name: "FixSpotifyEmbeds",
-    description: "Fixes spotify embeds being incredibly loud by letting you customise the volume",
+    name: "Spotify埋め込み修正",
+    description: "Spotifyの埋め込みが非常に大きな音量で再生されるのを修正し、音量をカスタマイズできるようにします",
     authors: [Devs.Ven],
     settings: definePluginSettings({
         volume: {
             type: OptionType.SLIDER,
-            description: "The volume % to set for spotify embeds. Anything above 10% is veeeery loud",
+            description: "Spotifyの埋め込みに設定する音量％。10％以上は非常に大きな音量です",
             markers: makeRange(0, 100, 10),
             stickToMarkers: false,
             default: 10

@@ -33,37 +33,37 @@ import styles from "./styles.css?managed";
 export const settings = definePluginSettings({
     saveZoomValues: {
         type: OptionType.BOOLEAN,
-        description: "Whether to save zoom and lens size values",
+        description: "ズームとレンズサイズの値を保存するかどうか",
         default: true,
     },
 
     invertScroll: {
         type: OptionType.BOOLEAN,
-        description: "Invert scroll",
+        description: "スクロールを反転する",
         default: true,
     },
 
     nearestNeighbour: {
         type: OptionType.BOOLEAN,
-        description: "Use Nearest Neighbour Interpolation when scaling images",
+        description: "画像を拡大するときに最近傍補間を使用する",
         default: false,
     },
 
     square: {
         type: OptionType.BOOLEAN,
-        description: "Make the lens square",
+        description: "レンズを四角にする",
         default: false,
     },
 
     zoom: {
-        description: "Zoom of the lens",
+        description: "レンズのズーム",
         type: OptionType.SLIDER,
         markers: makeRange(1, 50, 4),
         default: 2,
         stickToMarkers: false,
     },
     size: {
-        description: "Radius / Size of the lens",
+        description: "レンズの半径 / サイズ",
         type: OptionType.SLIDER,
         markers: makeRange(50, 1000, 50),
         default: 100,
@@ -71,7 +71,7 @@ export const settings = definePluginSettings({
     },
 
     zoomSpeed: {
-        description: "How fast the zoom / lens size changes",
+        description: "ズーム / レンズサイズの変化速度",
         type: OptionType.SLIDER,
         markers: makeRange(0.1, 5, 0.2),
         default: 0.5,
@@ -79,13 +79,12 @@ export const settings = definePluginSettings({
     },
 });
 
-
 const imageContextMenuPatch: NavContextMenuPatchCallback = children => () => {
     children.push(
         <Menu.MenuGroup id="image-zoom">
             <Menu.MenuCheckboxItem
                 id="vc-square"
-                label="Square Lens"
+                label="四角いレンズ"
                 checked={settings.store.square}
                 action={() => {
                     settings.store.square = !settings.store.square;
@@ -94,7 +93,7 @@ const imageContextMenuPatch: NavContextMenuPatchCallback = children => () => {
             />
             <Menu.MenuCheckboxItem
                 id="vc-nearest-neighbour"
-                label="Nearest Neighbour"
+                label="最近傍補間"
                 checked={settings.store.nearestNeighbour}
                 action={() => {
                     settings.store.nearestNeighbour = !settings.store.nearestNeighbour;
@@ -103,7 +102,7 @@ const imageContextMenuPatch: NavContextMenuPatchCallback = children => () => {
             />
             <Menu.MenuControlItem
                 id="vc-zoom"
-                label="Zoom"
+                label="ズーム"
                 control={(props, ref) => (
                     <Menu.MenuSliderControl
                         ref={ref}
@@ -117,7 +116,7 @@ const imageContextMenuPatch: NavContextMenuPatchCallback = children => () => {
             />
             <Menu.MenuControlItem
                 id="vc-size"
-                label="Lens Size"
+                label="レンズサイズ"
                 control={(props, ref) => (
                     <Menu.MenuSliderControl
                         ref={ref}
@@ -131,7 +130,7 @@ const imageContextMenuPatch: NavContextMenuPatchCallback = children => () => {
             />
             <Menu.MenuControlItem
                 id="vc-zoom-speed"
-                label="Zoom Speed"
+                label="ズーム速度"
                 control={(props, ref) => (
                     <Menu.MenuSliderControl
                         ref={ref}
@@ -149,19 +148,15 @@ const imageContextMenuPatch: NavContextMenuPatchCallback = children => () => {
 };
 
 export default definePlugin({
-    name: "ImageZoom",
-    description: "Lets you zoom in to images and gifs. Use scroll wheel to zoom in and shift + scroll wheel to increase lens radius / size",
+    name: "画像ズーム",
+    description: "画像やGIFを拡大表示することができます。ズームインするにはスクロールホイールを、レンズの半径/サイズを増やすにはシフト+スクロールホイールを使用します",
     authors: [Devs.Aria],
-    tags: ["ImageUtilities"],
+    tags: ["画像ユーティリティ"],
 
     patches: [
         {
             find: "Messages.OPEN_IN_BROWSER",
             replacement: {
-                // there are 2 image thingies. one for carosuel and one for the single image.
-                // so thats why i added global flag.
-                // also idk if this patch is good, should it be more specific?
-                // https://regex101.com/r/xfvNvV/1
                 match: /return.{1,200}\.wrapper.{1,200}src:\i,/g,
                 replace: `$&id: '${ELEMENT_ID}',`
             }
@@ -197,7 +192,6 @@ export default definePlugin({
 
     settings,
 
-    // to stop from rendering twice /shrug
     currentMagnifierElement: null as React.FunctionComponentElement<MagnifierProps & JSX.IntrinsicAttributes> | null,
     element: null as HTMLDivElement | null,
 
@@ -253,7 +247,6 @@ export default definePlugin({
 
     stop() {
         disableStyle(styles);
-        // so componenetWillUnMount gets called if Magnifier component is still alive
         this.root && this.root.unmount();
         this.element?.remove();
         removeContextMenuPatch("image-context", imageContextMenuPatch);

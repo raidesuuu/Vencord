@@ -101,71 +101,71 @@ function setActivity(activity: Activity | null) {
 
 const settings = definePluginSettings({
     username: {
-        description: "last.fm username",
+        description: "last.fmのユーザー名",
         type: OptionType.STRING,
     },
     apiKey: {
-        description: "last.fm api key",
+        description: "last.fmのAPIキー",
         type: OptionType.STRING,
     },
     shareUsername: {
-        description: "show link to last.fm profile",
+        description: "last.fmのプロフィールへのリンクを表示",
         type: OptionType.BOOLEAN,
         default: false,
     },
     hideWithSpotify: {
-        description: "hide last.fm presence if spotify is running",
+        description: "Spotifyが実行中の場合、last.fmのプレゼンスを非表示",
         type: OptionType.BOOLEAN,
         default: true,
     },
     statusName: {
-        description: "custom status text",
+        description: "カスタムステータステキスト",
         type: OptionType.STRING,
-        default: "some music",
+        default: "音楽を聴いています",
     },
     nameFormat: {
-        description: "Show name of song and artist in status name",
+        description: "曲名とアーティスト名をステータス名に表示",
         type: OptionType.SELECT,
         options: [
             {
-                label: "Use custom status name",
+                label: "カスタムステータス名を使用",
                 value: NameFormat.StatusName,
                 default: true
             },
             {
-                label: "Use format 'artist - song'",
+                label: "フォーマット 'アーティスト - 曲' を使用",
                 value: NameFormat.ArtistFirst
             },
             {
-                label: "Use format 'song - artist'",
+                label: "フォーマット '曲 - アーティスト' を使用",
                 value: NameFormat.SongFirst
             },
             {
-                label: "Use artist name only",
+                label: "アーティスト名のみを使用",
                 value: NameFormat.ArtistOnly
             },
             {
-                label: "Use song name only",
+                label: "曲名のみを使用",
                 value: NameFormat.SongOnly
             }
         ],
     },
     useListeningStatus: {
-        description: 'show "Listening to" status instead of "Playing"',
+        description: '"再生中"の代わりに"聴いています"のステータスを表示',
         type: OptionType.BOOLEAN,
         default: false,
     },
     missingArt: {
-        description: "When album or album art is missing",
+        description: "アルバムまたはアルバムアートが欠落している場合",
         type: OptionType.SELECT,
         options: [
             {
-                label: "Use large Last.fm logo",
+                label: "大きなLast.fmのロゴを使用",
                 value: "lastfmLogo",
                 default: true
             },
             {
-                label: "Use generic placeholder",
+                label: "一般的なプレースホルダーを使用",
                 value: "placeholder"
             }
         ],
@@ -174,21 +174,21 @@ const settings = definePluginSettings({
 
 export default definePlugin({
     name: "LastFMRichPresence",
-    description: "Little plugin for Last.fm rich presence",
+    description: "Last.fmのリッチプレゼンスのための小さなプラグイン",
     authors: [Devs.dzshn, Devs.RuiNtD, Devs.blahajZip, Devs.archeruwu],
 
     settingsAboutComponent: () => (
         <>
-            <Forms.FormTitle tag="h3">How to get an API key</Forms.FormTitle>
+            <Forms.FormTitle tag="h3">APIキーの取得方法</Forms.FormTitle>
             <Forms.FormText>
-                An API key is required to fetch your current track. To get one, you can
-                visit <Link href="https://www.last.fm/api/account/create">this page</Link> and
-                fill in the following information: <br /> <br />
+                現在のトラックを取得するためにはAPIキーが必要です。取得するには、
+                <Link href="https://www.last.fm/api/account/create">このページ</Link>にアクセスし、
+                次の情報を入力してください：<br /> <br />
 
-                Application name: Discord Rich Presence <br />
-                Application description: (personal use) <br /> <br />
+                アプリケーション名: Discord Rich Presence <br />
+                アプリケーションの説明: (個人使用) <br /> <br />
 
-                And copy the API key (not the shared secret!)
+                そしてAPIキー（共有シークレットではない！）をコピーします。
             </Forms.FormText>
         </>
     ),
@@ -222,7 +222,7 @@ export default definePlugin({
 
             const json = await res.json();
             if (json.error) {
-                logger.error("Error from Last.fm API", `${json.error}: ${json.message}`);
+                logger.error("Last.fm APIからのエラー", `${json.error}: ${json.message}`);
                 return null;
             }
 
@@ -231,17 +231,17 @@ export default definePlugin({
             if (!trackData?.["@attr"]?.nowplaying)
                 return null;
 
-            // why does the json api have xml structure
+            // なぜjson apiはxml構造を持っているのか
             return {
-                name: trackData.name || "Unknown",
+                name: trackData.name || "不明",
                 album: trackData.album["#text"],
-                artist: trackData.artist["#text"] || "Unknown",
+                artist: trackData.artist["#text"] || "不明",
                 url: trackData.url,
                 imageUrl: trackData.image?.find((x: any) => x.size === "large")?.["#text"]
             };
         } catch (e) {
-            logger.error("Failed to query Last.fm API", e);
-            // will clear the rich presence if API fails
+            logger.error("Last.fm APIのクエリに失敗しました", e);
+            // APIが失敗した場合はリッチプレゼンスをクリアします
             return null;
         }
     },
@@ -262,7 +262,7 @@ export default definePlugin({
         if (settings.store.hideWithSpotify) {
             for (const activity of presenceStore.getActivities()) {
                 if (activity.type === ActivityType.LISTENING && activity.application_id !== applicationId) {
-                    // there is already music status because of Spotify or richerCider (probably more)
+                    // SpotifyやricherCider（おそらく他にも）のためにすでに音楽ステータスが存在します
                     return null;
                 }
             }
@@ -285,14 +285,14 @@ export default definePlugin({
 
         const buttons: ActivityButton[] = [
             {
-                label: "View Song",
+                label: "曲を見る",
                 url: trackData.url,
             },
         ];
 
         if (settings.store.shareUsername)
             buttons.push({
-                label: "Last.fm Profile",
+                label: "Last.fmのプロフィール",
                 url: `https://www.last.fm/user/${settings.store.username}`,
             });
 

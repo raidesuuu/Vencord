@@ -78,9 +78,9 @@ function getIgnoredActivities() {
 }
 
 export default definePlugin({
-    name: "IgnoreActivities",
+    name: "アクティビティを無視",
     authors: [Devs.Nuckyz],
-    description: "Ignore activities from showing up on your status ONLY. You can configure which ones are ignored from the Registered Games and Activities tabs.",
+    description: "あなたのステータス上でのみ表示されるアクティビティを無視します。登録されたゲームとアクティビティのタブから、どのアクティビティを無視するか設定できます。",
 
     settings,
 

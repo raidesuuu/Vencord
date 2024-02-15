@@ -20,8 +20,8 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "iLoveSpam",
-    description: "Do not hide messages from 'likely spammers'",
+    name: "スパムを隠さない",
+    description: "'スパムユーザー'からのメッセージを隠さない",
     authors: [Devs.botato, Devs.Nyako],
     patches: [
         {

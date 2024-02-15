@@ -35,8 +35,8 @@ const getHiddenMessages = () => get(KEY).then(set => {
 const saveHiddenMessages = (ids: Set<string>) => set(KEY, ids);
 
 export default definePlugin({
-    name: "HideAttachments",
-    description: "Hide attachments and Embeds for individual messages via hover button",
+    name: "添付ファイルを隠す",
+    description: "ホバーボタンを介して個々のメッセージの添付ファイルと埋め込みを隠す",
     authors: [Devs.Ven],
     dependencies: ["MessagePopoverAPI"],
 
@@ -48,13 +48,13 @@ export default definePlugin({
         await getHiddenMessages();
         await this.buildCss();
 
-        addButton("HideAttachments", msg => {
+        addButton("添付ファイルを隠す", msg => {
             if (!msg.attachments.length && !msg.embeds.length && !msg.stickerItems.length) return null;
 
             const isHidden = hiddenMessages.has(msg.id);
 
             return {
-                label: isHidden ? "Show Attachments" : "Hide Attachments",
+                label: isHidden ? "添付ファイルを表示" : "添付ファイルを隠す",
                 icon: isHidden ? ImageVisible : ImageInvisible,
                 message: msg,
                 channel: ChannelStore.getChannel(msg.channel_id),

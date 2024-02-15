@@ -29,7 +29,7 @@ const KbdStyles = findByPropsLazy("key", "removeBuildOverride");
 
 const settings = definePluginSettings({
     enableIsStaff: {
-        description: "Enable isStaff",
+        description: "isStaffを有効にする",
         type: OptionType.BOOLEAN,
         default: false,
         restartNeeded: true
@@ -37,8 +37,8 @@ const settings = definePluginSettings({
 });
 
 export default definePlugin({
-    name: "Experiments",
-    description: "Enable Access to Experiments in Discord!",
+    name: "実験",
+    description: "Discordでの実験へのアクセスを有効にします！",
     authors: [
         Devs.Megu,
         Devs.Ven,
@@ -92,16 +92,15 @@ export default definePlugin({
         const altKey = isMacOS ? "opt" : "alt";
         return (
             <React.Fragment>
-                <Forms.FormTitle tag="h3">More Information</Forms.FormTitle>
+                <Forms.FormTitle tag="h3">詳細情報</Forms.FormTitle>
                 <Forms.FormText variant="text-md/normal">
-                    You can enable client DevTools{" "}
+                    以下の<code>isStaff</code>を有効にした後、クライアントのDevToolsを有効にすることができます{" "}
                     <kbd className={KbdStyles.key}>{modKey}</kbd> +{" "}
                     <kbd className={KbdStyles.key}>{altKey}</kbd> +{" "}
                     <kbd className={KbdStyles.key}>O</kbd>{" "}
-                    after enabling <code>isStaff</code> below
                 </Forms.FormText>
                 <Forms.FormText>
-                    and then toggling <code>Enable DevTools</code> in the <code>Developer Options</code> tab in settings.
+                    そして、設定の<code>開発者オプション</code>タブで<code>DevToolsを有効にする</code>を切り替えます。
                 </Forms.FormText>
             </React.Fragment>
         );
@@ -109,14 +108,14 @@ export default definePlugin({
 
     WarningCard: ErrorBoundary.wrap(() => (
         <ErrorCard id="vc-experiments-warning-card" className={Margins.bottom16}>
-            <Forms.FormTitle tag="h2">Hold on!!</Forms.FormTitle>
+            <Forms.FormTitle tag="h2">ちょっと待って!!</Forms.FormTitle>
 
             <Forms.FormText>
-                Experiments are unreleased Discord features. They might not work, or even break your client or get your account disabled.
+                実験はリリースされていないDiscordの機能です。それらは動作しないか、あなたのクライアントを壊すか、あなたのアカウントを無効にする可能性があります。
             </Forms.FormText>
 
             <Forms.FormText className={Margins.top8}>
-                Only use experiments if you know what you're doing. Vencord is not responsible for any damage caused by enabling experiments.
+                あなたが何をしているのかを知っている場合にのみ、実験を使用してください。Vencordは、実験を有効にすることによって引き起こされる損害については責任を負いません。
             </Forms.FormText>
         </ErrorCard>
     ), { noop: true })

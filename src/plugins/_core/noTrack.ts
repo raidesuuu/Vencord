@@ -1,19 +1,18 @@
 /*
- * Vencord, a modification for Discord's desktop app
- * Copyright (c) 2022 Vendicated and contributors
+ * Vencord、Discordのデスクトップアプリのための改造
+ * Copyright (c) 2022 Vendicatedとその貢献者
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * このプログラムはフリーソフトウェアです: あなたはそれを再配布することができ、または
+ * Free Software Foundationによって公開されたGNU General Public Licenseの
+ * 条件の下でそれを変更することができます、ライセンスのバージョン3、または
+ * （あなたの選択により）任意の後のバージョン。
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * このプログラムは有用であることを期待して配布されます、
+ * しかし、何の保証もありません; さらには商品性または特定の目的への適合性の黙示的な保証もありません。
+ * 詳細についてはGNU General Public Licenseを参照してください。
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * あなたはこのプログラムと一緒にGNU General Public Licenseのコピーを受け取るべきでした。
+ * そうでない場合は、<https://www.gnu.org/licenses/>を参照してください。
 */
 
 import { Devs } from "@utils/constants";
@@ -21,7 +20,7 @@ import definePlugin from "@utils/types";
 
 export default definePlugin({
     name: "NoTrack",
-    description: "Disable Discord's tracking ('science'), metrics and Sentry crash reporting",
+    description: "Discordのトラッキング（'science'）、メトリクス、Sentryクラッシュレポートを無効にする",
     authors: [Devs.Cyn, Devs.Ven, Devs.Nuckyz, Devs.Arrow],
     required: true,
     patches: [
@@ -55,7 +54,7 @@ export default definePlugin({
         {
             find: ".installedLogHooks)",
             replacement: {
-                // if getDebugLogging() returns false, the hooks don't get installed.
+                // getDebugLogging()がfalseを返す場合、フックはインストールされません。
                 match: "getDebugLogging(){",
                 replace: "getDebugLogging(){return false;"
             }

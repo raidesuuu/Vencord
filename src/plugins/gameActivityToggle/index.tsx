@@ -64,7 +64,7 @@ function GameActivityToggleButton() {
 
     return (
         <Button
-            tooltipText={showCurrentGame ? "Disable Game Activity" : "Enable Game Activity"}
+            tooltipText={showCurrentGame ? "ゲームアクティビティを無効にする" : "ゲームアクティビティを有効にする"}
             icon={makeIcon(showCurrentGame)}
             role="switch"
             aria-checked={!showCurrentGame}
@@ -76,14 +76,14 @@ function GameActivityToggleButton() {
 const settings = definePluginSettings({
     oldIcon: {
         type: OptionType.BOOLEAN,
-        description: "Use the old icon style before Discord icon redesign",
+        description: "Discordのアイコンデザインが変わる前の古いアイコンスタイルを使用する",
         default: false
     }
 });
 
 export default definePlugin({
-    name: "GameActivityToggle",
-    description: "Adds a button next to the mic and deafen button to toggle game activity.",
+    name: "ゲームアクティビティを切り替える",
+    description: "マイクと消音ボタンの隣にゲームアクティビティを切り替えるボタンを追加します。",
     authors: [Devs.Nuckyz, Devs.RuukuLada],
     settings,
 

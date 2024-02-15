@@ -39,10 +39,10 @@ const settings = definePluginSettings({
     greetMode: {
         type: OptionType.SELECT,
         options: [
-            { label: "Greet (you can only greet 3 times)", value: GreetMode.Greet, default: true },
-            { label: "Normal Message (you can greet spam)", value: GreetMode.NormalMessage }
+            { label: "挨拶 (3回までしか挨拶できません)", value: GreetMode.Greet, default: true },
+            { label: "通常のメッセージ (挨拶をスパムすることができます)", value: GreetMode.NormalMessage }
         ],
-        description: "Choose the greet mode"
+        description: "挨拶モードを選択"
     }
 }).withPrivateSettings<{
     multiGreetChoices?: string[];
@@ -83,10 +83,10 @@ function GreetMenu({ channel, message }: { message: Message, channel: Channel; }
         <Menu.Menu
             navId="greet-sticker-picker"
             onClose={() => FluxDispatcher.dispatch({ type: "CONTEXT_MENU_CLOSE" })}
-            aria-label="Greet Sticker Picker"
+            aria-label="挨拶ステッカーピッカー"
         >
             <Menu.MenuGroup
-                label="Greet Mode"
+                label="挨拶モード"
             >
                 {Object.values(GreetMode).map(mode => (
                     <Menu.MenuRadioItem
@@ -103,7 +103,7 @@ function GreetMenu({ channel, message }: { message: Message, channel: Channel; }
             <Menu.MenuSeparator />
 
             <Menu.MenuGroup
-                label="Greet Stickers"
+                label="挨拶ステッカー"
             >
                 {WELCOME_STICKERS.map(sticker => (
                     <Menu.MenuItem
@@ -120,7 +120,7 @@ function GreetMenu({ channel, message }: { message: Message, channel: Channel; }
                     <Menu.MenuSeparator />
 
                     <Menu.MenuItem
-                        label="Unholy Multi-Greet"
+                        label="非聖なるマルチ挨拶"
                         id="unholy-multi-greet"
                     >
                         {WELCOME_STICKERS.map(sticker => {
@@ -145,7 +145,7 @@ function GreetMenu({ channel, message }: { message: Message, channel: Channel; }
                         <Menu.MenuSeparator />
                         <Menu.MenuItem
                             id="multi-greet-submit"
-                            label="Send Greets"
+                            label="挨拶を送る"
                             action={() => greet(channel, message, multiGreetChoices!)}
                             disabled={multiGreetChoices.length === 0}
                         />
@@ -159,7 +159,7 @@ function GreetMenu({ channel, message }: { message: Message, channel: Channel; }
 
 export default definePlugin({
     name: "GreetStickerPicker",
-    description: "Allows you to use any greet sticker instead of only the random one by right-clicking the 'Wave to say hi!' button",
+    description: "右クリックで'挨拶するために手を振る!'ボタンを押すと、ランダムなものだけでなく、任意の挨拶ステッカーを使用できます",
     authors: [Devs.Ven],
 
     settings,

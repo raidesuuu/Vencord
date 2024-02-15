@@ -177,7 +177,6 @@ const getFontSize = (s: string) => {
 };
 
 const nameValidator = /^\w+$/i;
-
 function CloneModal({ data }: { data: Sticker | Emoji; }) {
     const [isCloning, setIsCloning] = React.useState(false);
     const [name, setName] = React.useState(data.name);
@@ -188,7 +187,7 @@ function CloneModal({ data }: { data: Sticker | Emoji; }) {
 
     return (
         <>
-            <Forms.FormTitle className={Margins.top20}>Custom Name</Forms.FormTitle>
+            <Forms.FormTitle className={Margins.top20}>カスタム名</Forms.FormTitle>
             <CheckedTextInput
                 value={name}
                 onChange={v => {
@@ -198,7 +197,7 @@ function CloneModal({ data }: { data: Sticker | Emoji; }) {
                 validate={v =>
                     (data.t === "Emoji" && v.length > 2 && v.length < 32 && nameValidator.test(v))
                     || (data.t === "Sticker" && v.length > 2 && v.length < 30)
-                    || "Name must be between 2 and 32 characters and only contain alphanumeric characters"
+                    || "名前は2から32文字の間で、英数字のみを含む必要があります"
                 }
             />
             <div style={{
@@ -216,7 +215,7 @@ function CloneModal({ data }: { data: Sticker | Emoji; }) {
                                 onMouseLeave={onMouseLeave}
                                 onMouseEnter={onMouseEnter}
                                 role="button"
-                                aria-label={"Clone to " + g.name}
+                                aria-label={g.name + "にクローン"}
                                 aria-disabled={isCloning}
                                 style={{
                                     borderRadius: "50%",
@@ -276,7 +275,7 @@ function buildMenuItem(type: "Emoji" | "Sticker", fetchData: () => Promisable<Om
         <Menu.MenuItem
             id="emote-cloner"
             key="emote-cloner"
-            label={`Clone ${type}`}
+            label={`${type}をクローン`}
             action={() =>
                 openModalLazy(async () => {
                     const res = await fetchData();
@@ -295,7 +294,7 @@ function buildMenuItem(type: "Emoji" | "Sticker", fetchData: () => Promisable<Om
                                     width={24}
                                     style={{ marginRight: "0.5em" }}
                                 />
-                                <Forms.FormText>Clone {data.name}</Forms.FormText>
+                                <Forms.FormText>{data.name}をクローン</Forms.FormText>
                             </ModalHeader>
                             <ModalContent>
                                 <CloneModal data={data} />
@@ -360,7 +359,7 @@ const expressionPickerPatch: NavContextMenuPatchCallback = (children, props: { t
 
 export default definePlugin({
     name: "EmoteCloner",
-    description: "Allows you to clone Emotes & Stickers to your own server (right click them)",
+    description: "エモートとステッカーを自分のサーバーにクローンすることができます（右クリック）",
     tags: ["StickerCloner"],
     authors: [Devs.Ven, Devs.Nuckyz],
 

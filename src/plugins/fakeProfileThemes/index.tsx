@@ -72,18 +72,18 @@ function decode(bio: string): Array<number> | null {
 
 const settings = definePluginSettings({
     nitroFirst: {
-        description: "Default color source if both are present",
+        description: "両方が存在する場合のデフォルトの色源",
         type: OptionType.SELECT,
         options: [
-            { label: "Nitro colors", value: true, default: true },
-            { label: "Fake colors", value: false },
+            { label: "Nitroの色", value: true, default: true },
+            { label: "偽の色", value: false },
         ]
     }
 });
 
 export default definePlugin({
     name: "FakeProfileThemes",
-    description: "Allows profile theming by hiding the colors in your bio thanks to invisible 3y3 encoding",
+    description: "あなたの自己紹介に見えない3y3エンコーディングを隠すことでプロフィールのテーマを可能にします",
     authors: [Devs.Alyxia, Devs.Remty],
     patches: [
         {
@@ -102,23 +102,23 @@ export default definePlugin({
     ],
     settingsAboutComponent: () => (
         <Forms.FormSection>
-            <Forms.FormTitle tag="h3">Usage</Forms.FormTitle>
+            <Forms.FormTitle tag="h3">使用方法</Forms.FormTitle>
             <Forms.FormText>
-                After enabling this plugin, you will see custom colors in the profiles of other people using compatible plugins. <br />
-                To set your own colors:
+                このプラグインを有効にすると、互換性のあるプラグインを使用している他の人のプロフィールにカスタム色が表示されます。<br />
+                自分の色を設定するには：
                 <ul>
-                    <li>• go to your profile settings</li>
-                    <li>• choose your own colors in the Nitro preview</li>
-                    <li>• click the "Copy 3y3" button</li>
-                    <li>• paste the invisible text anywhere in your bio</li>
+                    <li>• プロフィール設定に移動します</li>
+                    <li>• Nitroプレビューで自分の色を選択します</li>
+                    <li>• "3y3をコピー"ボタンをクリックします</li>
+                    <li>• バイオの任意の場所に見えないテキストを貼り付けます</li>
                 </ul><br />
-                <b>Please note:</b> if you are using a theme which hides nitro ads, you should disable it temporarily to set colors.
+                <b>注意：</b> Nitroの広告を隠すテーマを使用している場合は、色を設定するために一時的に無効にする必要があります。
             </Forms.FormText>
         </Forms.FormSection>),
     settings,
     colorDecodeHook(user: UserProfile) {
         if (user) {
-            // don't replace colors if already set with nitro
+            // Nitroで既に設定されている場合は色を置き換えない
             if (settings.store.nitroFirst && user.themeColors) return user;
             const colors = decode(user.bio);
             if (colors) {
@@ -139,7 +139,7 @@ export default definePlugin({
             color={Button.Colors.PRIMARY}
             size={Button.Sizes.XLARGE}
             className={Margins.left16}
-        >Copy 3y3
+        >3y3をコピー
         </Button >;
     }, { noop: true }),
 });
