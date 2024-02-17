@@ -166,7 +166,7 @@ export default definePlugin({
             find: "handleImageLoad=",
             replacement: [
                 {
-                    match: /showThumbhashPlaceholder:\i,/,
+                    match: /placeholderVersion:\i,/,
                     replace: "...$self.makeProps(this),$&"
                 },
 
