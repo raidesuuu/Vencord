@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { addContextMenuPatch, NavContextMenuPatchCallback, removeContextMenuPatch } from "@api/ContextMenu";
+import { NavContextMenuPatchCallback } from "@api/ContextMenu";
 import { LinkIcon } from "@components/Icons";
 import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
@@ -29,7 +29,7 @@ interface UserContextProps {
     user: User;
 }
 
-const UserContextMenuPatch: NavContextMenuPatchCallback = (children, { user }: UserContextProps) => () => {
+const UserContextMenuPatch: NavContextMenuPatchCallback = (children, { user }: UserContextProps) => {
     if (!user) return;
 
     children.push(
@@ -47,11 +47,7 @@ export default definePlugin({
     authors: [Devs.castdrian],
     description: "ユーザーコンテキストメニューに「ユーザーURLをコピー」オプションを追加します",
 
-    start() {
-        addContextMenuPatch("user-context", UserContextMenuPatch);
-    },
-
-    stop() {
-        removeContextMenuPatch("user-context", UserContextMenuPatch);
-    },
+    contextMenus: {
+        "user-context": UserContextMenuPatch
+    }
 });

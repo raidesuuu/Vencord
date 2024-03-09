@@ -11,7 +11,7 @@
  * <https://www.gnu.org/licenses/> を参照してください。
 */
 
-import { addContextMenuPatch } from "@api/ContextMenu";
+import { findGroupChildrenByChildId } from "@api/ContextMenu";
 import { Settings } from "@api/Settings";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
@@ -25,21 +25,21 @@ export default definePlugin({
     authors: [Devs.Ven, Devs.Megu],
     required: true,
 
-    start() {
-        // ユーザー設定の歯車コンテキストメニューの設定ショートカットは、
-        // ハードコードされたマップから要素を読み取りますが、
-        // これには明らかな理由でセクションが含まれていません。
-        // これは、セクションのアクションを手動でSettingsRouterを使用するようにパッチします
-        // （これはデスクトップでのみ機能しますが、コンテキストメニューは通常モバイルでは利用できません）
-        addContextMenuPatch("user-settings-cog", children => () => {
-            const section = children.find(c => Array.isArray(c) && c.some(it => it?.props?.id === "VencordSettings")) as any;
+    contextMenus: {
+        // The settings shortcuts in the user settings cog context menu
+        // read the elements from a hardcoded map which for obvious reason
+        // doesn't contain our sections. This patches the actions of our
+        // sections to manually use SettingsRouter (which only works on desktop
+        // but the context menu is usually not available on mobile anyway)
+        "user-settings-cog"(children) {
+            const section = findGroupChildrenByChildId("VencordSettings", children);
             section?.forEach(c => {
                 const id = c?.props?.id;
                 if (id?.startsWith("Vencord") || id?.startsWith("Vesktop")) {
-                    c.props.action = () => SettingsRouter.open(id);
+                    c!.props.action = () => SettingsRouter.open(id);
                 }
             });
-        });
+        }
     },
 
     patches: [{
