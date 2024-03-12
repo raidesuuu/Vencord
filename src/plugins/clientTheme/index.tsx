@@ -132,132 +132,132 @@ async function generateColorOffsets() {
         .join("\n");
 
 
-function generateColorOffsets(styles) {
-    const variableLightness = {} as Record<string, number>;
+    function generateColorOffsets(styles) {
+        const variableLightness = {} as Record<string, number>;
 
-    // Get lightness values of --primary variables
-    let variableMatch = variableRegex.exec(styles);
-    while (variableMatch !== null) {
-        const [, variable, lightness] = variableMatch;
-        variableLightness[variable] = parseFloat(lightness);
-        variableMatch = variableRegex.exec(styles);
+        // Get lightness values of --primary variables
+        let variableMatch = variableRegex.exec(styles);
+        while (variableMatch !== null) {
+            const [, variable, lightness] = variableMatch;
+            variableLightness[variable] = parseFloat(lightness);
+            variableMatch = variableRegex.exec(styles);
+        }
+
+        createStyleSheet("clientThemeOffsets", [
+            `.theme-light {\n ${genThemeSpecificOffsets(variableLightness, lightVariableRegex, "--primary-345-hsl")} \n}`,
+            `.theme-dark {\n ${genThemeSpecificOffsets(variableLightness, darkVariableRegex, "--primary-600-hsl")} \n}`,
+        ].join("\n\n"));
     }
 
-    createStyleSheet("clientThemeOffsets", [
-        `.theme-light {\n ${genThemeSpecificOffsets(variableLightness, lightVariableRegex, "--primary-345-hsl")} \n}`,
-        `.theme-dark {\n ${genThemeSpecificOffsets(variableLightness, darkVariableRegex, "--primary-600-hsl")} \n}`,
-    ].join("\n\n"));
-}
+    function generateLightModeFixes(styles) {
+        const groupLightUsesW500Regex = /\.theme-light[^{]*\{[^}]*var\(--white-500\)[^}]*}/gm;
+        // get light capturing groups that mention --white-500
+        const relevantStyles = [...styles.matchAll(groupLightUsesW500Regex)].flat();
 
-function generateLightModeFixes(styles) {
-    const groupLightUsesW500Regex = /\.theme-light[^{]*\{[^}]*var\(--white-500\)[^}]*}/gm;
-    // get light capturing groups that mention --white-500
-    const relevantStyles = [...styles.matchAll(groupLightUsesW500Regex)].flat();
+        const groupBackgroundRegex = /^([^{]*)\{background:var\(--white-500\)/m;
+        const groupBackgroundColorRegex = /^([^{]*)\{background-color:var\(--white-500\)/m;
+        // find all capturing groups that assign background or background-color directly to w500
+        const backgroundGroups = mapReject(relevantStyles, entry => captureOne(entry, groupBackgroundRegex)).join(",\n");
+        const backgroundColorGroups = mapReject(relevantStyles, entry => captureOne(entry, groupBackgroundColorRegex)).join(",\n");
+        // create css to reassign them to --primary-100
+        const reassignBackgrounds = `${backgroundGroups} {\n background: var(--primary-100) \n}`;
+        const reassignBackgroundColors = `${backgroundColorGroups} {\n background-color: var(--primary-100) \n}`;
 
-    const groupBackgroundRegex = /^([^{]*)\{background:var\(--white-500\)/m;
-    const groupBackgroundColorRegex = /^([^{]*)\{background-color:var\(--white-500\)/m;
-    // find all capturing groups that assign background or background-color directly to w500
-    const backgroundGroups = mapReject(relevantStyles, entry => captureOne(entry, groupBackgroundRegex)).join(",\n");
-    const backgroundColorGroups = mapReject(relevantStyles, entry => captureOne(entry, groupBackgroundColorRegex)).join(",\n");
-    // create css to reassign them to --primary-100
-    const reassignBackgrounds = `${backgroundGroups} {\n background: var(--primary-100) \n}`;
-    const reassignBackgroundColors = `${backgroundColorGroups} {\n background-color: var(--primary-100) \n}`;
+        const groupBgVarRegex = /\.theme-light\{([^}]*--[^:}]*(?:background|bg)[^:}]*:var\(--white-500\)[^}]*)\}/m;
+        const bgVarRegex = /^(--[^:]*(?:background|bg)[^:]*):var\(--white-500\)/m;
+        // get all global variables used for backgrounds
+        const lightVars = mapReject(relevantStyles, style => captureOne(style, groupBgVarRegex)) // get the insides of capture groups that have at least one background var with w500
+            .map(str => str.split(";")).flat(); // captureGroupInsides[] -> cssRule[]
+        const lightBgVars = mapReject(lightVars, variable => captureOne(variable, bgVarRegex)); // remove vars that aren't for backgrounds or w500
+        // create css to reassign every var
+        const reassignVariables = `.theme-light {\n ${lightBgVars.map(variable => `${variable}: var(--primary-100);`).join("\n")} \n}`;
 
-    const groupBgVarRegex = /\.theme-light\{([^}]*--[^:}]*(?:background|bg)[^:}]*:var\(--white-500\)[^}]*)\}/m;
-    const bgVarRegex = /^(--[^:]*(?:background|bg)[^:]*):var\(--white-500\)/m;
-    // get all global variables used for backgrounds
-    const lightVars = mapReject(relevantStyles, style => captureOne(style, groupBgVarRegex)) // get the insides of capture groups that have at least one background var with w500
-        .map(str => str.split(";")).flat(); // captureGroupInsides[] -> cssRule[]
-    const lightBgVars = mapReject(lightVars, variable => captureOne(variable, bgVarRegex)); // remove vars that aren't for backgrounds or w500
-    // create css to reassign every var
-    const reassignVariables = `.theme-light {\n ${lightBgVars.map(variable => `${variable}: var(--primary-100);`).join("\n")} \n}`;
-
-    createStyleSheet("clientThemeLightModeFixes", [
-        reassignBackgrounds,
-        reassignBackgroundColors,
-        reassignVariables,
-    ].join("\n\n"));
-}
-
-function captureOne(str, regex) {
-    const result = str.match(regex);
-    return (result === null) ? null : result[1];
-}
-
-function mapReject(arr, mapFunc) {
-    return arr.map(mapFunc).filter(Boolean);
-}
-
-function updateColorVars(color: string) {
-    const { hue, saturation, lightness } = hexToHSL(color);
-
-    let style = document.getElementById("clientThemeVars");
-    if (!style) {
-        style = document.createElement("style");
-        style.setAttribute("id", "clientThemeVars");
-        document.head.appendChild(style);
+        createStyleSheet("clientThemeLightModeFixes", [
+            reassignBackgrounds,
+            reassignBackgroundColors,
+            reassignVariables,
+        ].join("\n\n"));
     }
 
-    style.textContent = `:root {
+    function captureOne(str, regex) {
+        const result = str.match(regex);
+        return (result === null) ? null : result[1];
+    }
+
+    function mapReject(arr, mapFunc) {
+        return arr.map(mapFunc).filter(Boolean);
+    }
+
+    function updateColorVars(color: string) {
+        const { hue, saturation, lightness } = hexToHSL(color);
+
+        let style = document.getElementById("clientThemeVars");
+        if (!style) {
+            style = document.createElement("style");
+            style.setAttribute("id", "clientThemeVars");
+            document.head.appendChild(style);
+        }
+
+        style.textContent = `:root {
         --theme-h: ${hue};
         --theme-s: ${saturation}%;
         --theme-l: ${lightness}%;
     }`;
-}
-
-// https://css-tricks.com/converting-color-spaces-in-javascript/
-function hexToHSL(hexCode: string) {
-    // Hex => RGB normalized to 0-1
-    const r = parseInt(hexCode.substring(0, 2), 16) / 255;
-    const g = parseInt(hexCode.substring(2, 4), 16) / 255;
-    const b = parseInt(hexCode.substring(4, 6), 16) / 255;
-
-    // RGB => HSL
-    const cMax = Math.max(r, g, b);
-    const cMin = Math.min(r, g, b);
-    const delta = cMax - cMin;
-
-    let hue: number, saturation: number, lightness: number;
-
-    lightness = (cMax + cMin) / 2;
-
-    if (delta === 0) {
-        // If r=g=b then the only thing that matters is lightness
-        hue = 0;
-        saturation = 0;
-    } else {
-        // Magic
-        saturation = delta / (1 - Math.abs(2 * lightness - 1));
-
-        if (cMax === r)
-            hue = ((g - b) / delta) % 6;
-        else if (cMax === g)
-            hue = (b - r) / delta + 2;
-        else
-            hue = (r - g) / delta + 4;
-        hue *= 60;
-        if (hue < 0)
-            hue += 360;
     }
 
-    // Move saturation and lightness from 0-1 to 0-100
-    saturation *= 100;
-    lightness *= 100;
+    // https://css-tricks.com/converting-color-spaces-in-javascript/
+    function hexToHSL(hexCode: string) {
+        // Hex => RGB normalized to 0-1
+        const r = parseInt(hexCode.substring(0, 2), 16) / 255;
+        const g = parseInt(hexCode.substring(2, 4), 16) / 255;
+        const b = parseInt(hexCode.substring(4, 6), 16) / 255;
 
-    return { hue, saturation, lightness };
-}
+        // RGB => HSL
+        const cMax = Math.max(r, g, b);
+        const cMin = Math.min(r, g, b);
+        const delta = cMax - cMin;
 
-// Minimized math just for lightness, lowers lag when changing colors
-function hexToLightness(hexCode: string) {
-    // Hex => RGB normalized to 0-1
-    const r = parseInt(hexCode.substring(0, 2), 16) / 255;
-    const g = parseInt(hexCode.substring(2, 4), 16) / 255;
-    const b = parseInt(hexCode.substring(4, 6), 16) / 255;
+        let hue: number, saturation: number, lightness: number;
 
-    const cMax = Math.max(r, g, b);
-    const cMin = Math.min(r, g, b);
+        lightness = (cMax + cMin) / 2;
 
-    const lightness = 100 * ((cMax + cMin) / 2);
+        if (delta === 0) {
+            // If r=g=b then the only thing that matters is lightness
+            hue = 0;
+            saturation = 0;
+        } else {
+            // Magic
+            saturation = delta / (1 - Math.abs(2 * lightness - 1));
 
-    return lightness;
-}
+            if (cMax === r)
+                hue = ((g - b) / delta) % 6;
+            else if (cMax === g)
+                hue = (b - r) / delta + 2;
+            else
+                hue = (r - g) / delta + 4;
+            hue *= 60;
+            if (hue < 0)
+                hue += 360;
+        }
+
+        // Move saturation and lightness from 0-1 to 0-100
+        saturation *= 100;
+        lightness *= 100;
+
+        return { hue, saturation, lightness };
+    }
+
+    // Minimized math just for lightness, lowers lag when changing colors
+    function hexToLightness(hexCode: string) {
+        // Hex => RGB normalized to 0-1
+        const r = parseInt(hexCode.substring(0, 2), 16) / 255;
+        const g = parseInt(hexCode.substring(2, 4), 16) / 255;
+        const b = parseInt(hexCode.substring(4, 6), 16) / 255;
+
+        const cMax = Math.max(r, g, b);
+        const cMin = Math.min(r, g, b);
+
+        const lightness = 100 * ((cMax + cMin) / 2);
+
+        return lightness;
+    }
