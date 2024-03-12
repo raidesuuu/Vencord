@@ -261,3 +261,4 @@ async function generateColorOffsets() {
 
         return lightness;
     }
+}
