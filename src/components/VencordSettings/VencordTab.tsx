@@ -123,13 +123,13 @@ function VencordSettings() {
                             onClick={() => VencordNative.native.openExternal("https://github.com/Vendicated/Vencord")}
                             size={Button.Sizes.SMALL}
                             disabled={settingsDirPending}>
-                            GitHubで開く(JP)
+                            GitHubで開く(オリジナル)
                         </Button>
                         <Button
                             onClick={() => VencordNative.native.openExternal("https://github.com/VencordJP/Vencord")}
                             size={Button.Sizes.SMALL}
                             disabled={settingsDirPending}>
-                            GitHubで開く(オリジナル)
+                            GitHubで開く(JP)
                         </Button>
                     </React.Fragment>
                 </Card>

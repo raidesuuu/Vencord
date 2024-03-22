@@ -1,6 +1,6 @@
 /*
- * Vencord, a Discord client mod
- * Copyright (c) 2024 Vendicated and contributors
+ * Vencord、Discordクライアントの修正
+ * 著作権 (c) 2024 Vendicatedと貢献者
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
@@ -20,18 +20,18 @@ const Classes = findByPropsLazy("animating", "baseLayer", "bg", "layer", "layers
 
 const settings = definePluginSettings({
     disableFade: {
-        description: "Disable the crossfade animation",
+        description: "クロスフェードアニメーションを無効にする",
         type: OptionType.BOOLEAN,
         default: true,
         restartNeeded: true
     },
     organizeMenu: {
-        description: "Organizes the settings cog context menu into categories",
+        description: "設定コグコンテキストメニューをカテゴリに整理する",
         type: OptionType.BOOLEAN,
         default: true
     },
     eagerLoad: {
-        description: "Removes the loading delay when opening the menu for the first time",
+        description: "初めてメニューを開くときの読み込み遅延を削除する",
         type: OptionType.BOOLEAN,
         default: true,
         restartNeeded: true
