@@ -50,14 +50,6 @@ function VencordSettings() {
     const isMac = navigator.platform.toLowerCase().startsWith("mac");
     const needsVibrancySettings = IS_DISCORD_DESKTOP && isMac;
 
-    // One-time migration of the old setting to the new one if necessary.
-    React.useEffect(() => {
-        if (settings.macosTranslucency === true && !settings.macosVibrancyStyle) {
-            settings.macosVibrancyStyle = "sidebar";
-            settings.macosTranslucency = undefined;
-        }
-    }, []);
-
     const Switches: Array<false | {
         key: KeysOfType<typeof settings, boolean>;
         title: string;
@@ -170,7 +162,7 @@ function VencordSettings() {
                     options={[
                         // 最も不透明から最も透明に並べ替えられた順に並べる
                         {
-                            label: "透明度なし", default: !settings.macosTranslucency, value: undefined
+                            label: "透明度なし", value: undefined
                         },
                         {
                             label: "ページの下（ウィンドウの色調整）",
@@ -197,9 +189,8 @@ function VencordSettings() {
                             value: "header"
                         },
                         {
-                            label: "サイドバー（透明なウィンドウの古い値）",
-                            value: "sidebar",
-                            default: settings.macosTranslucency
+                            label: "サイドバー",
+                            value: "sidebar"
                         },
                         {
                             label: "ツールチップ",

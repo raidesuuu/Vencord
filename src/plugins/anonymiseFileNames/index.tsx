@@ -67,7 +67,7 @@ const settings = definePluginSettings({
 
 export default definePlugin({
     name: "ファイル名を匿名化",
-    authors: [Devs.obscurity],
+    authors: [Devs.fawn],
     description: "アップロードされたファイル名を匿名化する",
     patches: [
         {
@@ -77,6 +77,13 @@ export default definePlugin({
                 replace:
                     "uploadFiles:(...args)=>(args[0].uploads.forEach(f=>f.filename=$self.anonymise(f)),$1(...args)),",
             },
+        },
+        {
+            find: "message.attachments",
+            replacement: {
+                match: /(\i.uploadFiles\((\i),)/,
+                replace: "$2.forEach(f=>f.filename=$self.anonymise(f)),$1"
+            }
         },
         {
             find: ".Messages.ATTACHMENT_UTILITIES_SPOILER",

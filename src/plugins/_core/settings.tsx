@@ -11,11 +11,10 @@
  * <https://www.gnu.org/licenses/> を参照してください。
 */
 
-import { findGroupChildrenByChildId } from "@api/ContextMenu";
 import { Settings } from "@api/Settings";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
-import { React, SettingsRouter } from "@webpack/common";
+import { React } from "@webpack/common";
 
 import gitHash from "~git-hash";
 
@@ -24,23 +23,6 @@ export default definePlugin({
     description: "設定UIとデバッグ情報を追加します",
     authors: [Devs.Ven, Devs.Megu],
     required: true,
-
-    contextMenus: {
-        // The settings shortcuts in the user settings cog context menu
-        // read the elements from a hardcoded map which for obvious reason
-        // doesn't contain our sections. This patches the actions of our
-        // sections to manually use SettingsRouter (which only works on desktop
-        // but the context menu is usually not available on mobile anyway)
-        "user-settings-cog"(children) {
-            const section = findGroupChildrenByChildId("VencordSettings", children);
-            section?.forEach(c => {
-                const id = c?.props?.id;
-                if (id?.startsWith("Vencord") || id?.startsWith("Vesktop")) {
-                    c!.props.action = () => SettingsRouter.open(id);
-                }
-            });
-        }
-    },
 
     patches: [{
         find: ".versionHash",
@@ -69,6 +51,12 @@ export default definePlugin({
                 }
             },
             replace: "...$self.makeSettingsCategories($1),$&"
+        }
+    }, {
+        find: "Messages.USER_SETTINGS_ACTIONS_MENU_LABEL",
+        replacement: {
+            match: /(?<=function\((\i),\i\)\{)(?=let \i=Object.values\(\i.UserSettingsSections\).*?(\i)\.default\.open\()/,
+            replace: "$2.default.open($1);return;"
         }
     }],
 
