@@ -26,7 +26,7 @@ export default definePlugin({
         "GIFのaltテキストを単に'GIF'からgifタグ/ファイル名を含むものに変更",
     patches: [
         {
-            find: "onCloseImage=",
+            find: '"onCloseImage",',
             replacement: {
                 match: /(return.{0,10}\.jsx.{0,50}isWindowFocused)/,
                 replace:
