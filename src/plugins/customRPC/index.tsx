@@ -22,12 +22,12 @@ import { Devs } from "@utils/constants";
 import { isTruthy } from "@utils/guards";
 import { useAwaiter } from "@utils/react";
 import definePlugin, { OptionType } from "@utils/types";
-import { findByPropsLazy, findComponentByCodeLazy } from "@webpack";
+import { findByCodeLazy, findByPropsLazy, findComponentByCodeLazy } from "@webpack";
 import { ApplicationAssetUtils, FluxDispatcher, Forms, GuildStore, React, SelectedChannelStore, SelectedGuildStore, UserStore } from "@webpack/common";
 
+const useProfileThemeStyle = findByCodeLazy("profileThemeStyle:", "--profile-gradient-primary-color");
 const ActivityComponent = findComponentByCodeLazy("onOpenGameProfile");
 const ActivityClassName = findByPropsLazy("activity", "buttonColor");
-const Colors = findByPropsLazy("profileColors");
 
 async function getApplicationAsset(key: string): Promise<string> {
     if (/https?:\/\/(cdn|media)\.discordapp\.(com|net)\/attachments\//.test(key)) return "mp:" + key.replace(/https?:\/\/(cdn|media)\.discordapp\.(com|net)\//, "");
@@ -393,6 +393,8 @@ export default definePlugin({
 
     settingsAboutComponent: () => {
         const activity = useAwaiter(createActivity);
+        const { profileThemeStyle } = useProfileThemeStyle({});
+
         return (
             <>
                 <Forms.FormText>
@@ -405,7 +407,7 @@ export default definePlugin({
                     画像リンクを使用したい場合は、画像をダウンロードし <Link href="https://imgur.com">Imgur</Link> に画像を再アップロードし、画像を右クリックして「画像アドレスをコピー」を選択して画像リンクを取得します。
                 </Forms.FormText>
                 <Forms.FormDivider />
-                <div style={{ width: "284px" }} className={Colors.profileColors}>
+                <div style={{ width: "284px", ...profileThemeStyle }}>
                     {activity[0] && <ActivityComponent activity={activity[0]} className={ActivityClassName.activity} channelId={SelectedChannelStore.getChannelId()}
                         guild={GuildStore.getGuild(SelectedGuildStore.getLastSelectedGuildId())}
                         application={{ id: settings.store.appID }}

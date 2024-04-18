@@ -315,7 +315,6 @@ export default function PluginSettings() {
                 <TextInput autoFocus value={searchValue.value} placeholder="プラグインを検索..." onChange={onSearch} className={Margins.bottom20} />
                 <div className={InputStyles.inputWrapper}>
                     <Select
-                        className={InputStyles.inputDefault}
                         options={[
                             { label: "すべて表示", value: SearchStatus.ALL, default: true },
                             { label: "有効なプラグインのみ表示", value: SearchStatus.ENABLED },
