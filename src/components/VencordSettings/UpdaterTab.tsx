@@ -22,6 +22,7 @@ import { Flex } from "@components/Flex";
 import { Link } from "@components/Link";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
+import { ModalCloseButton, ModalContent, ModalProps, ModalRoot, ModalSize, openModal } from "@utils/modal";
 import { relaunch } from "@utils/native";
 import { useAwaiter } from "@utils/react";
 import { changes, checkForUpdates, getRepo, isNewer, update, updateError, UpdateLogger } from "@utils/updater";
@@ -29,7 +30,7 @@ import { Alerts, Button, Card, Forms, Parser, React, Switch, Toasts } from "@web
 
 import gitHash from "~git-hash";
 
-import { SettingsTab, wrapTab } from "./shared";
+import { handleSettingsTabError, SettingsTab, wrapTab } from "./shared";
 
 function withDispatcher(dispatcher: React.Dispatch<React.SetStateAction<boolean>>, action: () => any) {
     return async () => {
@@ -37,22 +38,25 @@ function withDispatcher(dispatcher: React.Dispatch<React.SetStateAction<boolean>
         try {
             await action();
         } catch (e: any) {
-            UpdateLogger.error("更新に失敗しました", e);
+            UpdateLogger.error("Failed to update", e);
+
+            let err: string;
             if (!e) {
-                var err = "不明なエラーが発生しました（エラーが未定義です）。もう一度お試しください。";
+                err = "An unknown error occurred (error is undefined).\nPlease try again.";
             } else if (e.code && e.cmd) {
                 const { code, path, cmd, stderr } = e;
 
                 if (code === "ENOENT")
-                    var err = `コマンド \`${path}\` が見つかりませんでした。インストールしてからもう一度お試しください。`;
+                    err = `Command \`${path}\` not found.\nPlease install it and try again`;
                 else {
-                    var err = `\`${cmd}\` の実行中にエラーが発生しました:\n`;
-                    err += stderr || `コード \`${code}\`。詳細についてはコンソールを参照してください。`;
+                    err = `An error occurred while running \`${cmd}\`:\n`;
+                    err += stderr || `Code \`${code}\`. See the console for more info`;
                 }
 
             } else {
-                var err = "不明なエラーが発生しました。詳細についてはコンソールを参照してください。";
+                err = "An unknown error occurred. See the console for more info.";
             }
+
             Alerts.show({
                 title: "おっと！",
                 body: (
@@ -186,7 +190,7 @@ function Newer(props: CommonProps) {
 }
 
 function Updater() {
-    const settings = useSettings(["notifyAboutUpdates", "autoUpdate", "autoUpdateNotification"]);
+    const settings = useSettings(["autoUpdate", "autoUpdateNotification"]);
 
     const [repo, err, repoPending] = useAwaiter(getRepo, { fallbackValue: "読み込み中..." });
 
@@ -204,17 +208,9 @@ function Updater() {
         <SettingsTab title="Vencordの更新">
             <Forms.FormTitle tag="h5">アップデーターの設定</Forms.FormTitle>
             <Switch
-                value={settings.notifyAboutUpdates}
-                onChange={(v: boolean) => settings.notifyAboutUpdates = v}
-                note="起動時に通知を表示します"
-                disabled={settings.autoUpdate}
-            >
-                新しいアップデートについて通知を受け取る
-            </Switch>
-            <Switch
                 value={settings.autoUpdate}
                 onChange={(v: boolean) => settings.autoUpdate = v}
-                note="確認プロンプトなしでVencordを自動的に更新します"
+                note="確認 プロンプトなしでVencordを自動的に更新します"
             >
                 自動的に更新する
             </Switch>
@@ -253,3 +249,20 @@ function Updater() {
 }
 
 export default IS_UPDATER_DISABLED ? null : wrapTab(Updater, "アップデート");
+
+export const openUpdaterModal = IS_UPDATER_DISABLED ? null : function () {
+    const UpdaterTab = wrapTab(Updater, "Updater");
+
+    try {
+        openModal(wrapTab((modalProps: ModalProps) => (
+            <ModalRoot {...modalProps} size={ModalSize.MEDIUM}>
+                <ModalContent className="vc-updater-modal">
+                    <ModalCloseButton onClick={modalProps.onClose} className="vc-updater-modal-close-button" />
+                    <UpdaterTab />
+                </ModalContent>
+            </ModalRoot>
+        ), "UpdaterModal"));
+    } catch {
+        handleSettingsTabError();
+    }
+};

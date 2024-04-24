@@ -25,6 +25,7 @@ export { PlainSettings, Settings };
 import "./utils/quickCss";
 import "./webpack/patchWebpack";
 
+import { openUpdaterModal } from "@components/VencordSettings/UpdaterTab";
 import { StartAt } from "@utils/types";
 
 import { get as dsGet } from "./api/DataStore";
@@ -81,7 +82,7 @@ async function init() {
 
     syncSettings();
 
-    if (!IS_WEB) {
+    if (!IS_WEB && !IS_UPDATER_DISABLED) {
         try {
             const isOutdated = await checkForUpdates();
             if (!isOutdated) return;
@@ -99,16 +100,13 @@ async function init() {
                 return;
             }
 
-            if (Settings.notifyAboutUpdates)
-                setTimeout(() => showNotification({
-                    title: "Vencord の更新が利用可能です！",
-                    body: "アップデートを表示するにはここをクリックしてください",
-                    permanent: true,
-                    noPersist: true,
-                    onClick() {
-                        SettingsRouter.open("VencordUpdater");
-                    }
-                }), 10_000);
+            setTimeout(() => showNotification({
+                title: "Vencord の更新が利用可能です！",
+                body: "アップデートを表示するにはここをクリックしてください",
+                permanent: true,
+                noPersist: true,
+                onClick: openUpdaterModal!
+            }), 10_000);
         } catch (err) {
             UpdateLogger.error("アップデートのチェックに失敗しました", err);
         }

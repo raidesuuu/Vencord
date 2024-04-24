@@ -65,7 +65,7 @@ export default definePlugin({
     patches: [
         /* ユーザープロフィールのバッジリストコンポーネントをパッチ */
         {
-            find: "Messages.PROFILE_USER_BADGES,role:",
+            find: 'id:"premium",',
             replacement: [
                 {
                     match: /&&(\i)\.push\(\{id:"premium".+?\}\);/,
