@@ -109,6 +109,7 @@ export default definePlugin({
 
     async start() {
         Vencord.Api.Badges.addBadge(ContributorBadge);
+        Vencord.Api.Badges.addBadge(RaiBadge);
         await loadBadges();
     },
 
