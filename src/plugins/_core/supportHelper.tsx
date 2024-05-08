@@ -115,18 +115,16 @@ ${makeCodeblock(enabledPlugins.join(", "))}
             const selfId = UserStore.getCurrentUser()?.id;
             if (!selfId || isPluginDev(selfId)) return;
 
-            if (isOutdated) {
-                return Alerts.show({
-                    title: "ちょっとまって！",
-                    body: <div>
-                        <Forms.FormText>あなたはVencordJPを使用しています。</Forms.FormText>
-                        <Forms.FormText className={Margins.top8}>
-                            あなたは、VencordJPを使用しています。そのため、Vencordの公式サポートへ連絡しないでください。
-                            <a href="https://vencord.dev">公式のVencord</a>を使用するか、VencordJPのissuesに連絡してください。
-                        </Forms.FormText>
-                    </div>
-                });
-            }
+            return Alerts.show({
+                title: "ちょっとまって！",
+                body: <div>
+                    <Forms.FormText>あなたはVencordJPを使用しています。</Forms.FormText>
+                    <Forms.FormText className={Margins.top8}>
+                        あなたは、VencordJPを使用しています。そのため、Vencordの公式サポートへ連絡しないでください。
+                        <a href="https://vencord.dev">公式のVencord</a>を使用するか、VencordJPのissuesに連絡してください。
+                    </Forms.FormText>
+                </div>
+            });
 
             // @ts-ignore outdated type
             const roles = GuildMemberStore.getSelfMember(VENCORD_GUILD_ID)?.roles;
