@@ -46,8 +46,7 @@ const RaiBadge: ProfileBadge = {
     description: "VencordJPの開発者",
     image: JP_BADGE,
     position: BadgePosition.START,
-    shouldShow: ({ user }) => isPluginDev(user.id),
-    onClick: (_, { user }) => openContributorModal(user)
+    shouldShow: ({ user }) => user.id == "1076090244069343294"
 };
 
 let DonorBadges = {} as Record<string, Array<Record<"tooltip" | "badge", string>>>;
