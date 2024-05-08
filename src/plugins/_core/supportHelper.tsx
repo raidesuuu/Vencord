@@ -16,25 +16,35 @@
  * 受け取るべきでした。 そうでない場合は、<https://www.gnu.org/licenses/>をご覧ください。
 */
 
-import { DataStore } from "@api/index";
+import ErrorBoundary from "@components/ErrorBoundary";
+import { Link } from "@components/Link";
+import { openUpdaterModal } from "@components/VencordSettings/UpdaterTab";
 import { Devs, SUPPORT_CHANNEL_ID } from "@utils/constants";
+import { Margins } from "@utils/margins";
 import { isPluginDev } from "@utils/misc";
+import { relaunch } from "@utils/native";
 import { makeCodeblock } from "@utils/text";
 import definePlugin from "@utils/types";
-import { isOutdated } from "@utils/updater";
-import { Alerts, Forms, UserStore } from "@webpack/common";
+import { isOutdated, update } from "@utils/updater";
+import { Alerts, Card, ChannelStore, Forms, GuildMemberStore, NavigationRouter, Parser, RelationshipStore, UserStore } from "@webpack/common";
 
 import gitHash from "~git-hash";
 import plugins from "~plugins";
 
 import settings from "./settings";
 
-const REMEMBER_DISMISS_KEY = "Vencord-SupportHelper-Dismiss";
+const VENCORD_GUILD_ID = "1015060230222131221";
 
 const AllowedChannelIds = [
     SUPPORT_CHANNEL_ID,
     "1024286218801926184", // Vencord > #bot-spam
     "1033680203433660458", // Vencord > #v
+];
+
+const TrustedRolesIds = [
+    "1026534353167208489", // contributor
+    "1026504932959977532", // regular
+    "1042507929485586532", // donor
 ];
 
 export default definePlugin({
@@ -43,6 +53,14 @@ export default definePlugin({
     description: "私たちがあなたにサポートを提供するのを助けます",
     authors: [Devs.Ven],
     dependencies: ["CommandsAPI"],
+
+    patches: [{
+        find: ".BEGINNING_DM.format",
+        replacement: {
+            match: /BEGINNING_DM\.format\(\{.+?\}\),(?=.{0,100}userId:(\i\.getRecipientId\(\)))/,
+            replace: "$& $self.ContributorDmWarningCard({ userId: $1 }),"
+        }
+    }],
 
     commands: [{
         name: "vencord-debug",
@@ -64,15 +82,13 @@ export default definePlugin({
             const isApiPlugin = (plugin: string) => plugin.endsWith("API") || plugins[plugin].required;
 
             const enabledPlugins = Object.keys(plugins).filter(p => Vencord.Plugins.isPluginEnabled(p) && !isApiPlugin(p));
-            const enabledApiPlugins = Object.keys(plugins).filter(p => Vencord.Plugins.isPluginEnabled(p) && isApiPlugin(p));
 
             const info = {
-                Vencord: `v${VERSION} • ${gitHash}${settings.additionalInfo} - ${Intl.DateTimeFormat("ja-JP", { dateStyle: "medium" }).format(BUILD_TIMESTAMP)}`,
-                "Discord Branch": RELEASE_CHANNEL,
-                Client: client,
-                Platform: window.navigator.platform,
-                Outdated: isOutdated,
-                OpenAsar: "openasar" in window,
+                Vencord:
+                    `v${VERSION} • [${gitHash}](<https://github.com/Vendicated/Vencord/commit/${gitHash}>)` +
+                    `${settings.additionalInfo} - ${Intl.DateTimeFormat("en-GB", { dateStyle: "medium" }).format(BUILD_TIMESTAMP)}`,
+                Client: `${RELEASE_CHANNEL} ~ ${client}`,
+                Platform: window.navigator.platform
             };
 
             if (IS_DISCORD_DESKTOP) {
@@ -80,11 +96,10 @@ export default definePlugin({
             }
 
             const debugInfo = `
-**Vencord デバッグ情報**
->>> ${Object.entries(info).map(([k, v]) => `${k}: ${v}`).join("\n")}
+>>> ${Object.entries(info).map(([k, v]) => `**${k}**: ${v}`).join("\n")}
 
-有効なプラグイン (${enabledPlugins.length + enabledApiPlugins.length}):
-${makeCodeblock(enabledPlugins.join(", ") + "\n\n" + enabledApiPlugins.join(", "))}
+Enabled Plugins (${enabledPlugins.length}):
+${makeCodeblock(enabledPlugins.join(", "))}
 `;
 
             return {
@@ -97,24 +112,39 @@ ${makeCodeblock(enabledPlugins.join(", ") + "\n\n" + enabledApiPlugins.join(", "
         async CHANNEL_SELECT({ channelId }) {
             if (channelId !== SUPPORT_CHANNEL_ID) return;
 
-            if (isPluginDev(UserStore.getCurrentUser().id)) return;
+            const selfId = UserStore.getCurrentUser()?.id;
+            if (!selfId || isPluginDev(selfId)) return;
 
-            if (isOutdated && gitHash !== await DataStore.get(REMEMBER_DISMISS_KEY)) {
-                const rememberDismiss = () => DataStore.set(REMEMBER_DISMISS_KEY, gitHash);
-
-                Alerts.show({
-                    title: "ちょっと待って！",
+            if (isOutdated) {
+                return Alerts.show({
+                    title: "ちょっとまって！",
                     body: <div>
-                        <Forms.FormText>あなたはVencordの古いバージョンを使用しています！ おそらく、あなたの問題はすでに修正されています。</Forms.FormText>
-                        <Forms.FormText>
-                            まず、設定の更新ページを使用して更新するか、VencordInstaller（Vencord更新ボタン）
-                            を使用して更新してください。更新ページにアクセスできない場合は、これを使用してください。
+                        <Forms.FormText>あなたはVencordJPを使用しています。</Forms.FormText>
+                        <Forms.FormText className={Margins.top8}>
+                            あなたは、VencordJPを使用しています。そのため、Vencordの公式サポートへ連絡しないでください。
+                            <a href="https://vencord.dev">公式のVencord</a>を使用するか、VencordJPのissuesに連絡してください。
                         </Forms.FormText>
-                    </div>,
-                    onCancel: rememberDismiss,
-                    onConfirm: rememberDismiss
+                    </div>
                 });
             }
+
+            // @ts-ignore outdated type
+            const roles = GuildMemberStore.getSelfMember(VENCORD_GUILD_ID)?.roles;
+            if (!roles || TrustedRolesIds.some(id => roles.includes(id))) return;
         }
-    }
+    },
+
+    ContributorDmWarningCard: ErrorBoundary.wrap(({ userId }) => {
+        if (!isPluginDev(userId)) return null;
+        if (RelationshipStore.isFriend(userId)) return null;
+
+        return (
+            <Card className={`vc-plugins-restart-card ${Margins.top8}`}>
+                Please do not private message Vencord plugin developers for support!
+                <br />
+                Instead, use the Vencord support channel: {Parser.parse("https://discord.com/channels/1015060230222131221/1026515880080842772")}
+                {!ChannelStore.getChannel(SUPPORT_CHANNEL_ID) && " (Click the link to join)"}
+            </Card>
+        );
+    }, { noop: true })
 });

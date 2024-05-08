@@ -16,11 +16,14 @@
  * 受け取るべきでした。 そうでない場合は、<https://www.gnu.org/licenses/>を参照してください。
 */
 
+import "./fixBadgeOverflow.css";
+
 import { BadgePosition, BadgeUserArgs, ProfileBadge } from "@api/Badges";
 import DonateButton from "@components/DonateButton";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Flex } from "@components/Flex";
 import { Heart } from "@components/Heart";
+import { openContributorModal } from "@components/PluginSettings/ContributorModal";
 import { Devs } from "@utils/constants";
 import { Margins } from "@utils/margins";
 import { isPluginDev } from "@utils/misc";
@@ -29,19 +32,22 @@ import definePlugin from "@utils/types";
 import { Forms, Toasts } from "@webpack/common";
 
 const CONTRIBUTOR_BADGE = "https://vencord.dev/assets/favicon.png";
+const JP_BADGE = "https://raic.tech/vencordjp/assets/images/vencordjp.png";
 
 const ContributorBadge: ProfileBadge = {
     description: "Vencordの貢献者",
     image: CONTRIBUTOR_BADGE,
     position: BadgePosition.START,
-    props: {
-        style: {
-            borderRadius: "50%",
-            transform: "scale(0.9)" // 画像がデフォルトのバッジに比べて少し大きすぎます
-        }
-    },
     shouldShow: ({ user }) => isPluginDev(user.id),
-    link: "https://github.com/Vendicated/Vencord"
+    onClick: (_, { user }) => openContributorModal(user)
+};
+
+const RaiBadge: ProfileBadge = {
+    description: "VencordJPの開発者",
+    image: JP_BADGE,
+    position: BadgePosition.START,
+    shouldShow: ({ user }) => isPluginDev(user.id),
+    onClick: (_, { user }) => openContributorModal(user)
 };
 
 let DonorBadges = {} as Record<string, Array<Record<"tooltip" | "badge", string>>>;
@@ -79,13 +85,13 @@ export default definePlugin({
                 },
                 // replace their component with ours if applicable
                 {
-                    match: /(?<=text:(\i)\.description,spacing:12,)children:/,
+                    match: /(?<=text:(\i)\.description,spacing:12,.{0,50})children:/,
                     replace: "children:$1.component ? () => $self.renderBadgeComponent($1) :"
                 },
                 // conditionally override their onClick with badge.onClick if it exists
                 {
                     match: /href:(\i)\.link/,
-                    replace: "...($1.onClick && { onClick: $1.onClick }),$&"
+                    replace: "...($1.onClick && { onClick: vcE => $1.onClick(vcE, arguments[0]) }),$&"
                 }
             ]
         }

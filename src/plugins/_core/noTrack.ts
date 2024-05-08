@@ -15,17 +15,31 @@
  * そうでない場合は、<https://www.gnu.org/licenses/>を参照してください。
 */
 
+import { definePluginSettings } from "@api/Settings";
 import { Devs } from "@utils/constants";
-import definePlugin from "@utils/types";
+import definePlugin, { OptionType } from "@utils/types";
+
+const settings = definePluginSettings({
+    disableAnalytics: {
+        type: OptionType.BOOLEAN,
+        description: "Disable Discord's tracking (analytics/'science')",
+        default: true,
+        restartNeeded: true
+    }
+});
 
 export default definePlugin({
     name: "NoTrack",
-    description: "Discordのトラッキング（'science'）、メトリクス、Sentryクラッシュレポートを無効にする",
+    description: "Discordのトラッキング（アナリティクス/'science'）、メトリクス、Sentryクラッシュレポートを無効にする",
     authors: [Devs.Cyn, Devs.Ven, Devs.Nuckyz, Devs.Arrow],
     required: true,
+
+    settings,
+
     patches: [
         {
             find: "AnalyticsActionHandlers.handle",
+            predicate: () => settings.store.disableAnalytics,
             replacement: {
                 match: /^.+$/,
                 replace: "()=>{}",
@@ -43,11 +57,11 @@ export default definePlugin({
             replacement: [
                 {
                     match: /this\._intervalId=/,
-                    replace: "this._intervalId=undefined&&"
+                    replace: "this._intervalId=void 0&&"
                 },
                 {
-                    match: /(increment\(\i\){)/,
-                    replace: "$1return;"
+                    match: /(?:increment|distribution)\(\i(?:,\i)?\){/g,
+                    replace: "$&return;"
                 }
             ]
         },
