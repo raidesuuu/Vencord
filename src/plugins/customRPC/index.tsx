@@ -17,13 +17,16 @@
 */
 
 import { definePluginSettings, Settings } from "@api/Settings";
+import { ErrorCard } from "@components/ErrorCard";
 import { Link } from "@components/Link";
 import { Devs } from "@utils/constants";
 import { isTruthy } from "@utils/guards";
+import { Margins } from "@utils/margins";
+import { classes } from "@utils/misc";
 import { useAwaiter } from "@utils/react";
 import definePlugin, { OptionType } from "@utils/types";
 import { findByCodeLazy, findByPropsLazy, findComponentByCodeLazy } from "@webpack";
-import { ApplicationAssetUtils, FluxDispatcher, Forms, GuildStore, React, SelectedChannelStore, SelectedGuildStore, UserStore } from "@webpack/common";
+import { ApplicationAssetUtils, Button, FluxDispatcher, Forms, GuildStore, React, SelectedChannelStore, SelectedGuildStore, StatusSettingsStores, UserStore } from "@webpack/common";
 
 const useProfileThemeStyle = findByCodeLazy("profileThemeStyle:", "--profile-gradient-primary-color");
 const ActivityComponent = findComponentByCodeLazy("onOpenGameProfile");
@@ -385,18 +388,37 @@ async function setRpc(disable?: boolean) {
 
 export default definePlugin({
     name: "CustomRPC",
-    description: "Custom RPCの設定をすることができます",
-    authors: [Devs.captain, Devs.AutumnVN],
+    description: "自分で作成したRPCを設定する",
+    authors: [Devs.captain, Devs.AutumnVN, Devs.nin0dev],
     start: setRpc,
     stop: () => setRpc(true),
     settings,
 
     settingsAboutComponent: () => {
         const activity = useAwaiter(createActivity);
+        const gameActivityEnabled = StatusSettingsStores.ShowCurrentGame.useSetting();
         const { profileThemeStyle } = useProfileThemeStyle({});
 
         return (
             <>
+                {!gameActivityEnabled && (
+                    <ErrorCard
+                        className={classes(Margins.top16, Margins.bottom16)}
+                        style={{ padding: "1em" }}
+                    >
+                        <Forms.FormTitle>Notice</Forms.FormTitle>
+                        <Forms.FormText>Game activity isn't enabled, people won't be able to see your custom rich presence!</Forms.FormText>
+
+                        <Button
+                            color={Button.Colors.TRANSPARENT}
+                            className={Margins.top8}
+                            onClick={() => StatusSettingsStores.ShowCurrentGame.updateSetting(true)}
+                        >
+                            Enable
+                        </Button>
+                    </ErrorCard>
+                )}
+
                 <Forms.FormText>
                     最初に <Link href="https://discord.com/developers/applications">Discord Developer Portal</Link> に行ってアプリケーションを作り、アプリケーションIDを取得する必要があります
                 </Forms.FormText>
@@ -406,7 +428,9 @@ export default definePlugin({
                 <Forms.FormText>
                     画像リンクを使用したい場合は、画像をダウンロードし <Link href="https://imgur.com">Imgur</Link> に画像を再アップロードし、画像を右クリックして「画像アドレスをコピー」を選択して画像リンクを取得します。
                 </Forms.FormText>
-                <Forms.FormDivider />
+
+                <Forms.FormDivider className={Margins.top8} />
+
                 <div style={{ width: "284px", ...profileThemeStyle }}>
                     {activity[0] && <ActivityComponent activity={activity[0]} className={ActivityClassName.activity} channelId={SelectedChannelStore.getChannelId()}
                         guild={GuildStore.getGuild(SelectedGuildStore.getLastSelectedGuildId())}

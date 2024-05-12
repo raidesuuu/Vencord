@@ -103,15 +103,15 @@ export default definePlugin({
                             body: "おっと :( Discordが5回以上クラッシュし、回復のしようがありません。",
                             noPersist: true,
                         });
-                    } catch {}
+                    } catch { }
 
                     return;
                 }
 
                 shouldAttemptRecover = false;
                 // This is enough to avoid a crash loop
-                setTimeout(() => (shouldAttemptRecover = true), 500);
-            } catch {}
+                setTimeout(() => shouldAttemptRecover = true, 1000);
+            } catch { }
 
             try {
                 if (!hasCrashedOnce) {
@@ -121,7 +121,7 @@ export default definePlugin({
                         true
                     );
                 }
-            } catch {}
+            } catch { }
 
             try {
                 if (settings.store.attemptToPreventCrashes) {
@@ -141,7 +141,7 @@ export default definePlugin({
                 body: "復旧を試みています",
                 noPersist: true,
             });
-        } catch {}
+        } catch { }
 
         try {
             const channelId = SelectedChannelStore.getChannelId();
