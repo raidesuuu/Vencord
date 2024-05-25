@@ -17,13 +17,17 @@
 */
 
 // This plugin is a port from Alyxia's Vendetta plugin
+import "./index.css";
+
 import { definePluginSettings } from "@api/Settings";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Devs } from "@utils/constants";
 import { Margins } from "@utils/margins";
-import { copyWithToast } from "@utils/misc";
+import { classes, copyWithToast } from "@utils/misc";
+import { useAwaiter } from "@utils/react";
 import definePlugin, { OptionType } from "@utils/types";
-import { Button, Forms } from "@webpack/common";
+import { extractAndLoadChunksLazy, findComponentByCodeLazy } from "@webpack";
+import { Button, Flex, Forms, React, Text, UserProfileStore, UserStore, useState } from "@webpack/common";
 import { User } from "discord-types/general";
 import virtualMerge from "virtual-merge";
 
@@ -81,6 +85,34 @@ const settings = definePluginSettings({
     }
 });
 
+interface ColorPickerProps {
+    color: number | null;
+    label: React.ReactElement;
+    showEyeDropper?: boolean;
+    suggestedColors?: string[];
+    onChange(value: number | null): void;
+}
+
+// I can't be bothered to figure out the semantics of this component. The
+// functions surely get some event argument sent to them and they likely aren't
+// all required. If anyone who wants to use this component stumbles across this
+// code, you'll have to do the research yourself.
+interface ProfileModalProps {
+    user: User;
+    pendingThemeColors: [number, number];
+    onAvatarChange: () => void;
+    onBannerChange: () => void;
+    canUsePremiumCustomization: boolean;
+    hideExampleButton: boolean;
+    hideFakeActivity: boolean;
+    isTryItOutFlow: boolean;
+}
+
+const ColorPicker = findComponentByCodeLazy<ColorPickerProps>(".Messages.USER_SETTINGS_PROFILE_COLOR_SELECT_COLOR", ".BACKGROUND_PRIMARY)");
+const ProfileModal = findComponentByCodeLazy<ProfileModalProps>('"ProfileCustomizationPreview"');
+
+const requireColorPicker = extractAndLoadChunksLazy(["USER_SETTINGS_PROFILE_COLOR_DEFAULT_BUTTON.format"], /createPromise:\(\)=>\i\.\i\("(.+?)"\).then\(\i\.bind\(\i,"(.+?)"\)\)/);
+
 export default definePlugin({
     name: "FakeProfileThemes",
     description: "あなたの自己紹介に見えない3y3エンコーディングを隠すことでプロフィールのテーマを可能にします",
@@ -101,21 +133,98 @@ export default definePlugin({
             }
         }
     ],
-    settingsAboutComponent: () => (
-        <Forms.FormSection>
-            <Forms.FormTitle tag="h3">使用方法</Forms.FormTitle>
-            <Forms.FormText>
-                このプラグインを有効にすると、互換性のあるプラグインを使用している他の人のプロフィールにカスタム色が表示されます。<br />
-                自分の色を設定するには：
-                <ul>
-                    <li>• プロフィール設定に移動します</li>
-                    <li>• Nitroプレビューで自分の色を選択します</li>
-                    <li>• "3y3をコピー"ボタンをクリックします</li>
-                    <li>• バイオの任意の場所に見えないテキストを貼り付けます</li>
-                </ul><br />
-                <b>注意：</b> Nitroの広告を隠すテーマを使用している場合は、色を設定するために一時的に無効にする必要があります。
-            </Forms.FormText>
-        </Forms.FormSection>),
+    settingsAboutComponent: () => {
+        const existingColors = decode(
+            UserProfileStore.getUserProfile(UserStore.getCurrentUser().id).bio
+        ) ?? [0, 0];
+        const [color1, setColor1] = useState(existingColors[0]);
+        const [color2, setColor2] = useState(existingColors[1]);
+
+        const [, , loadingColorPickerChunk] = useAwaiter(requireColorPicker);
+
+        return (
+            <Forms.FormSection>
+                <Forms.FormTitle tag="h3">Usage</Forms.FormTitle>
+                <Forms.FormText>
+                    このプラグインを有効にすると、互換性のあるプラグインを使用している他の人のプロフィールにカスタムカラーが表示されます。
+                    これが表示されます: {" "}
+                    <br />
+                    色を設定するためのステップ:
+                    <ul>
+                        <li>
+                            • 下のカラーピッカーで色を選んでください。
+                        </li>
+                        <li>• "3y3をコピー"ボタンをクリックする</li>
+                        <li>• 透明なテキストを自己紹介の任意の場所に貼り付ける</li>
+                    </ul><br />
+                    <Forms.FormDivider
+                        className={classes(Margins.top8, Margins.bottom8)}
+                    />
+                    <Forms.FormTitle tag="h3">カラーピッカー</Forms.FormTitle>
+                    {!loadingColorPickerChunk && (
+                        <Flex
+                            direction={Flex.Direction.HORIZONTAL}
+                            style={{ gap: "1rem" }}
+                        >
+                            <ColorPicker
+                                color={color1}
+                                label={
+                                    <Text
+                                        variant={"text-xs/normal"}
+                                        style={{ marginTop: "4px" }}
+                                    >
+                                        プライマリ
+                                    </Text>
+                                }
+                                onChange={(color: number) => {
+                                    setColor1(color);
+                                }}
+                            />
+                            <ColorPicker
+                                color={color2}
+                                label={
+                                    <Text
+                                        variant={"text-xs/normal"}
+                                        style={{ marginTop: "4px" }}
+                                    >
+                                        アクセント
+                                    </Text>
+                                }
+                                onChange={(color: number) => {
+                                    setColor2(color);
+                                }}
+                            />
+                            <Button
+                                onClick={() => {
+                                    const colorString = encode(color1, color2);
+                                    copyWithToast(colorString);
+                                }}
+                                color={Button.Colors.PRIMARY}
+                                size={Button.Sizes.XLARGE}
+                            >
+                                3y3をコピー
+                            </Button>
+                        </Flex>
+                    )}
+                    <Forms.FormDivider
+                        className={classes(Margins.top8, Margins.bottom8)}
+                    />
+                    <Forms.FormTitle tag="h3">プレビュー</Forms.FormTitle>
+                    <div className="vc-fpt-preview">
+                        <ProfileModal
+                            user={UserStore.getCurrentUser()}
+                            pendingThemeColors={[color1, color2]}
+                            onAvatarChange={() => { }}
+                            onBannerChange={() => { }}
+                            canUsePremiumCustomization={true}
+                            hideExampleButton={true}
+                            hideFakeActivity={true}
+                            isTryItOutFlow={true}
+                        />
+                    </div>
+                </Forms.FormText>
+            </Forms.FormSection>);
+    },
     settings,
     colorDecodeHook(user: UserProfile) {
         if (user) {
