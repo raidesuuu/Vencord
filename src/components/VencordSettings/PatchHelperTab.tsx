@@ -186,7 +186,7 @@ function ReplacementInput({ replacement, setReplacement, replacementError }) {
     return (
         <>
             {/* FormTitle adds a class if className is not set, so we set it to an empty string to prevent that */}
-            <Forms.FormTitle className="">replacement</Forms.FormTitle>
+            <Forms.FormTitle className="">置き換える</Forms.FormTitle>
             <TextInput
                 value={replacement?.toString()}
                 onChange={onChange}
@@ -275,7 +275,7 @@ function FullPatchInput({ setFind, setParsedFind, setMatch, setReplacement }: Fu
     }
 
     return <>
-        <Forms.FormText className={Margins.bottom8}>Paste your full JSON patch here to fill out the fields</Forms.FormText>
+        <Forms.FormText className={Margins.bottom8}>JSONパッチをここに貼り付けて、フィールドを埋めてください。</Forms.FormText>
         <TextArea value={fullPatch} onChange={setFullPatch} onBlur={update} />
         {fullPatchError !== "" && <Forms.FormText style={{ color: "var(--text-danger)" }}>{fullPatchError}</Forms.FormText>}
     </>;
@@ -295,14 +295,14 @@ function PatchHelper() {
 
     const code = React.useMemo(() => {
         return `
-{
-    find: ${parsedFind instanceof RegExp ? parsedFind.toString() : JSON.stringify(parsedFind)},
-    replacement: {
-        match: /${match.replace(/(?<!\\)\//g, "\\/")}/,
-        replace: ${typeof replacement === "function" ? replacement.toString() : JSON.stringify(replacement)}
+                            {
+                                find: ${parsedFind instanceof RegExp ? parsedFind.toString() : JSON.stringify(parsedFind)},
+                            replacement: {
+                                match: /${match.replace(/(?<!\\)\//g, "\\/")}/,
+                            replace: ${typeof replacement === "function" ? replacement.toString() : JSON.stringify(replacement)}
     }
 }
-        `.trim();
+                            `.trim();
     }, [parsedFind, match, replacement]);
 
     function onFindChange(v: string) {
@@ -344,7 +344,7 @@ function PatchHelper() {
                 setReplacement={setReplacement}
             />
 
-            <Forms.FormTitle className={Margins.top8}>find</Forms.FormTitle>
+            <Forms.FormTitle className={Margins.top8}>検索</Forms.FormTitle>
             <TextInput
                 type="text"
                 value={find}
@@ -352,7 +352,7 @@ function PatchHelper() {
                 error={findError}
             />
 
-            <Forms.FormTitle className={Margins.top8}>match</Forms.FormTitle>
+            <Forms.FormTitle className={Margins.top8}>一致</Forms.FormTitle>
             <TextInput
                 type="text"
                 value={match}

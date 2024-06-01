@@ -102,7 +102,7 @@ function VencordSettings() {
                             <Button
                                 onClick={relaunch}
                                 size={Button.Sizes.SMALL}>
-                                Restart Client
+                                クライアントを再起動
                             </Button>
                         )}
                         <Button

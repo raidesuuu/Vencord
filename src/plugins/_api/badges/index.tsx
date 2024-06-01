@@ -32,7 +32,7 @@ import definePlugin from "@utils/types";
 import { Forms, Toasts } from "@webpack/common";
 
 const CONTRIBUTOR_BADGE = "https://vencord.dev/assets/favicon.png";
-const JP_BADGE = "https://raic.tech/vencordjp/assets/images/vencordjp.png";
+const JP_BADGE = "https://raw.githubusercontent.com/raidesuuu/raic.tech/main/dist/vencordjp/assets/images/vencordjp.png";
 
 const ContributorBadge: ProfileBadge = {
     description: "Vencordの貢献者",

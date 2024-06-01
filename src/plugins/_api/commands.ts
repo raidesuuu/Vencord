@@ -20,7 +20,7 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "コマンドAPI",
+    name: "CommandsAPI",
     authors: [Devs.Arjix],
     description: "コマンドを使用するものに必要なAPI",
     patches: [

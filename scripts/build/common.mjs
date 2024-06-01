@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+ */
 
 import "../suppressExperimentalWarnings.js";
 import "../checkNodeVersion.js";
@@ -34,7 +34,8 @@ const PackageJSON = JSON.parse(readFileSync("package.json"));
 
 export const VERSION = PackageJSON.version;
 // https://reproducible-builds.org/docs/source-date-epoch/
-export const BUILD_TIMESTAMP = Number(process.env.SOURCE_DATE_EPOCH) || Date.now();
+export const BUILD_TIMESTAMP =
+    Number(process.env.SOURCE_DATE_EPOCH) || Date.now();
 
 export const watch = process.argv.includes("--watch");
 export const IS_DEV = watch || process.argv.includes("--dev");
@@ -42,7 +43,9 @@ export const IS_REPORTER = process.argv.includes("--reporter");
 export const IS_STANDALONE = process.argv.includes("--standalone");
 
 export const IS_UPDATER_DISABLED = process.argv.includes("--disable-updater");
-export const gitHash = process.env.VENCORD_HASH || execSync("git rev-parse --short HEAD", { encoding: "utf-8" }).trim();
+export const gitHash =
+    process.env.VENCORD_HASH ||
+    execSync("git rev-parse --short HEAD", { encoding: "utf-8" }).trim();
 
 export const banner = {
     js: `
@@ -50,7 +53,8 @@ export const banner = {
 // Standalone: ${IS_STANDALONE}
 // Platform: ${IS_STANDALONE === false ? process.platform : "Universal"}
 // Updater Disabled: ${IS_UPDATER_DISABLED}
-`.trim()
+// Dev Mode: ${IS_DEV}
+`.trim(),
 };
 
 export async function exists(path) {
@@ -67,31 +71,39 @@ export const makeAllPackagesExternalPlugin = {
     name: "make-all-packages-external",
     setup(build) {
         const filter = /^[^./]|^\.[^./]|^\.\.[^/]/; // Must not start with "/" or "./" or "../"
-        build.onResolve({ filter }, args => ({ path: args.path, external: true }));
-    }
+        build.onResolve({ filter }, (args) => ({
+            path: args.path,
+            external: true,
+        }));
+    },
 };
 
 /**
  * @type {(kind: "web" | "discordDesktop" | "vencordDesktop") => import("esbuild").Plugin}
  */
-export const globPlugins = kind => ({
+export const globPlugins = (kind) => ({
     name: "glob-plugins",
-    setup: build => {
+    setup: (build) => {
         const filter = /^~plugins$/;
-        build.onResolve({ filter }, args => {
+        build.onResolve({ filter }, (args) => {
             return {
                 namespace: "import-plugins",
-                path: args.path
+                path: args.path,
             };
         });
 
         build.onLoad({ filter, namespace: "import-plugins" }, async () => {
-            const pluginDirs = ["plugins/_api", "plugins/_core", "plugins", "userplugins"];
+            const pluginDirs = [
+                "plugins/_api",
+                "plugins/_core",
+                "plugins",
+                "userplugins",
+            ];
             let code = "";
             let plugins = "\n";
             let i = 0;
             for (const dir of pluginDirs) {
-                if (!await exists(`./src/${dir}`)) continue;
+                if (!(await exists(`./src/${dir}`))) continue;
                 const files = await readdir(`./src/${dir}`);
                 for (const file of files) {
                     if (file.startsWith("_") || file.startsWith(".")) continue;
@@ -100,14 +112,26 @@ export const globPlugins = kind => ({
                     const target = getPluginTarget(file);
                     if (target && !IS_REPORTER) {
                         if (target === "dev" && !watch) continue;
-                        if (target === "web" && kind === "discordDesktop") continue;
+                        if (target === "web" && kind === "discordDesktop")
+                            continue;
                         if (target === "desktop" && kind === "web") continue;
-                        if (target === "discordDesktop" && kind !== "discordDesktop") continue;
-                        if (target === "vencordDesktop" && kind !== "vencordDesktop") continue;
+                        if (
+                            target === "discordDesktop" &&
+                            kind !== "discordDesktop"
+                        )
+                            continue;
+                        if (
+                            target === "vencordDesktop" &&
+                            kind !== "vencordDesktop"
+                        )
+                            continue;
                     }
 
                     const mod = `p${i}`;
-                    code += `import ${mod} from "./${dir}/${file.replace(/\.tsx?$/, "")}";\n`;
+                    code += `import ${mod} from "./${dir}/${file.replace(
+                        /\.tsx?$/,
+                        ""
+                    )}";\n`;
                     plugins += `[${mod}.name]:${mod},\n`;
                     i++;
                 }
@@ -115,10 +139,10 @@ export const globPlugins = kind => ({
             code += `export default {${plugins}};`;
             return {
                 contents: code,
-                resolveDir: "./src"
+                resolveDir: "./src",
             };
         });
-    }
+    },
 });
 
 /**
@@ -126,15 +150,16 @@ export const globPlugins = kind => ({
  */
 export const gitHashPlugin = {
     name: "git-hash-plugin",
-    setup: build => {
+    setup: (build) => {
         const filter = /^~git-hash$/;
-        build.onResolve({ filter }, args => ({
-            namespace: "git-hash", path: args.path
+        build.onResolve({ filter }, (args) => ({
+            namespace: "git-hash",
+            path: args.path,
         }));
         build.onLoad({ filter, namespace: "git-hash" }, () => ({
-            contents: `export default "${gitHash}"`
+            contents: `export default "${gitHash}"`,
         }));
-    }
+    },
 };
 
 /**
@@ -142,16 +167,20 @@ export const gitHashPlugin = {
  */
 export const gitRemotePlugin = {
     name: "git-remote-plugin",
-    setup: build => {
+    setup: (build) => {
         const filter = /^~git-remote$/;
-        build.onResolve({ filter }, args => ({
-            namespace: "git-remote", path: args.path
+        build.onResolve({ filter }, (args) => ({
+            namespace: "git-remote",
+            path: args.path,
         }));
         build.onLoad({ filter, namespace: "git-remote" }, async () => {
             let remote = process.env.VENCORD_REMOTE;
             if (!remote) {
-                const res = await promisify(exec)("git remote get-url origin", { encoding: "utf-8" });
-                remote = res.stdout.trim()
+                const res = await promisify(exec)("git remote get-url origin", {
+                    encoding: "utf-8",
+                });
+                remote = res.stdout
+                    .trim()
                     .replace("https://github.com/", "")
                     .replace("git@github.com:", "")
                     .replace(/.git$/, "");
@@ -159,7 +188,7 @@ export const gitRemotePlugin = {
 
             return { contents: `export default "${remote}"` };
         });
-    }
+    },
 };
 
 /**
@@ -167,61 +196,73 @@ export const gitRemotePlugin = {
  */
 export const fileUrlPlugin = {
     name: "file-uri-plugin",
-    setup: build => {
+    setup: (build) => {
         const filter = /^file:\/\/.+$/;
-        build.onResolve({ filter }, args => ({
+        build.onResolve({ filter }, (args) => ({
             namespace: "file-uri",
             path: args.path,
             pluginData: {
                 uri: args.path,
-                path: join(args.resolveDir, args.path.slice("file://".length).split("?")[0])
-            }
+                path: join(
+                    args.resolveDir,
+                    args.path.slice("file://".length).split("?")[0]
+                ),
+            },
         }));
-        build.onLoad({ filter, namespace: "file-uri" }, async ({ pluginData: { path, uri } }) => {
-            const { searchParams } = new URL(uri);
-            const base64 = searchParams.has("base64");
-            const minify = IS_STANDALONE === true && searchParams.has("minify");
-            const noTrim = searchParams.get("trim") === "false";
+        build.onLoad(
+            { filter, namespace: "file-uri" },
+            async ({ pluginData: { path, uri } }) => {
+                const { searchParams } = new URL(uri);
+                const base64 = searchParams.has("base64");
+                const minify =
+                    IS_STANDALONE === true && searchParams.has("minify");
+                const noTrim = searchParams.get("trim") === "false";
 
-            const encoding = base64 ? "base64" : "utf-8";
+                const encoding = base64 ? "base64" : "utf-8";
 
-            let content;
-            if (!minify) {
-                content = await readFile(path, encoding);
-                if (!noTrim) content = content.trimEnd();
-            } else {
-                if (path.endsWith(".html")) {
-                    content = await minifyHtml(await readFile(path, "utf-8"), {
-                        collapseWhitespace: true,
-                        removeComments: true,
-                        minifyCSS: true,
-                        minifyJS: true,
-                        removeEmptyAttributes: true,
-                        removeRedundantAttributes: true,
-                        removeScriptTypeAttributes: true,
-                        removeStyleLinkTypeAttributes: true,
-                        useShortDoctype: true
-                    });
-                } else if (/[mc]?[jt]sx?$/.test(path)) {
-                    const res = await esbuild.build({
-                        entryPoints: [path],
-                        write: false,
-                        minify: true
-                    });
-                    content = res.outputFiles[0].text;
+                let content;
+                if (!minify) {
+                    content = await readFile(path, encoding);
+                    if (!noTrim) content = content.trimEnd();
                 } else {
-                    throw new Error(`Don't know how to minify file type: ${path}`);
+                    if (path.endsWith(".html")) {
+                        content = await minifyHtml(
+                            await readFile(path, "utf-8"),
+                            {
+                                collapseWhitespace: true,
+                                removeComments: true,
+                                minifyCSS: true,
+                                minifyJS: true,
+                                removeEmptyAttributes: true,
+                                removeRedundantAttributes: true,
+                                removeScriptTypeAttributes: true,
+                                removeStyleLinkTypeAttributes: true,
+                                useShortDoctype: true,
+                            }
+                        );
+                    } else if (/[mc]?[jt]sx?$/.test(path)) {
+                        const res = await esbuild.build({
+                            entryPoints: [path],
+                            write: false,
+                            minify: true,
+                        });
+                        content = res.outputFiles[0].text;
+                    } else {
+                        throw new Error(
+                            `Don't know how to minify file type: ${path}`
+                        );
+                    }
+
+                    if (base64)
+                        content = Buffer.from(content).toString("base64");
                 }
 
-                if (base64)
-                    content = Buffer.from(content).toString("base64");
+                return {
+                    contents: `export default ${JSON.stringify(content)}`,
+                };
             }
-
-            return {
-                contents: `export default ${JSON.stringify(content)}`
-            };
-        });
-    }
+        );
+    },
 };
 
 const styleModule = readFileSync("./scripts/build/module/style.js", "utf-8");
@@ -231,22 +272,34 @@ const styleModule = readFileSync("./scripts/build/module/style.js", "utf-8");
 export const stylePlugin = {
     name: "style-plugin",
     setup: ({ onResolve, onLoad }) => {
-        onResolve({ filter: /\.css\?managed$/, namespace: "file" }, ({ path, resolveDir }) => ({
-            path: relative(process.cwd(), join(resolveDir, path.replace("?managed", ""))),
-            namespace: "managed-style",
-        }));
-        onLoad({ filter: /\.css$/, namespace: "managed-style" }, async ({ path }) => {
-            const css = await readFile(path, "utf-8");
-            const name = relative(process.cwd(), path).replaceAll("\\", "/");
+        onResolve(
+            { filter: /\.css\?managed$/, namespace: "file" },
+            ({ path, resolveDir }) => ({
+                path: relative(
+                    process.cwd(),
+                    join(resolveDir, path.replace("?managed", ""))
+                ),
+                namespace: "managed-style",
+            })
+        );
+        onLoad(
+            { filter: /\.css$/, namespace: "managed-style" },
+            async ({ path }) => {
+                const css = await readFile(path, "utf-8");
+                const name = relative(process.cwd(), path).replaceAll(
+                    "\\",
+                    "/"
+                );
 
-            return {
-                loader: "js",
-                contents: styleModule
-                    .replaceAll("STYLE_SOURCE", JSON.stringify(css))
-                    .replaceAll("STYLE_NAME", JSON.stringify(name))
-            };
-        });
-    }
+                return {
+                    loader: "js",
+                    contents: styleModule
+                        .replaceAll("STYLE_SOURCE", JSON.stringify(css))
+                        .replaceAll("STYLE_NAME", JSON.stringify(name)),
+                };
+            }
+        );
+    },
 };
 
 /**
@@ -266,5 +319,5 @@ export const commonOpts = {
     jsxFactory: "VencordCreateElement",
     jsxFragment: "VencordFragment",
     // Work around https://github.com/evanw/esbuild/issues/2460
-    tsconfig: "./scripts/build/tsconfig.esbuild.json"
+    tsconfig: "./scripts/build/tsconfig.esbuild.json",
 };
