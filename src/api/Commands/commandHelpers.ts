@@ -55,4 +55,4 @@ export function findOption<T>(args: Argument[], name: string): T & {} | undefine
 export function findOption<T>(args: Argument[], name: string, fallbackValue: T): T & {};
 export function findOption(args: Argument[], name: string, fallbackValue?: any) {
     return (args.find(a => a.name === name)?.value || fallbackValue) as any;
-}
+}   
