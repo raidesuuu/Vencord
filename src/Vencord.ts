@@ -40,6 +40,10 @@ import { checkForUpdates, update, UpdateLogger } from "./utils/updater";
 import { onceReady } from "./webpack";
 import { SettingsRouter } from "./webpack/common";
 
+if (IS_REPORTER) {
+    require("./debug/runReporter");
+}
+
 async function syncSettings() {
     // ローカル共有設定の事前チェック
     if (

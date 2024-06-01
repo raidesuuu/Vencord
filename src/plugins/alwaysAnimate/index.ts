@@ -31,10 +31,10 @@ export default definePlugin({
             // 一部のモジュールはfindに一致しますが、置換はそのまま返されます
             noWarn: true,
             replacement: {
-                match: /canAnimate:.+?(?=([,}].*?\)))/g,
+                match: /canAnimate:.+?([,}].*?\))/g,
                 replace: (m, rest) => {
                     const destructuringMatch = rest.match(/}=.+/);
-                    if (destructuringMatch == null) return "canAnimate:!0";
+                    if (destructuringMatch == null) return `canAnimate:!0${rest}`;
                     return m;
                 }
             }

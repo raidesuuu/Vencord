@@ -64,8 +64,8 @@ export default definePlugin({
 
     commands: [{
         name: "vencord-debug",
-        description: "Vencord デバッグ情報を送信",
-        predicate: ctx => AllowedChannelIds.includes(ctx.channel.id),
+        description: "Vencordのデバッグ情報を送信する",
+        predicate: ctx => isPluginDev(UserStore.getCurrentUser()?.id) || AllowedChannelIds.includes(ctx.channel.id),
         async execute() {
             const { RELEASE_CHANNEL } = window.GLOBAL_ENV;
 
