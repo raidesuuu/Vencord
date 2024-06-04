@@ -36,6 +36,7 @@ import { patches, PMLogger, startAllPlugins } from "./plugins";
 import { localStorage } from "./utils/localStorage";
 import { relaunch } from "./utils/native";
 import { getCloudSettings, putCloudSettings } from "./utils/settingsSync";
+import { $t } from "./utils/translation";
 import { checkForUpdates, update, UpdateLogger } from "./utils/updater";
 import { onceReady } from "./webpack";
 import { SettingsRouter } from "./webpack/common";
@@ -52,8 +53,8 @@ async function syncSettings() {
     ) {
         // 通知を表示して、修正方法を伝える
         showNotification({
-            title: "クラウド統合",
-            body: "他のクライアントでクラウド統合が有効になっていることに気付きました！制限のため、継続して使用するには再認証が必要です。設定ページに移動して再認証してください。",
+            title: $t("vencord.utils.cloud.integrations.title"),
+            body: $t("vencord.utils.cloud.integrations.reauthenticate"),
             color: "var(--yellow-360)",
             onClick: () => SettingsRouter.open("VencordCloud")
         });
@@ -72,8 +73,8 @@ async function syncSettings() {
             // 可能な通知の数を減らすために通知を表示します。getCloudSettings() は、エラーがあるかどうかに関係なく、
             // ユーザーに通知するため、可能な通知の数だけ表示するだけで十分です (設定が新しい場合など)。
             showNotification({
-                title: "クラウド設定",
-                body: "設定が更新されました！完全な変更を適用するために再起動するにはここをクリックしてください。",
+                title: $t("vencord.utils.cloud.settings.title"),
+                body: $t("vencord.utils.cloud.settings.updated"),
                 color: "var(--green-360)",
                 onClick: relaunch
             });
@@ -96,8 +97,8 @@ async function init() {
                 await update();
                 if (Settings.autoUpdateNotification)
                     setTimeout(() => showNotification({
-                        title: "Vencord が更新されました！",
-                        body: "再起動するにはここをクリックしてください",
+                        title: $t("vencord.update.updated"),
+                        body: $t("vencord.update.clickToRestart"),
                         permanent: true,
                         noPersist: true,
                         onClick: relaunch
@@ -106,8 +107,8 @@ async function init() {
             }
 
             setTimeout(() => showNotification({
-                title: "Vencord の更新が利用可能です！",
-                body: "アップデートを表示するにはここをクリックしてください",
+                title: $t("vencord.update.available"),
+                body: $t("vencord.update.clickToView"),
                 permanent: true,
                 noPersist: true,
                 onClick: openUpdaterModal!
