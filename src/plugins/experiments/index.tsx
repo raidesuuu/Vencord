@@ -16,27 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { definePluginSettings } from "@api/Settings";
+import { disableStyle, enableStyle } from "@api/Styles";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { ErrorCard } from "@components/ErrorCard";
 import { Devs } from "@utils/constants";
-import { Logger } from "@utils/Logger";
 import { Margins } from "@utils/margins";
-import definePlugin, { OptionType } from "@utils/types";
+import definePlugin from "@utils/types";
 import { findByPropsLazy } from "@webpack";
-import { Forms, React, UserStore } from "@webpack/common";
-import { User } from "discord-types/general";
+import { Forms, React } from "@webpack/common";
+
+import hideBugReport from "./hideBugReport.css?managed";
 
 const KbdStyles = findByPropsLazy("key", "removeBuildOverride");
-
-const settings = definePluginSettings({
-    enableIsStaff: {
-        description: "isStaffを有効にする",
-        type: OptionType.BOOLEAN,
-        default: false,
-        restartNeeded: true
-    }
-});
 
 export default definePlugin({
     name: "実験",
@@ -48,7 +39,6 @@ export default definePlugin({
         Devs.BanTheNons,
         Devs.Nuckyz
     ],
-    settings,
 
     patches: [
         {
@@ -66,36 +56,24 @@ export default definePlugin({
             }
         },
         {
-            find: '"isStaff",',
-            predicate: () => settings.store.enableIsStaff,
-            replacement: [
-                {
-                    match: /(?<=>)(\i)\.hasFlag\((\i\.\i)\.STAFF\)(?=})/,
-                    replace: (_, user, flags) => `$self.isStaff(${user},${flags})`
-                },
-                {
-                    match: /hasFreePremium\(\){return this.isStaff\(\)\s*?\|\|/,
-                    replace: "hasFreePremium(){return ",
-                }
-            ]
-        },
-        {
             find: 'H1,title:"Experiments"',
             replacement: {
                 match: 'title:"Experiments",children:[',
                 replace: "$&$self.WarningCard(),"
             }
+        },
+        // change top right chat toolbar button from the help one to the dev one
+        {
+            find: "toolbar:function",
+            replacement: {
+                match: /\i\.isStaff\(\)/,
+                replace: "true"
+            }
         }
     ],
 
-    isStaff(user: User, flags: any) {
-        try {
-            return UserStore.getCurrentUser()?.id === user.id || user.hasFlag(flags.STAFF);
-        } catch (err) {
-            new Logger("Experiments").error(err);
-            return user.hasFlag(flags.STAFF);
-        }
-    },
+    start: () => enableStyle(hideBugReport),
+    stop: () => disableStyle(hideBugReport),
 
     settingsAboutComponent: () => {
         const isMacOS = navigator.platform.includes("Mac");
@@ -105,13 +83,14 @@ export default definePlugin({
             <React.Fragment>
                 <Forms.FormTitle tag="h3">詳細情報</Forms.FormTitle>
                 <Forms.FormText variant="text-md/normal">
-                    以下の<code>isStaff</code>を有効にした後、クライアントのDevToolsを有効にすることができます{" "}
+                    You can enable client DevTools{" "}
                     <kbd className={KbdStyles.key}>{modKey}</kbd> +{" "}
                     <kbd className={KbdStyles.key}>{altKey}</kbd> +{" "}
                     <kbd className={KbdStyles.key}>O</kbd>{" "}
+                    after enabling <code>isStaff</code> below
                 </Forms.FormText>
                 <Forms.FormText>
-                    そして、設定の<code>開発者オプション</code>タブで<code>DevToolsを有効にする</code>を切り替えます。
+                    and then toggling <code>Enable DevTools</code> in the <code>Developer Options</code> tab in settings.
                 </Forms.FormText>
             </React.Fragment>
         );
@@ -126,7 +105,7 @@ export default definePlugin({
             </Forms.FormText>
 
             <Forms.FormText className={Margins.top8}>
-                あなたが何をしているのかを知っている場合にのみ、実験を使用してください。Vencordは、実験を有効にすることによって引き起こされる損害については責任を負いません。
+                Only use experiments if you know what you're doing. Vencord is not responsible for any damage caused by enabling experiments.
             </Forms.FormText>
         </ErrorCard>
     ), { noop: true })
