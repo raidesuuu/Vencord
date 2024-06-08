@@ -1,6 +1,6 @@
 /*
  * Vencord, a modification for Discord's desktop app
- * Copyright (c) 2022 Vendicated and contributors
+ * Copyright (c) 2023 Vendicated and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { maybePromptToUpdate } from "@utils/updater";
+type MemoizedFunction<T extends (...args: any[]) => any> = {
+    (...args: Parameters<T>): ReturnType<T>;
+    clear(): void;
+};
 
-export function handleComponentFailed() {
-    maybePromptToUpdate(
-        "Uh Oh! Failed to render this Page." +
-        " However, there is an update available that might fix it." +
-        " Would you like to update and restart now?"
-    );
+export function memoize<T extends (...args: any[]) => any>(func: T): MemoizedFunction<T> {
+    const cache = new Map<string, ReturnType<T>>();
+
+    const memoizedFunc = (...args: Parameters<T>): ReturnType<T> => {
+        const key = JSON.stringify(args);
+        if (cache.has(key)) {
+            return cache.get(key)!;
+        }
+
+        const result = func(...args);
+        cache.set(key, result);
+        return result;
+    };
+
+    memoizedFunc.clear = () => cache.clear();
+
+    return memoizedFunc;
 }

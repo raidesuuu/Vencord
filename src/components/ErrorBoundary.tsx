@@ -19,7 +19,6 @@
 import { Logger } from "@utils/Logger";
 import { Margins } from "@utils/margins";
 import { LazyComponent } from "@utils/react";
-import { $t } from "@utils/translation";
 import { React } from "@webpack/common";
 
 import { ErrorCard } from "./ErrorCard";
@@ -86,11 +85,11 @@ const ErrorBoundary = LazyComponent(() => {
                     {...this.state}
                 />;
 
-            const msg = this.props.message || $t("vencord.components.errorBoundary.error");
+            const msg = this.props.message || "An error occurred while rendering this Component. More info can be found below and in your console.";
 
             return (
                 <ErrorCard style={{ overflow: "hidden" }}>
-                    <h1>{$t("vencord.components.errorBoundary.ohNo")}</h1>
+                    <h1>Oh no!</h1>
                     <p>{msg}</p>
                     <code>
                         {this.state.message}

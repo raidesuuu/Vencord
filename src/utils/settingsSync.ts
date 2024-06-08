@@ -24,7 +24,6 @@ import { deflateSync, inflateSync } from "fflate";
 import { getCloudAuth, getCloudUrl } from "./cloud";
 import { Logger } from "./Logger";
 import { relaunch } from "./native";
-import { $t } from "./translation";
 import { chooseFile, saveFile } from "./web";
 
 export async function importSettings(data: string) {
@@ -69,10 +68,10 @@ const toast = (type: number, message: string) =>
     });
 
 const toastSuccess = () =>
-    toast(Toasts.Type.SUCCESS, $t("vencord.utils.settingsSync.imported"));
+    toast(Toasts.Type.SUCCESS, "設定がインポートされました。VencordJPを再起動してください。");
 
 const toastFailure = (err: any) =>
-    toast(Toasts.Type.FAILURE, $t("vencord.utils.settingsSync.failedToImport", { error: String(err) }));
+    toast(Toasts.Type.FAILURE, `設定をインポートできませんでした: ${String(err)}`);
 
 export async function uploadSettingsBackup(showToast = true): Promise<void> {
     if (IS_DISCORD_DESKTOP) {
@@ -129,8 +128,8 @@ export async function putCloudSettings(manual?: boolean) {
         if (!res.ok) {
             cloudSettingsLogger.error(`Failed to sync up, API returned ${res.status}`);
             showNotification({
-                title: $t("vencord.utils.cloud.settings.title"),
-                body: $t("vencord.utils.cloud.settings.syncErrorUp.api", { status: res.status.toString() }),
+                title: "クラウド設定",
+                body: `クラウドに設定を同期できませんでした: (APIが ${res.status} を返しました。).`,
                 color: "var(--red-360)"
             });
             return;
@@ -144,16 +143,17 @@ export async function putCloudSettings(manual?: boolean) {
 
         if (manual) {
             showNotification({
-                title: $t("vencord.utils.cloud.settings.title"),
-                body: $t("vencord.utils.cloud.settings.syncSuccess"),
+                title: "クラウド設定",
+                body: "設定をクラウドに同期しました！",
                 noPersist: true,
             });
+
         }
     } catch (e: any) {
         cloudSettingsLogger.error("Failed to sync up", e);
         showNotification({
-            title: $t("vencord.utils.cloud.settings.title"),
-            body: $t("vencord.utils.cloud.settings.syncErrorUp.generic", { error: e.toString() }),
+            title: "クラウド設定",
+            body: `クラウドに設定を同期できませんでした: (${e.toString()}).`,
             color: "var(--red-360)"
         });
     }
@@ -174,8 +174,8 @@ export async function getCloudSettings(shouldNotify = true, force = false) {
             cloudSettingsLogger.info("No settings on the cloud");
             if (shouldNotify)
                 showNotification({
-                    title: $t("vencord.utils.cloud.settings.title"),
-                    body: $t("vencord.utils.cloud.settings.nothingOnline"),
+                    title: "クラウド設定",
+                    body: "クラウドに設定がありません。",
                     noPersist: true
                 });
             return false;
@@ -185,8 +185,8 @@ export async function getCloudSettings(shouldNotify = true, force = false) {
             cloudSettingsLogger.info("Settings up to date");
             if (shouldNotify)
                 showNotification({
-                    title: $t("vencord.utils.cloud.settings.title"),
-                    body: $t("vencord.utils.cloud.settings.upToDate"),
+                    title: "クラウド設定",
+                    body: "あなたの設定は最新です。",
                     noPersist: true
                 });
             return false;
@@ -195,8 +195,8 @@ export async function getCloudSettings(shouldNotify = true, force = false) {
         if (!res.ok) {
             cloudSettingsLogger.error(`Failed to sync down, API returned ${res.status}`);
             showNotification({
-                title: $t("vencord.utils.cloud.settings.title"),
-                body: $t("vencord.utils.cloud.settings.syncErrorDown.api", { status: res.status.toString() }),
+                title: "クラウド設定",
+                body: `設定をクラウドから同期できませんでした: (APIが ${res.status} を返しました).`,
                 color: "var(--red-360)"
             });
             return false;
@@ -209,8 +209,8 @@ export async function getCloudSettings(shouldNotify = true, force = false) {
         if (!force && written < localWritten) {
             if (shouldNotify)
                 showNotification({
-                    title: $t("vencord.utils.cloud.settings.title"),
-                    body: $t("vencord.utils.cloud.settings.localNewer"),
+                    title: "クラウド設定",
+                    body: "あなたの設定はクラウドの設定よりも新しいです！",
                     noPersist: true,
                 });
             return;
@@ -228,8 +228,8 @@ export async function getCloudSettings(shouldNotify = true, force = false) {
         cloudSettingsLogger.info("Settings loaded from cloud successfully");
         if (shouldNotify)
             showNotification({
-                title: $t("vencord.utils.cloud.settings.title"),
-                body: $t("vencord.utils.cloud.settings.updated"),
+                title: "クラウド設定",
+                body: "あなたの設定が更新されました！再起動してすべての変更を適用します",
                 color: "var(--green-360)",
                 onClick: IS_WEB ? () => location.reload() : relaunch,
                 noPersist: true
@@ -239,8 +239,8 @@ export async function getCloudSettings(shouldNotify = true, force = false) {
     } catch (e: any) {
         cloudSettingsLogger.error("Failed to sync down", e);
         showNotification({
-            title: $t("vencord.utils.cloud.settings.title"),
-            body: $t("vencord.utils.cloud.settings.syncErrorDown.generic", { error: e.toString() }),
+            title: "クラウド設定",
+            body: `設定をクラウドから同期できませんでした: (${e.toString()}).`,
             color: "var(--red-360)"
         });
 
@@ -258,8 +258,8 @@ export async function deleteCloudSettings() {
         if (!res.ok) {
             cloudSettingsLogger.error(`Failed to delete, API returned ${res.status}`);
             showNotification({
-                title: $t("vencord.utils.cloud.settings.title"),
-                body: $t("vencord.utils.cloud.settings.deleteError.api", { error: res.status.toString() }),
+                title: "クラウド設定",
+                body: `設定を削除できませんでした: (APIが ${res.status} を返しました).`,
                 color: "var(--red-360)"
             });
             return;
@@ -267,15 +267,15 @@ export async function deleteCloudSettings() {
 
         cloudSettingsLogger.info("Settings deleted from cloud successfully");
         showNotification({
-            title: $t("vencord.utils.cloud.settings.title"),
-            body: $t("vencord.utils.cloud.settings.deleted"),
+            title: "クラウド設定",
+            body: "クラウドから設定を削除しました！",
             color: "var(--green-360)"
         });
     } catch (e: any) {
         cloudSettingsLogger.error("Failed to delete", e);
         showNotification({
-            title: $t("vencord.utils.cloud.settings.title"),
-            body: $t("vencord.utils.cloud.settings.deleteError.generic", { error: e.toString() }),
+            title: "クラウド設定",
+            body: `設定を削除できませんでした: (${e.toString()}).`,
             color: "var(--red-360)"
         });
     }

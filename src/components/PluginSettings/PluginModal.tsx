@@ -188,9 +188,9 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
             </ModalHeader>
             <ModalContent>
                 <Forms.FormSection>
-                    <Forms.FormTitle tag="h3">About {plugin.name}</Forms.FormTitle>
+                    <Forms.FormTitle tag="h3">{plugin.name} について</Forms.FormTitle>
                     <Forms.FormText>{plugin.description}</Forms.FormText>
-                    <Forms.FormTitle tag="h3" style={{ marginTop: 8, marginBottom: 0 }}>Authors</Forms.FormTitle>
+                    <Forms.FormTitle tag="h3" style={{ marginTop: 8, marginBottom: 0 }}>作成者</Forms.FormTitle>
                     <div style={{ width: "fit-content", marginBottom: 8 }}>
                         <UserSummaryItem
                             users={authors}
@@ -227,7 +227,7 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
                     </div>
                 )}
                 <Forms.FormSection className={Margins.bottom16}>
-                    <Forms.FormTitle tag="h3">Settings</Forms.FormTitle>
+                    <Forms.FormTitle tag="h3">設定</Forms.FormTitle>
                     {renderSettings()}
                 </Forms.FormSection>
             </ModalContent>

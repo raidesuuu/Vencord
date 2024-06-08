@@ -1,6 +1,6 @@
 /*
  * Vencord, a modification for Discord's desktop app
- * Copyright (c) 2022 Vendicated and contributors
+ * Copyright (c) 2023 Vendicated and contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,12 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { maybePromptToUpdate } from "@utils/updater";
+import { settings } from "../index";
 
-export function handleComponentFailed() {
-    maybePromptToUpdate(
-        "Uh Oh! Failed to render this Page." +
-        " However, there is an update available that might fix it." +
-        " Would you like to update and restart now?"
-    );
+export class LimitedMap<K, V> {
+    public map: Map<K, V> = new Map();
+    constructor() { }
+
+    set(key: K, value: V) {
+        if (settings.store.cacheLimit > 0 && this.map.size >= settings.store.cacheLimit) {
+            // delete the first entry
+            this.map.delete(this.map.keys().next().value);
+        }
+        this.map.set(key, value);
+    }
+
+    get(key: K) {
+        return this.map.get(key);
+    }
 }

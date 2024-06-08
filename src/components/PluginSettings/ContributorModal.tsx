@@ -110,7 +110,7 @@ function ContributorModal({ user }: { user: User; }) {
 
             {plugins.length ? (
                 <Forms.FormText>
-                    この方は、{pluralise(plugins.length, "plugin")}つのプラグインに{ContributedHyperLink}しています！
+                    この方は、{plugins.length}つのプラグインに{ContributedHyperLink}しています！
                 </Forms.FormText>
             ) : (
                 <Forms.FormText>
