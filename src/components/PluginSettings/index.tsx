@@ -69,7 +69,7 @@ function ReloadRequiredCard({ required }: { required: boolean; }) {
                     <Forms.FormText className={cl("dep-text")}>
                         新しいプラグインとその設定を適用するために、今すぐ再起動してください
                     </Forms.FormText>
-                    <Button color={Button.Colors.YELLOW} onClick={() => location.reload()}>
+                    <Button onClick={() => location.reload()}>
                         再起動
                     </Button>
                 </>

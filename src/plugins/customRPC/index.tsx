@@ -178,21 +178,21 @@ const settings = definePluginSettings({
     },
     startTime: {
         type: OptionType.NUMBER,
-        description: "タイムスタンプを開始（カスタムタイムスタンプモードのみ）",
+        description: "タイムスタンプをミリ秒で開始（カスタムタイムスタンプモードのみ）",
         onChange: onChange,
         disabled: isTimestampDisabled,
         isValid: (value: number) => {
-            if (value && value < 0) return "開始タイムスタンプは0より大きくある必要があります";
+            if (value && value < 0) return "開始のタイムスタンプは0より大きい必要があります";
             return true;
         }
     },
     endTime: {
         type: OptionType.NUMBER,
-        description: "タイムスタンプを終了（タイムスタンプモードがカスタムの場合のみ）",
+        description: "タイムスタンプをミリ秒で終了（タイムスタンプモードがカスタムの場合のみ）",
         onChange: onChange,
         disabled: isTimestampDisabled,
         isValid: (value: number) => {
-            if (value && value < 0) return "終了タイムスタンプは0より大きくある必要があります";
+            if (value && value < 0) return "終了のタイムスタンプは0より大きい必要があります";
             return true;
         }
     },
