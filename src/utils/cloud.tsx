@@ -21,6 +21,8 @@ import { showNotification } from "@api/Notifications";
 import { Settings } from "@api/Settings";
 import { OAuth2AuthorizeModal, UserStore } from "@webpack/common";
 
+import { $t } from "@utils/translation";
+
 import { Logger } from "./Logger";
 import { openModal } from "./modal";
 
@@ -83,8 +85,8 @@ export async function authorizeCloud() {
         var { clientId, redirectUri } = await oauthConfiguration.json();
     } catch {
         showNotification({
-            title: "クラウド設定",
-            body: "セットアップ失敗 (OAuthの構成を取得できませんでした)."
+            title: $t("vencord.utils.cloud.integrations.title"),
+            body: $t("vencord.utils.cloud.integrations.setupFailure.oauth")
         });
         Settings.cloud.authenticated = false;
         return;
@@ -113,22 +115,22 @@ export async function authorizeCloud() {
                     cloudLogger.info("Authorized with secret");
                     await setAuthorization(secret);
                     showNotification({
-                        title: "クラウド設定",
-                        body: "クラウド設定が有効になりました！"
+                        title: $t("vencord.utils.cloud.integrations.title"),
+                        body: $t("vencord.utils.cloud.integrations.enabled")
                     });
                     Settings.cloud.authenticated = true;
                 } else {
                     showNotification({
-                        title: "クラウド設定",
-                        body: "セットアップ失敗 (シークレットが返されていない?)."
+                        title: $t("vencord.utils.cloud.integrations.title"),
+                        body: $t("vencord.utils.cloud.integrations.setupFailure.missingSecret")
                     });
                     Settings.cloud.authenticated = false;
                 }
             } catch (e: any) {
                 cloudLogger.error("Failed to authorize", e);
                 showNotification({
-                    title: "クラウド設定",
-                    body: `セットアップ失敗 (${e.toString()}).`
+                    title: $t("vencord.utils.cloud.integrations.title"),
+                    body: $t("vencord.utils.cloud.integrations.setupFailure.generic", { error: e.toString() })
                 });
                 Settings.cloud.authenticated = false;
             }

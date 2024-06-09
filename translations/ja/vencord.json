@@ -1,0 +1,58 @@
+{
+    "ohNo": "おっと！",
+    "errorBoundaryDescription": "このコンポーネントのレンダリング中にエラーが発生しました。詳細は以下およびコンソールで確認できます。",
+    "failureUpdate": "おっと！ このページのレンダリングに失敗しました。しかし、修正できる可能性のある更新があります。今すぐ更新して再起動しますか？",
+    "pluginRestart": "変更を適用するために再起動してください！",
+    "requiredPlugin": "このプラグインはVencordの動作に必要です。",
+    "new": "新",
+    "pluginContributed": {
+        "one": "この人は1つのプラグインに<0>貢献</0>しました！",
+        "other": "この人は{count}つのプラグインに<0>貢献</0>しました！",
+        "zero": "この人はプラグインを作成していません。おそらく他の方法でVencordに<0>貢献</0>したのでしょう！"
+    },
+    "update": {
+        "available": "Vencordの更新が利用可能です！",
+        "clickToRestart": "ここをクリックして再起動",
+        "clickToView": "更新を表示するにはここをクリック",
+        "updated": "Vencordが更新されました！"
+    },
+    "cloudIntegrations": "クラウド統合",
+    "cloudSettings": "クラウド設定",
+    "cloud": {
+        "integrations": {
+            "enabled": "クラウド統合が有効になりました！",
+            "reauthenticate": "他のクライアントでクラウド統合が有効になっていることに気づきました！制限のため、継続して使用するには再認証が必要です。設定ページに移動するにはここをクリックしてください！",
+            "setupFailure": {
+                "generic": "セットアップに失敗しました（{error}）。",
+                "missingSecret": "セットアップに失敗しました（秘密情報が返されませんでした？）。",
+                "oauth": "セットアップに失敗しました（OAuth設定を取得できませんでした）。"
+            }
+        },
+        "settings": {
+            "deleteError": {
+                "api": "設定を削除できませんでした（APIが{status}を返しました）。",
+                "generic": "設定を削除できませんでした（{error}）。"
+            },
+            "deleted": "クラウドから設定が削除されました！",
+            "localNewer": "ローカル設定がクラウドのものより新しいです。",
+            "nothingOnline": "クラウドに設定はありません。",
+            "syncErrorDown": {
+                "api": "クラウドから設定を同期できませんでした（APIが{status}を返しました）。",
+                "generic": "クラウドから設定を同期できませんでした（{error}）。"
+            },
+            "syncErrorUp": {
+                "api": "クラウドに設定を同期できませんでした（APIが{status}を返しました）。",
+                "generic": "クラウドに設定を同期できませんでした（{error}）。"
+            },
+            "syncSuccess": "クラウドに設定を同期しました！",
+            "upToDate": "設定は最新です。",
+            "updated": "設定が更新されました！ 変更を完全に適用するためにここをクリックして再起動してください！"
+        }
+    },
+    "copiedToClipboard": "クリップボードにコピーしました！",
+    "clipboardNotSupported": "お使いのブラウザはクリップボードへのコピーをサポートしていません",
+    "failedToImport": "設定のインポートに失敗しました：{error}",
+    "importedSettings": "設定が正常にインポートされました。変更を適用するために再起動してください！",
+    "updaterRepeatFailed": "それも失敗しました :( インストーラーで更新または再インストールを試してください！",
+    "gitCopyNewer": "ローカルコピーのコミットがより新しいです。それらをスタッシュするかリセットしてください。"
+}

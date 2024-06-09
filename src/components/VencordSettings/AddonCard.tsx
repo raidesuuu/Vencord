@@ -22,6 +22,7 @@ import { classNameFactory } from "@api/Styles";
 import { Badge } from "@components/Badge";
 import { Switch } from "@components/Switch";
 import { Text, useRef } from "@webpack/common";
+import { $t } from "@utils/translation";
 import type { MouseEventHandler, ReactNode } from "react";
 
 const cl = classNameFactory("vc-addon-");
@@ -67,7 +68,7 @@ export function AddonCard({ disabled, isNew, name, infoButton, footer, author, e
                             >
                                 {name}
                             </div>
-                        </div>{isNew && <Badge text="新" color="#ED4245" />}
+                        </div>{isNew && <Badge text={$t("vencord.new")} color="#ED4245" />}
                     </Text>
                     {!!author && (
                         <Text variant="text-md/normal" className={cl("author")}>

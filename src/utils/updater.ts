@@ -21,6 +21,7 @@ import gitHash from "~git-hash";
 import { Logger } from "./Logger";
 import { relaunch } from "./native";
 import { IpcRes } from "./types";
+import { $t, Translate } from "@utils/translation";
 
 export const UpdateLogger = /* #__PURE__*/ new Logger("Updater", "white");
 export let isOutdated = false;
@@ -70,7 +71,7 @@ export async function maybePromptToUpdate(confirmMessage: string, checkForDev = 
         const isOutdated = await checkForUpdates();
         if (isOutdated) {
             const wantsUpdate = confirm(confirmMessage);
-            if (wantsUpdate && isNewer) return alert("あなたのローカルコピーには、より新しいコミットがあります。それをstashするかリセットしてください。");
+            if (wantsUpdate && isNewer) return alert($t("vencord.gitCopyNewer"));
             if (wantsUpdate) {
                 await update();
                 relaunch();
@@ -78,6 +79,6 @@ export async function maybePromptToUpdate(confirmMessage: string, checkForDev = 
         }
     } catch (err) {
         UpdateLogger.error(err);
-        alert("アップデートに失敗しました :( インストーラーからアップデートや再インストールを試してください");
+        alert($t("vencord.updaterRepeatFailed"));
     }
 }
