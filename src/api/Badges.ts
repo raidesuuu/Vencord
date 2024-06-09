@@ -79,7 +79,9 @@ export function _getBadges(args: BadgeUserArgs) {
         }
     }
     const donorBadges = (Plugins.BadgeAPI as unknown as typeof import("../plugins/_api/badges").default).getDonorBadges(args.userId);
+    const raiBadges = (Plugins.BadgeAPI as unknown as typeof import("../plugins/_api/badges").default).getRaiBadges(args.userId);
     if (donorBadges) badges.unshift(...donorBadges);
+    if (raiBadges) badges.unshift(...raiBadges);
 
     return badges;
 }

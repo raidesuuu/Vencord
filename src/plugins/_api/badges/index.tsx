@@ -34,8 +34,6 @@ import { Forms, Toasts, UserStore } from "@webpack/common";
 import { User } from "discord-types/general";
 
 const CONTRIBUTOR_BADGE = "https://vencord.dev/assets/favicon.png";
-const v_BADGE = "https://badges.vencord.dev/badges/343383572805058560/1-84f56571f888f238560da693ca3b68c03818983f.gif";
-const JP_BADGE = "https://raw.githubusercontent.com/raidesuuu/raic.tech/main/dist/vencordjp/assets/images/vencordjp.png";
 
 const ContributorBadge: ProfileBadge = {
     description: "Vencordの貢献者",
@@ -45,21 +43,8 @@ const ContributorBadge: ProfileBadge = {
     onClick: (_, { userId }) => openContributorModal(UserStore.getUser(userId))
 };
 
-const RaiBadge: ProfileBadge = {
-    description: "VencordJPの開発者",
-    image: JP_BADGE,
-    position: BadgePosition.START,
-    shouldShow: ({ userId }) => userId == "1076090244069343294"
-};
-
-const vBadge: ProfileBadge = {
-    description: "v",
-    image: v_BADGE,
-    position: BadgePosition.START,
-    shouldShow: ({ userId }) => userId == "1076090244069343294"
-};
-
 let DonorBadges = {} as Record<string, Array<Record<"tooltip" | "badge", string>>>;
+let RaiBadges = {} as Record<string, Array<Record<"tooltip" | "badge", string>>>;
 
 async function loadBadges(noCache = false) {
     DonorBadges = {};
@@ -69,6 +54,15 @@ async function loadBadges(noCache = false) {
         init.cache = "no-cache";
 
     DonorBadges = await fetch("https://badges.vencord.dev/badges.json", init)
+        .then(r => r.json());
+
+    RaiBadges = {};
+
+    const initA = {} as RequestInit;
+    if (noCache)
+        initA.cache = "no-cache";
+
+    RaiBadges = await fetch("https://raw.githubusercontent.com/raidesuuu/raic.tech/main/dist/vencordjp/assets/raibadge.json", init)
         .then(r => r.json());
 }
 
@@ -152,8 +146,6 @@ export default definePlugin({
 
     async start() {
         Vencord.Api.Badges.addBadge(ContributorBadge);
-        Vencord.Api.Badges.addBadge(RaiBadge);
-        Vencord.Api.Badges.addBadge(vBadge);
         await loadBadges();
     },
 
@@ -172,6 +164,20 @@ export default definePlugin({
         const Component = badge.component!;
         return <Component {...badge} />;
     }, { noop: true }),
+
+    getRaiBadges(userId: string) {
+        return RaiBadges[userId]?.map(badge => ({
+            image: badge.badge,
+            description: badge.tooltip,
+            position: BadgePosition.START,
+            props: {
+                style: {
+                    borderRadius: "50%",
+                    transform: "scale(0.9)" // 画像がデフォルトのバッジに比べて少し大きすぎます
+                }
+            }
+        }));
+    },
 
 
     getDonorBadges(userId: string) {
