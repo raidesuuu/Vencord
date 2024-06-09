@@ -34,6 +34,7 @@ import { Forms, Toasts, UserStore } from "@webpack/common";
 import { User } from "discord-types/general";
 
 const CONTRIBUTOR_BADGE = "https://vencord.dev/assets/favicon.png";
+const v_BADGE = "https://badges.vencord.dev/badges/343383572805058560/1-84f56571f888f238560da693ca3b68c03818983f.gif";
 const JP_BADGE = "https://raw.githubusercontent.com/raidesuuu/raic.tech/main/dist/vencordjp/assets/images/vencordjp.png";
 
 const ContributorBadge: ProfileBadge = {
@@ -48,7 +49,14 @@ const RaiBadge: ProfileBadge = {
     description: "VencordJPの開発者",
     image: JP_BADGE,
     position: BadgePosition.START,
-    shouldShow: ({ user }) => user.id == "1076090244069343294"
+    shouldShow: ({ userId }) => userId == "1076090244069343294"
+};
+
+const vBadge: ProfileBadge = {
+    description: "v",
+    image: v_BADGE,
+    position: BadgePosition.START,
+    shouldShow: ({ userId }) => userId == "1076090244069343294"
 };
 
 let DonorBadges = {} as Record<string, Array<Record<"tooltip" | "badge", string>>>;
@@ -145,6 +153,7 @@ export default definePlugin({
     async start() {
         Vencord.Api.Badges.addBadge(ContributorBadge);
         Vencord.Api.Badges.addBadge(RaiBadge);
+        Vencord.Api.Badges.addBadge(vBadge);
         await loadBadges();
     },
 
