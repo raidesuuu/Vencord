@@ -24,20 +24,19 @@ import { closeAllModals } from "@utils/modal";
 import definePlugin, { OptionType } from "@utils/types";
 import { maybePromptToUpdate } from "@utils/updater";
 import { filters, findBulk, proxyLazyWebpack } from "@webpack";
-import { DraftType, FluxDispatcher, NavigationRouter, SelectedChannelStore } from "@webpack/common";
+import { DraftType, ExpressionPickerStore, FluxDispatcher, NavigationRouter, SelectedChannelStore } from "@webpack/common";
 
 const CrashHandlerLogger = new Logger("CrashHandler");
 
-const { ModalStack, DraftManager, closeExpressionPicker } = proxyLazyWebpack(() => {
-    const [ModalStack, DraftManager, ExpressionManager] = findBulk(
+const { ModalStack, DraftManager } = proxyLazyWebpack(() => {
+    const [ModalStack, DraftManager] = findBulk(
         filters.byProps("pushLazy", "popAll"),
         filters.byProps("clearDraft", "saveDraft"),
-        filters.byProps("closeExpressionPicker", "openExpressionPicker"),);
+    );
 
     return {
         ModalStack,
-        DraftManager,
-        closeExpressionPicker: ExpressionManager?.closeExpressionPicker,
+        DraftManager
     };
 });
 
@@ -148,12 +147,10 @@ export default definePlugin({
             CrashHandlerLogger.debug("ドラフトをクリアできませんでした。", err);
         }
         try {
-            closeExpressionPicker();
-        } catch (err) {
-            CrashHandlerLogger.debug(
-                "エクスプレッション・ピッカーを閉じるのに失敗しました。",
-                err
-            );
+            ExpressionPickerStore.closeExpressionPicker();
+        }
+        catch (err) {
+            CrashHandlerLogger.debug("エクスプレッション・ピッカーを閉じるのに失敗しました。", err);
         }
         try {
             FluxDispatcher.dispatch({ type: "CONTEXT_MENU_CLOSE" });

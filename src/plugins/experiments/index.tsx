@@ -16,18 +16,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { definePluginSettings } from "@api/Settings";
 import { disableStyle, enableStyle } from "@api/Styles";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { ErrorCard } from "@components/ErrorCard";
 import { Devs } from "@utils/constants";
 import { Margins } from "@utils/margins";
-import definePlugin from "@utils/types";
+import definePlugin, { OptionType } from "@utils/types";
 import { findByPropsLazy } from "@webpack";
 import { Forms, React } from "@webpack/common";
 
 import hideBugReport from "./hideBugReport.css?managed";
 
-const KbdStyles = findByPropsLazy("key", "removeBuildOverride");
+const KbdStyles = findByPropsLazy("key", "combo");
+
+const settings = definePluginSettings({
+    toolbarDevMenu: {
+        type: OptionType.BOOLEAN,
+        description: "Change the Help (?) toolbar button (top right in chat) to Discord's developer menu",
+        default: false,
+        restartNeeded: true
+    }
+});
 
 export default definePlugin({
     name: "実験",
@@ -39,6 +49,8 @@ export default definePlugin({
         Devs.BanTheNons,
         Devs.Nuckyz
     ],
+
+    settings,
 
     patches: [
         {
@@ -68,6 +80,16 @@ export default definePlugin({
             replacement: {
                 match: /\i\.isStaff\(\)/,
                 replace: "true"
+            },
+            predicate: () => settings.store.toolbarDevMenu
+        },
+
+        // makes the Favourites Server experiment allow favouriting DMs and threads
+        {
+            find: "useCanFavoriteChannel",
+            replacement: {
+                match: /!\(\i\.isDM\(\)\|\|\i\.isThread\(\)\)/,
+                replace: "true",
             }
         }
     ],
@@ -83,14 +105,12 @@ export default definePlugin({
             <React.Fragment>
                 <Forms.FormTitle tag="h3">詳細情報</Forms.FormTitle>
                 <Forms.FormText variant="text-md/normal">
-                    You can enable client DevTools{" "}
-                    <kbd className={KbdStyles.key}>{modKey}</kbd> +{" "}
-                    <kbd className={KbdStyles.key}>{altKey}</kbd> +{" "}
-                    <kbd className={KbdStyles.key}>O</kbd>{" "}
-                    after enabling <code>isStaff</code> below
-                </Forms.FormText>
-                <Forms.FormText>
-                    and then toggling <code>Enable DevTools</code> in the <code>Developer Options</code> tab in settings.
+                    Discordの開発ツールを次のショートカットで開けます: {" "}
+                    <div className={KbdStyles.combo} style={{ display: "inline-flex" }}>
+                        <kbd className={KbdStyles.key}>{modKey}</kbd> +{" "}
+                        <kbd className={KbdStyles.key}>{altKey}</kbd> +{" "}
+                        <kbd className={KbdStyles.key}>O</kbd>{" "}
+                    </div>
                 </Forms.FormText>
             </React.Fragment>
         );
@@ -105,7 +125,7 @@ export default definePlugin({
             </Forms.FormText>
 
             <Forms.FormText className={Margins.top8}>
-                Only use experiments if you know what you're doing. Vencord is not responsible for any damage caused by enabling experiments.
+                実験は、自分が何をしているのか分かっている場合にのみ使用してください。Vencordは、実験を可能にすることによって生じたいかなる損害にも責任を負いません。
             </Forms.FormText>
         </ErrorCard>
     ), { noop: true })
