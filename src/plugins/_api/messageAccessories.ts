@@ -20,7 +20,7 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "メッセージアクセサリAPI",
+    name: "MessageAccessoriesAPI",
     description: "メッセージアクセサリを追加するためのAPI。",
     authors: [Devs.Cyn],
     patches: [

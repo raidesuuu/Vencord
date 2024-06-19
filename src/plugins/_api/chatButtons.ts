@@ -8,7 +8,7 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "チャット入力ボタンAPI",
+    name: "ChatButtonsAPI",
     description: "チャット入力にボタンを追加するAPI",
     authors: [Devs.Ven],
 

@@ -20,7 +20,7 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "通知API",
+    name: "NotificationAPI",
     description: "通知が自動的に閉じられるのを修正",
     authors: [Devs.Ven],
     required: true,

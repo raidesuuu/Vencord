@@ -20,8 +20,8 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "メッセージイベントAPI",
-    description: "メッセージイベントを使用するすべてに必要なAPI。",
+    name: "MessageEventsAPI",
+    description: "Api required by anything using message events.",
     authors: [Devs.Arjix, Devs.hunt, Devs.Ven],
     patches: [
         {

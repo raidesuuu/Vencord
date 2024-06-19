@@ -20,7 +20,7 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "サーバーリストAPI",
+    name: "ServerListAPI",
     authors: [Devs.kemo],
     description: "サーバーリストを変更するプラグインに必要なAPI",
     patches: [

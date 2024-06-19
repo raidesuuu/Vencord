@@ -20,7 +20,7 @@ import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 
 export default definePlugin({
-    name: "コンテキストメニューAPI",
+    name: "ContextMenuAPI",
     description: "コンテキストメニューに項目を追加/削除するためのAPI。",
     authors: [Devs.Nuckyz, Devs.Ven, Devs.Kyuuhachi],
     required: true,
