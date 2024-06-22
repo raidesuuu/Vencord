@@ -16,10 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import "./PluginModal.css";
+
 import { generateId } from "@api/Commands";
 import { useSettings } from "@api/Settings";
+import { classNameFactory } from "@api/Styles";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Flex } from "@components/Flex";
+import { gitRemote } from "@shared/vencordUserAgent";
 import { proxyLazy } from "@utils/lazy";
 import { Margins } from "@utils/margins";
 import { classes, isObjectEmpty } from "@utils/misc";
@@ -29,6 +33,8 @@ import { findByPropsLazy, findComponentByCodeLazy } from "@webpack";
 import { Button, Clickable, FluxDispatcher, Forms, React, Text, Tooltip, UserStore, UserUtils } from "@webpack/common";
 import { User } from "discord-types/general";
 import { Constructor } from "type-fest";
+
+import { PluginMeta } from "~plugins";
 
 import {
     ISettingElementProps,
@@ -40,6 +46,9 @@ import {
     SettingTextComponent
 } from "./components";
 import { openContributorModal } from "./ContributorModal";
+import { GithubButton, WebsiteButton } from "./LinkIconButton";
+
+const cl = classNameFactory("vc-plugin-modal-");
 
 const UserSummaryItem = findComponentByCodeLazy("defaultRenderUser", "showDefaultAvatarsForNullUsers");
 const AvatarStyles = findByPropsLazy("moreUsers", "emptyUser", "avatarContainer", "clickableAvatar");
@@ -180,17 +189,55 @@ export default function PluginModal({ plugin, onRestartNeeded, onClose, transiti
         );
     }
 
+    /*
+    function switchToPopout() {
+        onClose();
+
+        const PopoutKey = `DISCORD_VENCORD_PLUGIN_SETTINGS_MODAL_${plugin.name}`;
+        PopoutActions.open(
+            PopoutKey,
+            () => <PluginModal
+                transitionState={transitionState}
+                plugin={plugin}
+                onRestartNeeded={onRestartNeeded}
+                onClose={() => PopoutActions.close(PopoutKey)}
+            />
+        );
+    }
+    */
+
+    const pluginMeta = PluginMeta[plugin.name];
+
     return (
         <ModalRoot transitionState={transitionState} size={ModalSize.MEDIUM} className="vc-text-selectable">
             <ModalHeader separator={false}>
                 <Text variant="heading-lg/semibold" style={{ flexGrow: 1 }}>{plugin.name}</Text>
+
+                {/*
+                <Button look={Button.Looks.BLANK} onClick={switchToPopout}>
+                    <OpenExternalIcon aria-label="Open in Popout" />
+                </Button>
+                */}
                 <ModalCloseButton onClick={onClose} />
             </ModalHeader>
             <ModalContent>
                 <Forms.FormSection>
-                    <Forms.FormTitle tag="h3">{plugin.name} について</Forms.FormTitle>
-                    <Forms.FormText>{plugin.description}</Forms.FormText>
-                    <Forms.FormTitle tag="h3" style={{ marginTop: 8, marginBottom: 0 }}>作成者</Forms.FormTitle>
+                    <Flex className={cl("info")}>
+                        <Forms.FormText className={cl("description")}>{plugin.description}</Forms.FormText>
+                        {!pluginMeta.userPlugin && (
+                            <div className="vc-settings-modal-links">
+                                <WebsiteButton
+                                    text="もっと見る"
+                                    href={`https://vencord.dev/plugins/${plugin.name}`}
+                                />
+                                <GithubButton
+                                    text="ソースコードを見る"
+                                    href={`https://github.com/${gitRemote}/tree/main/src/plugins/${pluginMeta.folderName}`}
+                                />
+                            </div>
+                        )}
+                    </Flex>
+                    <Forms.FormTitle tag="h3" style={{ marginTop: 8, marginBottom: 0 }}>Authors</Forms.FormTitle>
                     <div style={{ width: "fit-content", marginBottom: 8 }}>
                         <UserSummaryItem
                             users={authors}

@@ -6,7 +6,7 @@
 
 import * as DataStore from "@api/DataStore";
 import { definePluginSettings, Settings } from "@api/Settings";
-import { getSettingStoreLazy } from "@api/SettingsStores";
+import { getUserSettingLazy } from "@api/UserSettings";
 import ErrorBoundary from "@components/ErrorBoundary";
 import { Flex } from "@components/Flex";
 import { Devs } from "@utils/constants";
@@ -28,7 +28,7 @@ interface IgnoredActivity {
 
 const RunningGameStore = findStoreLazy("RunningGameStore");
 
-const ShowCurrentGame = getSettingStoreLazy("status", "showCurrentGame")!;
+const ShowCurrentGame = getUserSettingLazy("status", "showCurrentGame")!;
 
 function ToggleIcon(activity: IgnoredActivity, tooltipText: string, path: string, fill: string) {
     return (
@@ -207,8 +207,8 @@ function isActivityTypeIgnored(type: number, id?: string) {
 export default definePlugin({
     name: "アクティビティを無視",
     authors: [Devs.Nuckyz],
-    description: "あなたのステータスのみに表示される活動を無視します。どのアクティビティを無視するかは、登録されたゲームとアクティビティのタブから設定できます。",
-    dependencies: ["SettingsStoreAPI"],
+    description: "あなたのステータスのみに表示される活動を無視します。どの活動を無視するかは、登録された対局と活動のタブから設定できます。",
+    dependencies: ["UserSettingsAPI"],
 
     settings,
 
