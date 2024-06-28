@@ -17,7 +17,7 @@
 
 import { definePluginSettings } from "@api/Settings";
 import { Devs } from "@utils/constants";
-import definePlugin, { OptionType } from "@utils/types";
+import definePlugin, { OptionType, StartAt } from "@utils/types";
 
 const settings = definePluginSettings({
     disableAnalytics: {
@@ -46,13 +46,6 @@ export default definePlugin({
             },
         },
         {
-            find: "window.DiscordSentry=",
-            replacement: {
-                match: /^.+$/,
-                replace: "()=>{}",
-            }
-        },
-        {
             find: ".METRICS,",
             replacement: [
                 {
@@ -73,5 +66,15 @@ export default definePlugin({
                 replace: "getDebugLogging(){return false;"
             }
         },
-    ]
+    ],
+
+    startAt: StartAt.Init,
+    start() {
+        Object.defineProperty(window, "DiscordSentry", {
+            configurable: true,
+            set() {
+                Reflect.deleteProperty(window, "DiscordSentry");
+            }
+        });
+    }
 });
