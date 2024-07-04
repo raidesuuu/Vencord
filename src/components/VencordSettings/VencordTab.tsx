@@ -17,16 +17,19 @@
 */
 
 import { openNotificationLogModal } from "@api/Notifications/notificationLog";
-import { Settings, useSettings } from "@api/Settings";
+import { useSettings } from "@api/Settings";
 import { classNameFactory } from "@api/Styles";
 import DonateButton from "@components/DonateButton";
-import { ErrorCard } from "@components/ErrorCard";
+import { openPluginModal } from "@components/PluginSettings/PluginModal";
 import { Margins } from "@utils/margins";
 import { identity } from "@utils/misc";
 import { relaunch, showItemInFolder } from "@utils/native";
 import { useAwaiter } from "@utils/react";
-import { Button, Card, Forms, React, Select, Slider, Switch } from "@webpack/common";
+import { Button, Card, Forms, React, Select, Switch, TooltipContainer } from "@webpack/common";
+import { ComponentType } from "react";
 
+import { Flex, FolderIcon, GithubIcon, LogIcon, PaintbrushIcon, RestartIcon } from "..";
+import { openNotificationSettingsModal } from "./NotificationSettings";
 import { SettingsTab, wrapTab } from "./shared";
 
 const cl = classNameFactory("vc-settings-");
@@ -37,6 +40,19 @@ const SHIGGY_DONATE_IMAGE = "https://media.discordapp.net/stickers/1039992459209
 type KeysOfType<Object, Type> = {
     [K in keyof Object]: Object[K] extends Type ? K : never;
 }[keyof Object];
+
+const iconWithTooltip = (Icon: ComponentType<{ className?: string; }>, tooltip: string) => () => (
+    <TooltipContainer text={tooltip}>
+        <Icon className={cl("quick-actions-img")} />
+    </TooltipContainer>
+);
+
+const NotificationLogIcon = iconWithTooltip(LogIcon, "通知のログを開く");
+const QuickCssIcon = iconWithTooltip(PaintbrushIcon, "QuickCSSを編集");
+const RelaunchIcon = iconWithTooltip(RestartIcon, "Discordを再起動");
+const OpenSettingsDirIcon = iconWithTooltip(FolderIcon, "設定フォルダを開く");
+const OpenGithubIcon = iconWithTooltip(GithubIcon, "VencordのGitHubを見る");
+const OpenGithubJPIcon = iconWithTooltip(GithubIcon, "VencordJPのGitHubを見る");
 
 function VencordSettings() {
     const [settingsDir, , settingsDirPending] = useAwaiter(VencordNative.settings.getSettingsDir, {
@@ -78,7 +94,7 @@ function VencordSettings() {
             !IS_WEB && {
                 key: "transparent",
                 title: "ウィンドウの透明化を有効にする",
-                note: "透明化をサポートするテーマが必要です。ウィンドウのサイズ変更ができなくなります。完全な再起動が必要です"
+                note: "透明化をサポートするテーマが必要です。!!ウィンドウのサイズ変更ができなくなります!!。完全な再起動が必要です"
             },
             !IS_WEB && isWindows && {
                 key: "winCtrlQ",
@@ -97,50 +113,67 @@ function VencordSettings() {
             <DonateCard image={donateImage} />
             <Forms.FormSection title="クイックアクション">
                 <Card className={cl("quick-actions-card")}>
-                    <React.Fragment>
-                        {!IS_WEB && (
-                            <Button
-                                onClick={relaunch}
-                                size={Button.Sizes.SMALL}>
-                                クライアントを再起動
-                            </Button>
-                        )}
+                    <Button
+                        onClick={openNotificationLogModal}
+                        look={Button.Looks.BLANK}
+                    >
+                        <NotificationLogIcon />
+                    </Button>
+                    <Button
+                        onClick={() => VencordNative.quickCss.openEditor()}
+                        look={Button.Looks.BLANK}
+                    >
+                        <QuickCssIcon />
+                    </Button>
+                    {!IS_WEB && (
                         <Button
-                            onClick={() => VencordNative.quickCss.openEditor()}
-                            size={Button.Sizes.SMALL}
-                            disabled={settingsDir === "Loading..."}>
-                            クイックCSSファイルを開く
+                            onClick={relaunch}
+                            look={Button.Looks.BLANK}
+                        >
+                            <RelaunchIcon />
                         </Button>
-                        {!IS_WEB && (
-                            <Button
-                                onClick={() => showItemInFolder(settingsDir)}
-                                size={Button.Sizes.SMALL}
-                                disabled={settingsDirPending}>
-                                設定フォルダを開く
-                            </Button>
-                        )}
+                    )}
+                    {!IS_WEB && (
                         <Button
-                            onClick={() => VencordNative.native.openExternal("https://github.com/Vendicated/Vencord")}
-                            size={Button.Sizes.SMALL}
-                            disabled={settingsDirPending}>
-                            GitHubで開く(オリジナル)
+                            onClick={() => showItemInFolder(settingsDir)}
+                            look={Button.Looks.BLANK}
+                            disabled={settingsDirPending}
+                        >
+                            <OpenSettingsDirIcon />
                         </Button>
-                        <Button
-                            onClick={() => VencordNative.native.openExternal("https://github.com/VencordJP/Vencord")}
-                            size={Button.Sizes.SMALL}
-                            disabled={settingsDirPending}>
-                            GitHubで開く(JP)
-                        </Button>
-                    </React.Fragment>
+                    )}
+                    <Button
+                        onClick={() => VencordNative.native.openExternal("https://github.com/Vendicated/Vencord")}
+                        look={Button.Looks.BLANK}
+                        disabled={settingsDirPending}
+                    >
+                        <OpenGithubIcon />
+                    </Button>
+                    <Button
+                        onClick={() => VencordNative.native.openExternal("https://github.com/VencordJP/Vencord")}
+                        look={Button.Looks.BLANK}
+                        disabled={settingsDirPending}
+                    >
+                        <OpenGithubJPIcon />
+                    </Button>
+
                 </Card>
             </Forms.FormSection>
 
-            <Forms.FormDivider />
+            <Forms.FormDivider />;
 
-            <Forms.FormSection className={Margins.top16} title="設定" tag="h5">
-                <Forms.FormText className={Margins.bottom20}>
+            <Forms.FormSection className={Margins.top16} title="Settings" tag="h5">
+                <Forms.FormText className={Margins.bottom20} style={{ color: "var(--text-muted)" }}>
                     ヒント：「設定」プラグインの設定で、この設定セクションの位置を変更できます！
+                    {" "}<Button
+                        look={Button.Looks.BLANK}
+                        style={{ color: "var(--text-link)", display: "inline-block" }}
+                        onClick={() => openPluginModal(Vencord.Plugins.plugins.Settings)}
+                    >
+                        設定プラグインの設定を開く
+                    </Button>!
                 </Forms.FormText>
+
                 {Switches.map(s => s && (
                     <Switch
                         key={s.key}
@@ -218,91 +251,17 @@ function VencordSettings() {
                     serialize={identity} />
             </>}
 
-            {typeof Notification !== "undefined" && <NotificationSection settings={settings.notifications} />}
+            <Forms.FormSection className={Margins.top16} title="Vencord Notifications" tag="h5">
+                <Flex>
+                    <Button onClick={openNotificationSettingsModal}>
+                        Notification Settings
+                    </Button>
+                    <Button onClick={openNotificationLogModal}>
+                        View Notification Log
+                    </Button>
+                </Flex>
+            </Forms.FormSection>
         </SettingsTab>
-    );
-}
-
-function NotificationSection({ settings }: { settings: typeof Settings["notifications"]; }) {
-    return (
-        <>
-            <Forms.FormTitle tag="h5">通知のスタイル</Forms.FormTitle>
-            {settings.useNative !== "never" && Notification?.permission === "denied" && (
-                <ErrorCard style={{ padding: "1em" }} className={Margins.bottom8}>
-                    <Forms.FormTitle tag="h5">デスクトップ通知が拒否されました</Forms.FormTitle>
-                    <Forms.FormText>あなたはデスクトップ通知を設定で無効にしました。そのため、デスクトップ通知を受信できません。</Forms.FormText>
-                </ErrorCard>
-            )}
-            <Forms.FormText className={Margins.bottom8}>
-                一部のプラグインは通知を表示する場合があります。これらには2つのスタイルがあります：
-                <ul>
-                    <li><strong>Vencordの通知</strong>: これらはアプリ内通知です</li>
-                    <li><strong>デスクトップ通知</strong>: ネイティブのデスクトップ通知（例：メンションを受け取ったとき）</li>
-                </ul>
-            </Forms.FormText>
-            <Select
-                placeholder="通知スタイル"
-                options={[
-                    { label: "Discordがフォーカスされていない場合にのみデスクトップ通知を使用する", value: "not-focused", default: true },
-                    { label: "常にデスクトップ通知を使用する", value: "always" },
-                    { label: "常にVencord通知を使用する", value: "never" },
-                ] satisfies Array<{ value: typeof settings["useNative"]; } & Record<string, any>>}
-                closeOnSelect={true}
-                select={v => settings.useNative = v}
-                isSelected={v => v === settings.useNative}
-                serialize={identity}
-            />
-
-            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>通知の位置</Forms.FormTitle>
-            <Select
-                isDisabled={settings.useNative === "always"}
-                placeholder="通知の位置"
-                options={[
-                    { label: "右下", value: "bottom-right", default: true },
-                    { label: "右上", value: "top-right" },
-                ] satisfies Array<{ value: typeof settings["position"]; } & Record<string, any>>}
-                select={v => settings.position = v}
-                isSelected={v => v === settings.position}
-                serialize={identity}
-            />
-
-            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>通知のタイムアウト</Forms.FormTitle>
-            <Forms.FormText className={Margins.bottom16}>自動的にタイムアウトしないようにするには、0秒に設定します</Forms.FormText>
-            <Slider
-                disabled={settings.useNative === "always"}
-                markers={[0, 1000, 2500, 5000, 10_000, 20_000]}
-                minValue={0}
-                maxValue={20_000}
-                initialValue={settings.timeout}
-                onValueChange={v => settings.timeout = v}
-                onValueRender={v => (v / 1000).toFixed(2) + "秒"}
-                onMarkerRender={v => (v / 1000) + "秒"}
-                stickToMarkers={false}
-            />
-
-            <Forms.FormTitle tag="h5" className={Margins.top16 + " " + Margins.bottom8}>通知ログの制限</Forms.FormTitle>
-            <Forms.FormText className={Margins.bottom16}>
-                古い通知が削除されるまでログに保存する通知の数。
-                通知ログを無効にするには<code>0</code>、古い通知を自動的に削除しないには<code>∞</code>に設定します
-            </Forms.FormText>
-            <Slider
-                markers={[0, 25, 50, 75, 100, 200]}
-                minValue={0}
-                maxValue={200}
-                stickToMarkers={true}
-                initialValue={settings.logLimit}
-                onValueChange={v => settings.logLimit = v}
-                onValueRender={v => v === 200 ? "∞" : v}
-                onMarkerRender={v => v === 200 ? "∞" : v}
-            />
-
-            <Button
-                onClick={openNotificationLogModal}
-                disabled={settings.logLimit === 0}
-            >
-                通知ログを開く
-            </Button>
-        </>
     );
 }
 

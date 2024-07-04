@@ -13,6 +13,7 @@
 import { showNotification } from "@api/Notifications";
 import { Settings, useSettings } from "@api/Settings";
 import { CheckedTextInput } from "@components/CheckedTextInput";
+import { Grid } from "@components/Grid";
 import { Link } from "@components/Link";
 import { authorizeCloud, cloudLogger, deauthorizeCloud, getCloudAuth, getCloudUrl } from "@utils/cloud";
 import { Margins } from "@utils/margins";
@@ -78,7 +79,9 @@ function SettingsSyncSection() {
                     size={Button.Sizes.SMALL}
                     disabled={!sectionEnabled}
                     onClick={() => putCloudSettings(true)}
-                >クラウドに同期</Button>
+                >
+                    クラウドに同期
+                </Button>
                 <Tooltip text="これにより、クラウド上の設定でローカルの設定が上書きされます。注意して使用してください！">
                     {({ onMouseLeave, onMouseEnter }) => (
                         <Button
@@ -88,7 +91,9 @@ function SettingsSyncSection() {
                             color={Button.Colors.RED}
                             disabled={!sectionEnabled}
                             onClick={() => getCloudSettings(true, true)}
-                        >クラウドから同期</Button>
+                        >
+                            クラウドから同期
+                        </Button>
                     )}
                 </Tooltip>
                 <Button
@@ -96,9 +101,11 @@ function SettingsSyncSection() {
                     color={Button.Colors.RED}
                     disabled={!sectionEnabled}
                     onClick={() => deleteCloudSettings()}
-                >クラウドの設定を削除</Button>
+                >
+                    クラウドの設定を削除
+                </Button>
             </div>
-        </Forms.FormSection>
+        </Forms.FormSection >
     );
 }
 
@@ -117,7 +124,12 @@ function CloudTab() {
                 <Switch
                     key="backend"
                     value={settings.cloud.authenticated}
-                    onChange={v => { v && authorizeCloud(); if (!v) settings.cloud.authenticated = v; }}
+                    onChange={v => {
+                        if (v)
+                            authorizeCloud();
+                        else
+                            settings.cloud.authenticated = v;
+                    }}
                     note="クラウド統合をまだ設定していない場合、認証を要求します。"
                 >
                     クラウド統合を有効にする
@@ -129,27 +141,47 @@ function CloudTab() {
                 <CheckedTextInput
                     key="backendUrl"
                     value={settings.cloud.url}
-                    onChange={v => { settings.cloud.url = v; settings.cloud.authenticated = false; deauthorizeCloud(); }}
+                    onChange={async v => {
+                        settings.cloud.url = v;
+                        settings.cloud.authenticated = false;
+                        deauthorizeCloud();
+                    }}
                     validate={validateUrl}
                 />
-                <Button
-                    className={Margins.top8}
-                    size={Button.Sizes.MEDIUM}
-                    color={Button.Colors.RED}
-                    disabled={!settings.cloud.authenticated}
-                    onClick={() => Alerts.show({
-                        title: "本当によろしいですか？",
-                        body: "データが削除されると元に戻すことはできません。注意してください！",
-                        onConfirm: eraseAllData,
-                        confirmText: "削除する",
-                        confirmColor: "vc-cloud-erase-data-danger-btn",
-                        cancelText: "キャンセル"
-                    })}
-                >すべてのデータを削除</Button>
+
+                <Grid columns={2} gap="1em" className={Margins.top8}>
+                    <Button
+                        size={Button.Sizes.MEDIUM}
+                        disabled={!settings.cloud.authenticated}
+                        onClick={async () => {
+                            await deauthorizeCloud();
+                            settings.cloud.authenticated = false;
+                            await authorizeCloud();
+                        }}
+                    >
+                        再認証
+                    </Button>
+                    <Button
+                        size={Button.Sizes.MEDIUM}
+                        color={Button.Colors.RED}
+                        disabled={!settings.cloud.authenticated}
+                        onClick={() => Alerts.show({
+                            title: "本当に続行しますか？",
+                            body: "データが削除されると元に戻すことはできません。注意してください！",
+                            onConfirm: eraseAllData,
+                            confirmText: "削除する",
+                            confirmColor: "vc-cloud-erase-data-danger-btn",
+                            cancelText: "キャンセル"
+                        })}
+                    >
+                        すべてのデータを削除
+                    </Button>
+                </Grid>
+
                 <Forms.FormDivider className={Margins.top16} />
             </Forms.FormSection >
             <SettingsSyncSection />
-        </SettingsTab>
+        </SettingsTab >
     );
 }
 
