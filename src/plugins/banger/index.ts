@@ -16,28 +16,34 @@
  * 受け取るべきでした。 そうでない場合は、<https://www.gnu.org/licenses/>を参照してください。
 */
 
+import { definePluginSettings } from "@api/Settings";
 import { Devs } from "@utils/constants";
 import definePlugin, { OptionType } from "@utils/types";
+
+const settings = definePluginSettings({
+    source: {
+        description: "BAN GIFを置き換えるソース（動画またはGif）",
+        type: OptionType.STRING,
+        default: "https://i.imgur.com/wp5q52C.mp4",
+        restartNeeded: true,
+    }
+});
 
 export default definePlugin({
     name: "BANger",
     description: "BANダイアログのGIFをカスタムものに置き換えます。",
     authors: [Devs.Xinto, Devs.Glitch],
+    settings,
     patches: [
         {
             find: "BAN_CONFIRM_TITLE.",
             replacement: {
                 match: /src:\i\("?\d+"?\)/g,
-                replace: "src: Vencord.Settings.plugins.BANger.source"
+                replace: "src:$self.source"
             }
         }
     ],
-    options: {
-        source: {
-            description: "BAN GIFを置き換えるソース（ビデオまたはGif）",
-            type: OptionType.STRING,
-            default: "https://i.imgur.com/wp5q52C.mp4",
-            restartNeeded: true,
-        }
+    get source() {
+        return settings.store.source;
     }
 });

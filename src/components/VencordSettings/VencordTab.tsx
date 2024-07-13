@@ -21,15 +21,16 @@ import { useSettings } from "@api/Settings";
 import { classNameFactory } from "@api/Styles";
 import DonateButton from "@components/DonateButton";
 import { openPluginModal } from "@components/PluginSettings/PluginModal";
+import { gitRemote } from "@shared/vencordUserAgent";
 import { Margins } from "@utils/margins";
 import { identity } from "@utils/misc";
 import { relaunch, showItemInFolder } from "@utils/native";
 import { useAwaiter } from "@utils/react";
-import { Button, Card, Forms, React, Select, Switch, TooltipContainer } from "@webpack/common";
-import { ComponentType } from "react";
+import { Button, Card, Forms, React, Select, Switch } from "@webpack/common";
 
 import { Flex, FolderIcon, GithubIcon, LogIcon, PaintbrushIcon, RestartIcon } from "..";
 import { openNotificationSettingsModal } from "./NotificationSettings";
+import { QuickAction, QuickActionCard } from "./quickActions";
 import { SettingsTab, wrapTab } from "./shared";
 
 const cl = classNameFactory("vc-settings-");
@@ -41,18 +42,6 @@ type KeysOfType<Object, Type> = {
     [K in keyof Object]: Object[K] extends Type ? K : never;
 }[keyof Object];
 
-const iconWithTooltip = (Icon: ComponentType<{ className?: string; }>, tooltip: string) => () => (
-    <TooltipContainer text={tooltip}>
-        <Icon className={cl("quick-actions-img")} />
-    </TooltipContainer>
-);
-
-const NotificationLogIcon = iconWithTooltip(LogIcon, "通知のログを開く");
-const QuickCssIcon = iconWithTooltip(PaintbrushIcon, "QuickCSSを編集");
-const RelaunchIcon = iconWithTooltip(RestartIcon, "Discordを再起動");
-const OpenSettingsDirIcon = iconWithTooltip(FolderIcon, "設定フォルダを開く");
-const OpenGithubIcon = iconWithTooltip(GithubIcon, "VencordのGitHubを見る");
-const OpenGithubJPIcon = iconWithTooltip(GithubIcon, "VencordJPのGitHubを見る");
 
 function VencordSettings() {
     const [settingsDir, , settingsDirPending] = useAwaiter(VencordNative.settings.getSettingsDir, {
@@ -112,53 +101,43 @@ function VencordSettings() {
         <SettingsTab title="Vencordの設定">
             <DonateCard image={donateImage} />
             <Forms.FormSection title="クイックアクション">
-                <Card className={cl("quick-actions-card")}>
-                    <Button
-                        onClick={openNotificationLogModal}
-                        look={Button.Looks.BLANK}
-                    >
-                        <NotificationLogIcon />
-                    </Button>
-                    <Button
-                        onClick={() => VencordNative.quickCss.openEditor()}
-                        look={Button.Looks.BLANK}
-                    >
-                        <QuickCssIcon />
-                    </Button>
+                <QuickActionCard>
+                    <QuickAction
+                        Icon={LogIcon}
+                        text="通知のログ"
+                        action={openNotificationLogModal}
+                    />
+                    <QuickAction
+                        Icon={PaintbrushIcon}
+                        text="QuckCSSを編集"
+                        action={() => VencordNative.quickCss.openEditor()}
+                    />
                     {!IS_WEB && (
-                        <Button
-                            onClick={relaunch}
-                            look={Button.Looks.BLANK}
-                        >
-                            <RelaunchIcon />
-                        </Button>
+                        <QuickAction
+                            Icon={RestartIcon}
+                            text="Discordを再起動"
+                            action={relaunch}
+                        />
                     )}
                     {!IS_WEB && (
-                        <Button
-                            onClick={() => showItemInFolder(settingsDir)}
-                            look={Button.Looks.BLANK}
-                            disabled={settingsDirPending}
-                        >
-                            <OpenSettingsDirIcon />
-                        </Button>
+                        <QuickAction
+                            Icon={FolderIcon}
+                            text="設定フォルダを開く"
+                            action={() => showItemInFolder(settingsDir)}
+                        />
                     )}
-                    <Button
-                        onClick={() => VencordNative.native.openExternal("https://github.com/Vendicated/Vencord")}
-                        look={Button.Looks.BLANK}
-                        disabled={settingsDirPending}
-                    >
-                        <OpenGithubIcon />
-                    </Button>
-                    <Button
-                        onClick={() => VencordNative.native.openExternal("https://github.com/VencordJP/Vencord")}
-                        look={Button.Looks.BLANK}
-                        disabled={settingsDirPending}
-                    >
-                        <OpenGithubJPIcon />
-                    </Button>
-
-                </Card>
-            </Forms.FormSection>
+                    <QuickAction
+                        Icon={GithubIcon}
+                        text="ソースコードを見る"
+                        action={() => VencordNative.native.openExternal("https://github.com/Vendicated/Vencord")}
+                    />
+                    <QuickAction
+                        Icon={GithubIcon}
+                        text="ソースコードを見る(JP)"
+                        action={() => VencordNative.native.openExternal("https://github.com/" + gitRemote)}
+                    />
+                </QuickActionCard>
+            </Forms.FormSection >
 
             <Forms.FormDivider />;
 
@@ -184,84 +163,86 @@ function VencordSettings() {
                         {s.title}
                     </Switch>
                 ))}
-            </Forms.FormSection>
+            </Forms.FormSection>;
 
 
-            {needsVibrancySettings && <>
-                <Forms.FormTitle tag="h5">ウィンドウの透明度設定 (再起動が必要)</Forms.FormTitle>
-                <Select
-                    className={Margins.bottom20}
-                    placeholder="ウィンドウの透明度設定"
-                    options={[
-                        // 最も不透明から最も透明に並べ替えられた順に並べる
-                        {
-                            label: "透明度なし", value: undefined
-                        },
-                        {
-                            label: "ページの下（ウィンドウの色調整）",
-                            value: "under-page"
-                        },
-                        {
-                            label: "コンテンツ",
-                            value: "content"
-                        },
-                        {
-                            label: "ウィンドウ",
-                            value: "window"
-                        },
-                        {
-                            label: "選択",
-                            value: "selection"
-                        },
-                        {
-                            label: "タイトルバー",
-                            value: "titlebar"
-                        },
-                        {
-                            label: "ヘッダー",
-                            value: "header"
-                        },
-                        {
-                            label: "サイドバー",
-                            value: "sidebar"
-                        },
-                        {
-                            label: "ツールチップ",
-                            value: "tooltip"
-                        },
-                        {
-                            label: "メニュー",
-                            value: "menu"
-                        },
-                        {
-                            label: "ポップオーバー",
-                            value: "popover"
-                        },
-                        {
-                            label: "フルスクリーンUI（透明ですがわずかに静か）",
-                            value: "fullscreen-ui"
-                        },
-                        {
-                            label: "HUD（最も透明）",
-                            value: "hud"
-                        },
-                    ]}
-                    select={v => settings.macosVibrancyStyle = v}
-                    isSelected={v => settings.macosVibrancyStyle === v}
-                    serialize={identity} />
-            </>}
+            {
+                needsVibrancySettings && <>
+                    <Forms.FormTitle tag="h5">ウィンドウの透明度設定 (再起動が必要)</Forms.FormTitle>
+                    <Select
+                        className={Margins.bottom20}
+                        placeholder="ウィンドウの透明度設定"
+                        options={[
+                            // 最も不透明から最も透明に並べ替えられた順に並べる
+                            {
+                                label: "透明度なし", value: undefined
+                            },
+                            {
+                                label: "ページの下（ウィンドウの色調整）",
+                                value: "under-page"
+                            },
+                            {
+                                label: "コンテンツ",
+                                value: "content"
+                            },
+                            {
+                                label: "ウィンドウ",
+                                value: "window"
+                            },
+                            {
+                                label: "選択",
+                                value: "selection"
+                            },
+                            {
+                                label: "タイトルバー",
+                                value: "titlebar"
+                            },
+                            {
+                                label: "ヘッダー",
+                                value: "header"
+                            },
+                            {
+                                label: "サイドバー",
+                                value: "sidebar"
+                            },
+                            {
+                                label: "ツールチップ",
+                                value: "tooltip"
+                            },
+                            {
+                                label: "メニュー",
+                                value: "menu"
+                            },
+                            {
+                                label: "ポップオーバー",
+                                value: "popover"
+                            },
+                            {
+                                label: "フルスクリーンUI（透明ですがわずかに静か）",
+                                value: "fullscreen-ui"
+                            },
+                            {
+                                label: "HUD（最も透明）",
+                                value: "hud"
+                            },
+                        ]}
+                        select={v => settings.macosVibrancyStyle = v}
+                        isSelected={v => settings.macosVibrancyStyle === v}
+                        serialize={identity} />
+                </>
+            }
 
-            <Forms.FormSection className={Margins.top16} title="Vencord Notifications" tag="h5">
+            <Forms.FormSection className={Margins.top16} title="Vencordの通知" tag="h5">
                 <Flex>
                     <Button onClick={openNotificationSettingsModal}>
-                        Notification Settings
+                        通知の設定を開く
                     </Button>
                     <Button onClick={openNotificationLogModal}>
-                        View Notification Log
+                        通知ログを開く
                     </Button>
                 </Flex>
             </Forms.FormSection>
-        </SettingsTab>
+        </SettingsTab >
     );
 }
 

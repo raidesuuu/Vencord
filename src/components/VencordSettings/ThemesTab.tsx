@@ -16,24 +16,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { useSettings } from "@api/Settings";
+import { Settings, useSettings } from "@api/Settings";
 import { classNameFactory } from "@api/Styles";
 import { Flex } from "@components/Flex";
-import { DeleteIcon } from "@components/Icons";
+import { DeleteIcon, FolderIcon, PaintbrushIcon, PencilIcon, PlusIcon, RestartIcon } from "@components/Icons";
 import { Link } from "@components/Link";
-import PluginModal from "@components/PluginSettings/PluginModal";
+import { openPluginModal } from "@components/PluginSettings/PluginModal";
 import type { UserThemeHeader } from "@main/themes";
 import { openInviteModal } from "@utils/discord";
 import { Margins } from "@utils/margins";
 import { classes } from "@utils/misc";
-import { openModal } from "@utils/modal";
 import { showItemInFolder } from "@utils/native";
 import { useAwaiter } from "@utils/react";
 import { findByPropsLazy, findLazy } from "@webpack";
-import { Button, Card, Forms, React, showToast, TabBar, TextArea, useEffect, useRef, useState } from "@webpack/common";
+import { Card, Forms, React, showToast, TabBar, TextArea, useEffect, useRef, useState } from "@webpack/common";
 import type { ComponentType, Ref, SyntheticEvent } from "react";
 
+import Plugins from "~plugins";
+
 import { AddonCard } from "./AddonCard";
+import { QuickAction, QuickActionCard } from "./quickActions";
 import { SettingsTab, wrapTab } from "./shared";
 
 type FileInput = ComponentType<{
@@ -212,61 +214,53 @@ function ThemesTab() {
                     <Forms.FormText>BDサイトを使用する場合は、「ダウンロード」をクリックして、ダウンロードした.theme.cssファイルをテーマフォルダに配置してください。</Forms.FormText>
                 </Card>
 
-                <Forms.FormSection title="ローカルテーマ">
-                    <Card className="vc-settings-quick-actions-card">
+                <Forms.FormSection title="Local Themes">
+                    <QuickActionCard>
                         <>
                             {IS_WEB ?
                                 (
-                                    <Button
-                                        size={Button.Sizes.SMALL}
-                                        disabled={themeDirPending}
-                                    >
-                                        テーマをアップロード
-                                        <FileInput
-                                            ref={fileInputRef}
-                                            onChange={onFileUpload}
-                                            multiple={true}
-                                            filters={[{ extensions: ["css"] }]}
-                                        />
-                                    </Button>
+                                    <QuickAction
+                                        text={
+                                            <span style={{ position: "relative" }}>
+                                                テーマをアップロード
+                                                <FileInput
+                                                    ref={fileInputRef}
+                                                    onChange={onFileUpload}
+                                                    multiple={true}
+                                                    filters={[{ extensions: ["css"] }]}
+                                                />
+                                            </span>
+                                        }
+                                        Icon={PlusIcon}
+                                    />
                                 ) : (
-                                    <Button
-                                        onClick={() => showItemInFolder(themeDir!)}
-                                        size={Button.Sizes.SMALL}
+                                    <QuickAction
+                                        text="テーマフォルダを開く"
+                                        action={() => showItemInFolder(themeDir!)}
                                         disabled={themeDirPending}
-                                    >
-                                        テーマフォルダを開く
-                                    </Button>
+                                        Icon={FolderIcon}
+                                    />
                                 )}
-                            <Button
-                                onClick={refreshLocalThemes}
-                                size={Button.Sizes.SMALL}
-                            >
-                                不足しているテーマを読み込む
-                            </Button>
-                            <Button
-                                onClick={() => VencordNative.quickCss.openEditor()}
-                                size={Button.Sizes.SMALL}
-                            >
-                                QuickCSSを編集する
-                            </Button>
+                            <QuickAction
+                                text="テーマを再読み込み"
+                                action={refreshLocalThemes}
+                                Icon={RestartIcon}
+                            />
+                            <QuickAction
+                                text="QuickCSSを編集"
+                                action={() => VencordNative.quickCss.openEditor()}
+                                Icon={PaintbrushIcon}
+                            />
 
-                            {Vencord.Settings.plugins.ClientTheme.enabled && (
-                                <Button
-                                    onClick={() => openModal(modalProps => (
-                                        <PluginModal
-                                            {...modalProps}
-                                            plugin={Vencord.Plugins.plugins.ClientTheme}
-                                            onRestartNeeded={() => { }}
-                                        />
-                                    ))}
-                                    size={Button.Sizes.SMALL}
-                                >
-                                    ClientThemeを編集する
-                                </Button>
+                            {Settings.plugins.ClientTheme.enabled && (
+                                <QuickAction
+                                    text="クライアントテーマを編集"
+                                    action={() => openPluginModal(Plugins.ClientTheme)}
+                                    Icon={PencilIcon}
+                                />
                             )}
                         </>
-                    </Card>
+                    </QuickActionCard>
 
                     <div className={cl("grid")}>
                         {userThemes?.map(theme => (
